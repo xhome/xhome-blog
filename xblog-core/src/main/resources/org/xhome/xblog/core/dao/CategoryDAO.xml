@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.xhome.xblog.core.dao.CategoryDAO">
+	
+	<cache/>
+	
+	<insert id="addCategory" parameterType="org.xhome.xblog.Category" useGeneratedKeys="true" keyProperty="id">
+		<if test="parent == null">
+			INSERT INTO xhome_xblog_category (name, owner, modifier, created, modified, version, status)
+			VALUES(#{name}, #{owner}, #{modifier}, #{created}, #{modified}, #{version}, #{status})
+		</if>
+		<if test="parent != null">
+			INSERT INTO xhome_xblog_category (name, parent, owner, modifier, created, modified, version, status)
+			VALUES(#{name}, #{parent.id} #{owner}, #{modifier}, #{created}, #{modified}, #{version}, #{status})
+		</if>
+	</insert>
+	
+	<update id="updateCategory" parameterType="org.xhome.xblog.Category">
+		UPDATE xhome_xblog_category
+		SET name = #{name}, modifier = #{modifier}, modified = NOW(),
+			version = version + 1, status = #{status}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="lockCategory" parameterType="org.xhome.xblog.Category">
+		UPDATE xhome_xblog_category
+		SET modifier = #{modifier}, modified = NOW(), version = version + 1, status = 5
+		WHERE id = #{id}
+	</update>
+	
+	<update id="unlockCategory" parameterType="org.xhome.xblog.Category">
+		UPDATE xhome_xblog_category
+		SET modifier = #{modifier}, modified = NOW(), version = version + 1, status = 1
+		WHERE id = #{id}
+	</update>
+	
+	<update id="removeCategory" parameterType="org.xhome.xblog.Category">
+		UPDATE xhome_xblog_category
+		SET modifier = #{modifier}, modified = NOW(), version = version + 1, status = 0
+		WHERE id = #{id}
+	</update>
+	
+	<delete id="deleteCategory" parameterType="org.xhome.xblog.Category">
+		DELETE FROM xhome_xblog_category WHERE id = #{id} AND status != 0
+	</delete>
+	
+	<select id="isCategoryExists" resultType="boolean" parameterType="org.xhome.xblog.Category">
+		SELECT COUNT(*) FROM xhome_xblog_category WHERE name = #{name} AND status != 0
+	</select>
+	
+	<select id="isCategoryUpdateable" resultType="boolean" parameterType="org.xhome.xblog.Category">
+		SELECT COUNT(*) FROM xhome_xblog_category WHERE id = #{id} AND status != 0 AND status != 4
+	</select>
+	
+	<select id="isCategoryLocked" resultType="boolean" parameterType="org.xhome.xblog.Category">
+		SELECT COUNT(*) FROM xhome_xblog_category WHERE id = #{id} AND status != 0 AND status = 5
+	</select>
+	
+	<select id="isCategoryRemoveable" resultType="boolean" parameterType="org.xhome.xblog.Category">
+		SELECT COUNT(*) FROM xhome_xblog_category WHERE id = #{id} AND status != 2 AND status != 4
+	</select>
+	
+	<select id="isCategoryDeleteable" resultType="boolean" parameterType="org.xhome.xblog.Category">
+		SELECT COUNT(*) FROM xhome_xblog_category WHERE id = #{id} AND status != 3 AND status != 4
+	</select>
+	
+	<select id="queryCategoryById" resultType="org.xhome.xblog.Category" parameterType="long">
+		SELECT * FROM xhome_xblog_category WHERE id = #{id} LIMIT 1
+	</select>
+	
+	<select id="queryCategoryByName" resultType="org.xhome.xblog.Category" parameterType="String">
+		SELECT * FROM xhome_xblog_category WHERE name = #{name} AND status != 0 LIMIT 1
+	</select>
+	
+	<sql id="restriction_categorys">
+		<trim prefix="WHERE" prefixOverrides="AND">
+			<if test="parameters != null">
+				<if test="parameters.name != null">
+					AND name LIKE CONCAT('%',#{parameters.name},'%')
+				</if>
+				<if test="parameters.name_llike != null">
+					AND name LIKE CONCAT('%',#{parameters.name_llike})
+				</if>
+				<if test="parameters.name_rlike != null">
+					AND name LIKE CONCAT(#{parameters.name_rlike},'%')
+				</if>
+				<if test="parameters.name_equal != null">
+					AND name = #{parameters.name_equal}
+				</if>
+				<if test="parameters.status != null">
+					AND status = #{parameters.status}
+				</if>
+				<if test="parameters.status_lt != null">
+					AND status &lt; #{parameters.status_lt}
+				</if>
+				<if test="parameters.status_le != null">
+					AND status &lt;= #{parameters.status_le}
+				</if>
+				<if test="parameters.status_gt != null">
+					AND status &gt; #{parameters.status_gt}
+				</if>
+				<if test="parameters.status_ge != null">
+					AND status &gt;= #{parameters.status_ge}
+				</if>
+				<if test="parameters.id != null">
+					AND id = #{parameters.id}
+				</if>
+				<if test="parameters.id_lt != null">
+					AND id &lt; #{parameters.id_lt}
+				</if>
+				<if test="parameters.id_le != null">
+					AND id &lt;= #{parameters.id_le}
+				</if>
+				<if test="parameters.id_gt != null">
+					AND id &gt; #{parameters.id_gt}
+				</if>
+				<if test="parameters.id_ge != null">
+					AND id &gt;= #{parameters.id_ge}
+				</if>
+			</if>
+			<if test="parameters == null or parameters.status == null">
+				AND status != 0
+			</if>
+		</trim>
+	</sql>
+	
+	<select id="queryCategorys" resultType="org.xhome.xblog.Category" parameterType="org.xhome.db.query.QueryBase">
+		SELECT * FROM xhome_xblog_category
+		<include refid="restriction_categorys"/>
+		ORDER BY name
+		<if test="_parameter != null">
+			LIMIT #{firstRow}, #{maxRow}
+		</if>
+	</select>
+	
+	<select id="countCategorys" resultType="long" parameterType="org.xhome.db.query.QueryBase">
+		SELECT COUNT(*) FROM xhome_xblog_category
+		<include refid="restriction_categorys"/>
+	</select>
+	
+</mapper>

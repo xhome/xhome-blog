@@ -41,19 +41,11 @@
                         <target>${java.version}</target>
                     </configuration>
                 </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-surefire-plugin</artifactId>
-                    <configuration>
-                        <additionalClasspathElements>
-                            <additionalClasspathElement>src/main/resources</additionalClasspathElement>
-                        </additionalClasspathElements>
-                    </configuration>
-                </plugin>
             </plugins>
         </pluginManagement>
     </build>
-	<distributionManagement>
+	
+    <distributionManagement>
 		<repository>
 			<id>nexus_xhome</id>
 			<url>http://nexus.xhomestudio.org/content/repositories/releases/</url>

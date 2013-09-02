@@ -9,15 +9,15 @@ import org.xhome.xauth.User;
  * @date 	Aug 31, 20136:26:38 PM
  * @describe 分类用户访问权限 
  */
-public class CatagoryUserPermission extends CatagoryPermission {
+public class CategoryUserPermission extends CategoryPermission {
 
 	private static final long serialVersionUID = -6041892211617473781L;
 
 	private User user; // 指定用户
 	
-	public CatagoryUserPermission() {}
+	public CategoryUserPermission() {}
 	
-	public CatagoryUserPermission(Catagory catagory, User user, int permission) {
+	public CategoryUserPermission(Category catagory, User user, int permission) {
 		this.setCatagory(catagory);
 		this.setUser(user);
 		this.setPermission(permission);

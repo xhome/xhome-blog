@@ -18,7 +18,7 @@ public class Article extends Base {
 	private String title; // 文章标题
 	private int attribute = PERMISSION_OPEN; // 文章属性
 	private String content; // 文章内容
-	private Catagory catagory; // 所属分类
+	private Category category; // 所属分类
 	private List<Tag> tags; // 文章标签
 	private List<Comment> comments; // 文章评论
 	
@@ -28,6 +28,12 @@ public class Article extends Base {
 	public final static int PERMISSION_READ_ONLY = 1 << 2; // 仅可阅读权限（包含评论）
 	public final static int PERMISSION_READ_WITHOUT_COMMENT = 1 << 3; // 不可见评论（仅可阅读文章内容）
 	public final static int PERMISSION_ASSIGN = 1 << 4; // 指定权限
+	
+	public Article() {}
+	
+	public Article(String title) {
+		this.setTitle(title);
+	}
 	
 	public String getTitle() {
 		return title;
@@ -47,11 +53,11 @@ public class Article extends Base {
 	public void setContent(String content) {
 		this.content = content;
 	}
-	public Catagory getCatagory() {
-		return catagory;
+	public Category getCategory() {
+		return category;
 	}
-	public void setCatagory(Catagory catagory) {
-		this.catagory = catagory;
+	public void setCategory(Category category) {
+		this.category = category;
 	}
 	public List<Tag> getTags() {
 		return tags;

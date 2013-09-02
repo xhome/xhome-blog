@@ -10,7 +10,7 @@ import org.xhome.xauth.User;
  * @date 	Aug 31, 20137:13:10 PM
  * @describe 文章访问记录
  */
-public class Records extends Base {
+public class Record extends Base {
 
 	private static final long serialVersionUID = 4289536483960003628L;
 	
@@ -20,9 +20,9 @@ public class Records extends Base {
 	private short agent; // 0:Other,1:Chrome, 2:Firefox, 3:IE, 4:Android
 	private String  number;  // 设备编号
 	
-	public Records() {}
+	public Record() {}
 	
-	public Records (Article article, User user, String address, short agent, String number) {
+	public Record (Article article, User user, String address, short agent, String number) {
 		this.setArticle(article);
 		this.setUser(user);
 		this.setAddress(address);

@@ -31,6 +31,15 @@ public class ManageLog extends Base {
 	public final static short TYPE_TAG_ROLE_PERMISSION = 11; // 标签角色访问权限
 	public final static short TYPE_TAG_USER_PERMISSION = 12; // 标签用户访问权限
 	
+	public ManageLog() {}
+	
+	public ManageLog (Short action, Short type, Long obj, Long user) {
+		this.setAction(action);
+		this.setType(type);
+		this.setObj(obj);
+		this.setOwner(user);
+	}
+	
 	public String getContent() {
 		return content;
 	}

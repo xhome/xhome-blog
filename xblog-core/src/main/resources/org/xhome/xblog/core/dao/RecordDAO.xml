@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.xhome.xblog.core.dao.RecordDAO">
+	
+	<cache/>
+	
+	<resultMap id="recordResultMap" type="org.xhome.xblog.Record">
+		<id property="id" column="id"/>
+		<result property="address" column="address"/>
+		<result property="agent" column="agent"/>
+		<result property="number" column="number"/>
+		<result property="created" column="created"/>
+		<result property="status" column="status"/>
+		<association property="user" javaType="org.xhome.xauth.User">
+			<result property="id" column="user"/>
+		</association>
+		<association property="article" javaType="org.xhome.xblog.Article">
+			<result property="id" column="article"/>
+		</association>
+	</resultMap>
+	
+	<insert id="addRecord" parameterType="org.xhome.xblog.Record" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO xhome_xblog_record (article, user, address, agent, number, created, status)
+		VALUES(#{article.id}, #{user.id}, CAST(#{address} AS BINARY), #{agent}, #{number}, #{created}, #{status})
+	</insert>
+	
+	<sql id="restriction_records">
+		<trim prefix="WHERE" prefixOverrides="AND">
+			<if test="parameters != null">
+				<if test="parameters.article != null">
+					AND article = #{parameters.article}
+				</if>
+				<if test="parameters.user != null">
+					AND user = #{parameters.user}
+				</if>
+				<if test="parameters.address != null">
+					AND address LIKE CONCAT(#{parameters.address}, '%')
+				</if>
+				<if test="parameters.agent != null">
+					AND agent = #{parameters.agent}
+				</if>
+				<if test="parameters.number != null">
+					AND number LIKE CONCAT('%', #{parameters.number},'%')
+				</if>
+				<if test="parameters.created != null">
+					AND created LIKE CONCAT(#{parameters.created},'%')
+				</if>
+				<if test="parameters.status != null">
+					AND status = #{parameters.status}
+				</if>
+			</if>
+		</trim>
+	</sql>
+	
+	<select id="queryRecords" resultMap="recordResultMap" parameterType="org.xhome.db.query.QueryBase">
+		SELECT * FROM xhome_xblog_record
+		<include refid="restriction_records"/>
+		ORDER BY created DESC
+		<if test="_parameter != null">
+			LIMIT #{firstRow}, #{maxRow}
+		</if>
+	</select>
+	
+	<select id="countRecords" resultType="long" parameterType="org.xhome.db.query.QueryBase">
+		SELECT COUNT(*) FROM xhome_xblog_record
+		<include refid="restriction_records"/>
+	</select>
+	
+</mapper>

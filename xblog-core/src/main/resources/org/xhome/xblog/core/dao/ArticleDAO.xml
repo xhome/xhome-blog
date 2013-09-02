@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.xhome.xblog.core.dao.ArticleDAO">
+	
+	<cache/>
+	
+	<resultMap id="articleLittleResultMap" type="org.xhome.xblog.Article">
+		<id property="id" column="id"/>
+		<result property="title" column="title"/>
+		<result property="attribute" column="attribute"/>
+		<result property="category" column="category"/>
+		<result property="owner" column="owner"/>
+		<result property="modifier" column="modifier"/>
+		<result property="created" column="created"/>
+		<result property="modified" column="modified"/>
+		<result property="version" column="version"/>
+		<result property="status" column="status"/>
+		<association property="category" javaType="org.xhome.xblog.Category" columnPrefix="category_">
+			<id property="id" column="id"/>
+			<result property="name" column="name"/>
+			<result property="owner" column="owner"/>
+			<result property="modifier" column="modifier"/>
+			<result property="created" column="created"/>
+			<result property="modified" column="modified"/>
+			<result property="version" column="version"/>
+			<result property="status" column="status"/>
+		</association>
+		<collection property="tags" ofType="org.xhome.xblog.Tag" columnPrefix="tag_">
+			<id property="id" column="id"/>
+			<result property="name" column="name"/>
+			<result property="owner" column="owner"/>
+			<result property="modifier" column="modifier"/>
+			<result property="created" column="created"/>
+			<result property="modified" column="modified"/>
+			<result property="version" column="version"/>
+			<result property="status" column="status"/>
+		</collection>
+	</resultMap>
+	
+	<resultMap id="articleResultMap" type="org.xhome.xblog.Article" extends="articleLittleResultMap">
+		<result property="content" column="content"/>
+	</resultMap>
+	
+	<insert id="addArticle" parameterType="org.xhome.xblog.Article" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO xhome_xblog_article (title, attribute, content, category,
+			owner, modifier, created, modified, version, status)
+		VALUES(#{title}, #{attribute}, #{content}, #{category.id},
+			#{owner}, #{modifier}, #{created}, #{modified}, #{version}, #{status})
+	</insert>
+	
+	<update id="updateArticle" parameterType="org.xhome.xblog.Article">
+		UPDATE xhome_xblog_article
+		SET title = #{title}, attribute = #{attribute}, content = #{content}, category = #{category.id},
+			modifier = #{modifier}, modified = NOW(), version = version + 1, status = #{status}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="lockArticle" parameterType="org.xhome.xblog.Article">
+		UPDATE xhome_xblog_article
+		SET modifier = #{modifier}, modified = NOW(), version = version + 1, status = 5
+		WHERE id = #{id}
+	</update>
+	
+	<update id="unlockArticle" parameterType="org.xhome.xblog.Article">
+		UPDATE xhome_xblog_article
+		SET modifier = #{modifier}, modified = NOW(), version = version + 1, status = 1
+		WHERE id = #{id}
+	</update>
+	
+	<update id="removeArticle" parameterType="org.xhome.xblog.Article">
+		UPDATE xhome_xblog_article
+		SET modifier = #{modifier}, modified = NOW(), version = version + 1, status = 0
+		WHERE id = #{id}
+	</update>
+	
+	<delete id="deleteArticle" parameterType="org.xhome.xblog.Article">
+		DELETE FROM xhome_xblog_article WHERE id = #{id} AND status != 0
+	</delete>
+	
+	<select id="isArticleUpdateable" resultType="boolean" parameterType="org.xhome.xblog.Article">
+		SELECT COUNT(*) FROM xhome_xblog_article WHERE id = #{id} AND status != 0 AND status != 4
+	</select>
+	
+	<select id="isArticleLocked" resultType="boolean" parameterType="org.xhome.xblog.Article">
+		SELECT COUNT(*) FROM xhome_xblog_article WHERE id = #{id} AND status != 0 AND status = 5
+	</select>
+	
+	<select id="isArticleRemoveable" resultType="boolean" parameterType="org.xhome.xblog.Article">
+		SELECT COUNT(*) FROM xhome_xblog_article WHERE id = #{id} AND status != 2 AND status != 4
+	</select>
+	
+	<select id="isArticleDeleteable" resultType="boolean" parameterType="org.xhome.xblog.Article">
+		SELECT COUNT(*) FROM xhome_xblog_article WHERE id = #{id} AND status != 3 AND status != 4
+	</select>
+	
+	<sql id="fromArticle">
+		FROM xhome_xblog_article AS a
+		LEFT JOIN xhome_xblog_category AS c ON a.category = c.id AND c.status != 0
+		LEFT JOIN xhome_xblog_article_tag AS at ON at.article = a.id AND at.status != 0
+		LEFT JOIN xhome_xblog_tag AS t ON at.tag = t.id AND t.status != 0
+	</sql>
+	
+	<sql id="selectArticleLittle">
+		SELECT a.id, a.title, a.attribute, a.category,
+			a.owner, a.modifier, a.created, a.modified, a.version, a.status,
+			c.id AS category_id, c.name AS category_name, c.owner AS category_owner,
+			c.modifier AS category_modifier, c.created AS category_created, c.modified AS category_modified,
+			c.version AS category_version, c.status AS category_status,
+			t.id AS tag_id, t.name AS tag_name, t.owner AS tag_owner,
+			t.modifier AS tag_modifier, t.created AS tag_created, t.modified AS tag_modified,
+			t.version AS tag_version, t.status AS tag_status
+	</sql>
+	
+	<sql id="selectArticle">
+		<include refid="selectArticleLittle"/>, a.content
+	</sql>
+	
+	<select id="queryArticle" resultMap="articleResultMap" parameterType="long">
+		<include refid="selectArticle"/>
+		<include refid="fromArticle"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<sql id="queryArticleId">
+		SELECT a.id
+		<include refid="fromArticle"/>
+		<trim prefix="WHERE" prefixOverrides="AND">
+			<if test="parameters != null">
+				<if test="parameters.title != null">
+					AND a.title LIKE CONCAT('%',#{parameters.title},'%')
+				</if>
+				<if test="parameters.title_llike != null">
+					AND a.title LIKE CONCAT('%',#{parameters.title_llike})
+				</if>
+				<if test="parameters.title_rlike != null">
+					AND a.title LIKE CONCAT(#{parameters.title_rlike},'%')
+				</if>
+				<if test="parameters.title_equal != null">
+					AND a.title = #{parameters.title_equal}
+				</if>
+				AND ((a.attribute &amp; 1) != 0
+				<if test="parameters.user != null">
+					OR ((a.attribute &amp; 2) != 0 AND a.owner = #{parameters.user})
+				</if>
+				)
+				<if test="parameters.content != null">
+					AND a.content LIKE CONCAT('%',#{parameters.content},'%')
+				</if>
+				<if test="parameters.status != null">
+					AND a.status = #{parameters.status}
+				</if>
+				<if test="parameters.status_lt != null">
+					AND a.status &lt; #{parameters.status_lt}
+				</if>
+				<if test="parameters.status_le != null">
+					AND a.status &lt;= #{parameters.status_le}
+				</if>
+				<if test="parameters.status_gt != null">
+					AND a.status &gt; #{parameters.status_gt}
+				</if>
+				<if test="parameters.status_ge != null">
+					AND a.status &gt;= #{parameters.status_ge}
+				</if>
+				<if test="parameters.id != null">
+					AND a.id = #{parameters.id}
+				</if>
+				<if test="parameters.id_lt != null">
+					AND a.id &lt; #{parameters.id_lt}
+				</if>
+				<if test="parameters.id_le != null">
+					AND a.id &lt;= #{parameters.id_le}
+				</if>
+				<if test="parameters.id_gt != null">
+					AND a.id &gt; #{parameters.id_gt}
+				</if>
+				<if test="parameters.id_ge != null">
+					AND a.id &gt;= #{parameters.id_ge}
+				</if>
+				<if test="parameters.category_id != null">
+					AND c.id = #{parameters.category_id}
+				</if>
+				<if test="parameters.category_id_lt != null">
+					AND c.id &lt; #{parameters.category_id_lt}
+				</if>
+				<if test="parameters.category_id_le != null">
+					AND c.id &lt;= #{parameters.category_id_le}
+				</if>
+				<if test="parameters.category_id_gt != null">
+					AND c.id &gt; #{parameters.category_id_gt}
+				</if>
+				<if test="parameters.category_id_ge != null">
+					AND c.id &gt;= #{parameters.category_id_ge}
+				</if>
+				<if test="parameters.category_name != null">
+					AND c.name LIKE CONCAT('%',#{parameters.category_name},'%')
+				</if>
+				<if test="parameters.category_name_llike != null">
+					AND c.name LIKE CONCAT('%',#{parameters.category_name_llike})
+				</if>
+				<if test="parameters.category_name_rlike != null">
+					AND c.name LIKE CONCAT(#{parameters.category_name_rlike},'%')
+				</if>
+				<if test="parameters.category_name_equal != null">
+					AND c.name = #{parameters.category_name_equal}
+				</if>
+				<if test="parameters.tag_id != null">
+					AND t.id = #{parameters.tag_id}
+				</if>
+				<if test="parameters.tag_id_lt != null">
+					AND t.id &lt; #{parameters.tag_id_lt}
+				</if>
+				<if test="parameters.tag_id_le != null">
+					AND t.id &lt;= #{parameters.tag_id_le}
+				</if>
+				<if test="parameters.tag_id_gt != null">
+					AND t.id &gt; #{parameters.tag_id_gt}
+				</if>
+				<if test="parameters.tag_id_ge != null">
+					AND t.id &gt;= #{parameters.tag_id_ge}
+				</if>
+				<if test="parameters.tag_name != null">
+					AND t.name LIKE CONCAT('%',#{parameters.tag_name},'%')
+				</if>
+				<if test="parameters.tag_name_llike != null">
+					AND t.name LIKE CONCAT('%',#{parameters.tag_name_llike})
+				</if>
+				<if test="parameters.tag_name_rlike != null">
+					AND t.name LIKE CONCAT(#{parameters.tag_name_rlike},'%')
+				</if>
+				<if test="parameters.tag_name_equal != null">
+					AND t.name = #{parameters.tag_name_equal}
+				</if>
+			</if>
+			<if test="parameters == null or parameters.status == null">
+				AND a.status != 0
+			</if>
+		</trim>
+		GROUP BY a.id
+	</sql>
+	
+	<select id="queryArticles" resultMap="articleLittleResultMap" parameterType="org.xhome.db.query.QueryBase">
+		<include refid="selectArticleLittle"/>
+		<include refid="fromArticle"/>
+		WHERE a.id IN (
+			<include refid="queryArticleId"/>
+		)
+		ORDER BY modified DESC
+		<if test="_parameter != null">
+			LIMIT #{firstRow}, #{maxRow}
+		</if>
+	</select>
+	
+	<select id="countArticles" resultType="long" parameterType="org.xhome.db.query.QueryBase">
+		SELECT COUNT(*) FROM (
+			<include refid="queryArticleId"/>
+		) AS t
+	</select>
+	
+	<insert id="addArticleTag" parameterType="Map" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO xhome_xblog_article_tag (article, tag, owner, modifier, created, modified, version, status)
+		VALUES(#{article.id}, #{tag.id}, #{owner}, #{modifier}, #{created}, #{modified}, #{version}, #{status})
+	</insert>
+	
+	<update id="lockArticleTag" parameterType="Map">
+		UPDATE xhome_xblog_article_tag
+		SET modifier = #{modifier}, modified = NOW(), version = version + 1, status = 5
+		WHERE status != 0 AND article = #{article.id} AND tag = #{tag.id}
+	</update>
+	
+	<update id="unlockArticleTag" parameterType="Map">
+		UPDATE xhome_xblog_article_tag
+		SET modifier = #{modifier}, modified = NOW(), version = version + 1, status = 1
+		WHERE status != 0 AND article = #{article.id} AND tag = #{tag.id}
+	</update>
+	
+	<update id="removeArticleTag" parameterType="Map">
+		UPDATE xhome_xblog_article_tag
+		SET modifier = #{modifier}, modified = NOW(), version = version + 1, status = 0
+		WHERE status != 0 AND article = #{article.id} AND tag = #{tag.id}
+	</update>
+	
+	<delete id="deleteArticleTag" parameterType="Map">
+		DELETE FROM xhome_xblog_article_tag WHERE status != 0 AND article = #{article.id} AND tag = #{tag.id}
+	</delete>
+	
+	<select id="hasArticleTag" resultType="boolean" parameterType="Map">
+		SELECT COUNT(*) FROM xhome_xblog_article_tag WHERE status != 0 AND article = #{article.id} AND tag = #{tag.id}
+	</select>
+	
+	<select id="isArticleTagUpdateable" resultType="boolean" parameterType="Map">
+		SELECT COUNT(*) FROM xhome_xblog_article_tag WHERE status != 0 AND article = #{article.id} AND tag = #{tag.id} AND status != 4
+	</select>
+	
+	<select id="isArticleTagLocked" resultType="boolean" parameterType="Map">
+		SELECT COUNT(*) FROM xhome_xblog_article_tag WHERE status != 0 AND article = #{article.id} AND tag = #{tag.id} AND status = 5
+	</select>
+	
+	<select id="isArticleTagRemoveable" resultType="boolean" parameterType="Map">
+		SELECT COUNT(*) FROM xhome_xblog_article_tag WHERE status != 0 AND article = #{article.id} AND tag = #{tag.id} AND status != 2 AND status != 4
+	</select>
+	
+	<select id="isArticleTagDeleteable" resultType="boolean" parameterType="Map">
+		SELECT COUNT(*) FROM xhome_xblog_article_tag WHERE status != 0 AND article = #{article.id} AND tag = #{tag.id} AND status != 3 AND status != 4
+	</select>
+	
+</mapper>

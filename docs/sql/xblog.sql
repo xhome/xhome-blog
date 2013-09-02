@@ -18,13 +18,13 @@ USE xblog;
 GRANT SELECT,INSERT,UPDATE,DELETE,EXECUTE ON xblog.* TO 'xblog'@'localhost' IDENTIFIED BY 'xblog';
 
 /*==============================================================*/
-/* Table: xhome_xblog_catagory                                  */
+/* Table: xhome_xblog_category                                  */
 /*==============================================================*/
-CREATE TABLE xhome_xblog_catagory
+CREATE TABLE xhome_xblog_category
 (
-   id                   INTEGER UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '分类ID',
-   name                 VARCHAR(20) NOT NULL COMMENT '分类名称',
-   parent               INTEGER NOT NULL DEFAULT NULL COMMENT 'NULL表示顶级分类',
+   id                   INTEGER NOT NULL AUTO_INCREMENT COMMENT '分类ID',
+   name                 VARCHAR(30) NOT NULL COMMENT '分类名称',
+   parent               INTEGER DEFAULT NULL COMMENT 'NULL表示顶级分类',
    owner                BIGINT NOT NULL COMMENT '创建者',
    modifier             BIGINT NOT NULL COMMENT '修改者',
    created              TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
@@ -32,25 +32,25 @@ CREATE TABLE xhome_xblog_catagory
    version              TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '版本',
    status               TINYINT UNSIGNED NOT NULL DEFAULT 1 COMMENT '状态0:标记删除,1:正常,2:不允许删除,3:不允许修改,4:锁定',
    PRIMARY KEY (id),
-   CONSTRAINT FK_CATAGORY_PARENT FOREIGN KEY (parent) REFERENCES xhome_xblog_catagory (id) ON DELETE RESTRICT ON UPDATE CASCADE
+   CONSTRAINT FK_CATEGORY_PARENT FOREIGN KEY (parent) REFERENCES xhome_xblog_category (id) ON DELETE RESTRICT ON UPDATE CASCADE
 )
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8
 COLLATE = utf8_general_ci
 AUTO_INCREMENT = 1;
 
-ALTER TABLE xhome_xblog_catagory COMMENT '分类';
+ALTER TABLE xhome_xblog_category COMMENT '分类';
 
 /*==============================================================*/
 /* Table: xhome_xblog_article                                   */
 /*==============================================================*/
 CREATE TABLE xhome_xblog_article
 (
-   id                   BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '文章ID',
+   id                   BIGINT NOT NULL AUTO_INCREMENT COMMENT '文章ID',
    title                VARCHAR(50) NOT NULL COMMENT '文章标题',
    attribute            TINYINT UNSIGNED NOT NULL DEFAULT 1 COMMENT '文章属性',
    content              TEXT NOT NULL COMMENT '文章内容',
-   catagory             INTEGER NOT NULL COMMENT '所属分类',
+   category             INTEGER NOT NULL COMMENT '所属分类',
    owner                BIGINT NOT NULL COMMENT '创建者',
    modifier             BIGINT NOT NULL COMMENT '修改者',
    created              TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
@@ -58,7 +58,7 @@ CREATE TABLE xhome_xblog_article
    version              TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '版本',
    status               TINYINT UNSIGNED NOT NULL DEFAULT 1 COMMENT '状态0:标记删除,1:正常,2:不允许删除,3:不允许修改,4:锁定',
    PRIMARY KEY (id),
-   CONSTRAINT FK_ARTICLE_CATAGORY FOREIGN KEY (catagory) REFERENCES xhome_xblog_catagory (id) ON DELETE RESTRICT ON UPDATE CASCADE
+   CONSTRAINT FK_ARTICLE_category FOREIGN KEY (category) REFERENCES xhome_xblog_category (id) ON DELETE RESTRICT ON UPDATE CASCADE
 )
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8
@@ -72,8 +72,8 @@ ALTER TABLE xhome_xblog_article COMMENT '文章';
 /*==============================================================*/
 CREATE TABLE xhome_xblog_tag
 (
-   id                   INTEGER UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '标签ID',
-   name                 VARCHAR NOT NULL COMMENT '标签名称',
+   id                   INTEGER NOT NULL AUTO_INCREMENT COMMENT '标签ID',
+   name                 VARCHAR(30) NOT NULL COMMENT '标签名称',
    owner                BIGINT NOT NULL COMMENT '创建者',
    modifier             BIGINT NOT NULL COMMENT '修改者',
    created              TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
@@ -94,7 +94,7 @@ ALTER TABLE xhome_xblog_tag COMMENT '标签';
 /*==============================================================*/
 CREATE TABLE xhome_xblog_article_tag
 (
-   id                   INTEGER UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '文章标签ID',
+   id                   INTEGER NOT NULL AUTO_INCREMENT COMMENT '文章标签ID',
    article              BIGINT NOT NULL COMMENT '文章ID',
    tag                  INTEGER NOT NULL COMMENT '标签ID',
    owner                BIGINT NOT NULL COMMENT '创建者',
@@ -119,8 +119,8 @@ ALTER TABLE xhome_xblog_article_tag COMMENT '文章标签';
 /*==============================================================*/
 CREATE TABLE xhome_xblog_comment
 (
-   id                   BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '评论ID',
-   article              BIGINT UNSIGNED NOT NULL COMMENT '文章ID',
+   id                   BIGINT NOT NULL AUTO_INCREMENT COMMENT '评论ID',
+   article              BIGINT NOT NULL COMMENT '文章ID',
    type                 TINYINT UNSIGNED NOT NULL COMMENT '0:评论,1:回复,2:引用',
    target               BIGINT UNSIGNED NOT NULL COMMENT '普通评论为文章ID，回复或引用则为评论ID',
    content              TEXT NOT NULL COMMENT '评论内容',
@@ -141,14 +141,14 @@ AUTO_INCREMENT = 1;
 ALTER TABLE xhome_xblog_comment COMMENT '文章评论';
 
 /*==============================================================*/
-/* Table: xhome_xblog_article_records                           */
+/* Table: xhome_xblog_record                           */
 /*==============================================================*/
-CREATE TABLE xhome_xblog_article_records
+CREATE TABLE xhome_xblog_record
 (
-   id                   BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+   id                   BIGINT NOT NULL AUTO_INCREMENT,
    article              BIGINT NOT NULL COMMENT '文章',
    user                 BIGINT NOT NULL COMMENT '用户',
-   address              VARCHAR NOT NULL COMMENT '访问地址(IPv4/IPv6)',
+   address              VARCHAR(16) NOT NULL COMMENT '访问地址(IPv4/IPv6)',
    agent                TINYINT NOT NULL DEFAULT 0 COMMENT '0:Other,1:Chrome, 2:Firefox, 3:IE, 4:Android',
    number               VARCHAR(100) NOT NULL COMMENT '设备编号',
    created              TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '访问时间',
@@ -160,15 +160,15 @@ DEFAULT CHARACTER SET = utf8
 COLLATE = utf8_general_ci
 AUTO_INCREMENT = 1;
 
-ALTER TABLE xhome_xblog_article_records COMMENT '文章访问记录';
+ALTER TABLE xhome_xblog_record COMMENT '文章访问记录';
 
 /*==============================================================*/
-/* Table: xhome_xblog_catagory_role_permission                  */
+/* Table: xhome_xblog_category_role_permission                  */
 /*==============================================================*/
-create table xhome_xblog_catagory_role_permission
+create table xhome_xblog_category_role_permission
 (
-   id                   BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-   catagory             INTEGER UNSIGNED NOT NULL COMMENT 'NULL表示针对所有分类',
+   id                   BIGINT NOT NULL AUTO_INCREMENT,
+   category             INTEGER UNSIGNED NOT NULL COMMENT 'NULL表示针对所有分类',
    role                 INTEGER UNSIGNED COMMENT 'NULL表示针对所有角色',
    permission           TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '0:不允许访问,1:允许访问,2:允许查看评论,3:允许评论,4:允许修改,5:允许删除,6:允许添加',
    owner                BIGINT NOT NULL COMMENT '创建者',
@@ -184,15 +184,15 @@ DEFAULT CHARACTER SET = utf8
 COLLATE = utf8_general_ci
 AUTO_INCREMENT = 1;
 
-alter table xhome_xblog_catagory_role_permission comment '分类角色访问权限';
+alter table xhome_xblog_category_role_permission comment '分类角色访问权限';
 
 /*==============================================================*/
-/* Table: xhome_xblog_catagory_user_permission                  */
+/* Table: xhome_xblog_category_user_permission                  */
 /*==============================================================*/
-CREATE TABLE xhome_xblog_catagory_user_permission
+CREATE TABLE xhome_xblog_category_user_permission
 (
-   id                   BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-   catagory             INTEGER UNSIGNED NOT NULL COMMENT 'NULL表示针对所有分类',
+   id                   BIGINT NOT NULL AUTO_INCREMENT,
+   category             INTEGER UNSIGNED NOT NULL COMMENT 'NULL表示针对所有分类',
    user                 BIGINT UNSIGNED NOT NULL COMMENT 'NULL表示针对所有用户',
    permission           TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '0:不允许访问,1:允许访问,2:允许查看评论,3:允许评论,4:允许修改,5:允许删除,6:允许添加',
    owner                BIGINT NOT NULL COMMENT '创建者',
@@ -208,14 +208,14 @@ DEFAULT CHARACTER SET = utf8
 COLLATE = utf8_general_ci
 AUTO_INCREMENT = 1;
 
-ALTER TABLE xhome_xblog_catagory_user_permission COMMENT '分类用户访问权限';
+ALTER TABLE xhome_xblog_category_user_permission COMMENT '分类用户访问权限';
 
 /*==============================================================*/
 /* Table: xhome_xblog_article_role_permission                   */
 /*==============================================================*/
 CREATE TABLE xhome_xblog_article_role_permission
 (
-   id                   BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+   id                   BIGINT NOT NULL AUTO_INCREMENT,
    article              BIGINT UNSIGNED NOT NULL COMMENT 'NULL表示针对所有文章',
    role                 INTEGER UNSIGNED NOT NULL COMMENT 'NULL表示针对所有角色',
    permission           TINYINT UNSIGNED NOT NULL COMMENT '0:不允许访问,1:允许访问,2:允许查看评论,3:允许评论,4:允许修改,5:允许删除',
@@ -239,7 +239,7 @@ ALTER TABLE xhome_xblog_article_role_permission COMMENT '文章角色访问权�
 /*==============================================================*/
 CREATE TABLE xhome_xblog_article_user_permission
 (
-   id                   BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+   id                   BIGINT NOT NULL AUTO_INCREMENT,
    article              BIGINT UNSIGNED NOT NULL COMMENT 'NULL表示针对所有文章',
    user                 BIGINT UNSIGNED NOT NULL COMMENT 'NULL表示针对所有用户',
    permission           TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '0:不允许访问,1:允许访问,2:允许查看评论,3:允许评论,4:允许修改,5:允许删除',
@@ -263,7 +263,7 @@ ALTER TABLE xhome_xblog_article_user_permission COMMENT '文章用户访问权�
 /*==============================================================*/
 CREATE TABLE xhome_xblog_tag_role_permission
 (
-   id                   BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+   id                   BIGINT NOT NULL AUTO_INCREMENT,
    tag                  INTEGER UNSIGNED NOT NULL COMMENT 'NULL表示针对所有标签',
    role                 INTEGER UNSIGNED NOT NULL COMMENT 'NULL表示针对所有角色',
    permission           TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '0:不允许查看,1:允许查看,2:允许添加,3,:允许修改,4:允许删除',
@@ -287,7 +287,7 @@ ALTER TABLE xhome_xblog_tag_role_permission COMMENT '标签角色访问权限';
 /*==============================================================*/
 CREATE TABLE xhome_xblog_tag_user_permission
 (
-   id                   BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+   id                   BIGINT NOT NULL AUTO_INCREMENT,
    tag                  INTEGER UNSIGNED NOT NULL COMMENT 'NULL表示针对所有标签',
    user                 BIGINT UNSIGNED NOT NULL COMMENT 'NULL表示针对所有用户',
    permission           TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '0:不允许查看,1:允许查看,2:允许添加,3,:允许修改,4:允许删除',

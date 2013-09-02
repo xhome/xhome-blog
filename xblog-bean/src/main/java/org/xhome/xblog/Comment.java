@@ -22,6 +22,19 @@ public class Comment extends Base {
 	public final static int TYPE_REPLY = 1; // 针对评论的回复
 	public final static int TYPE_QUOTE = 2; // 引用评论
 	
+	public Comment() {}
+	
+	public Comment(String content, Article article) {
+		this(content, article, null);
+	}
+	
+	public Comment(String content, Article article, Comment target) {
+		this.setContent(content);
+		this.setArticle(article);
+		this.setTarget(target);
+		this.setType(target != null ? TYPE_REPLY : TYPE_COMMENT);
+	}
+	
 	public Article getArticle() {
 		return article;
 	}

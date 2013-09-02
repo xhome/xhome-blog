@@ -7,16 +7,16 @@ package org.xhome.xblog;
  * @date 	Aug 31, 20136:24:37 PM
  * @describe 分类访问权限
  */
-public abstract class CatagoryPermission extends Permission {
+public abstract class CategoryPermission extends Permission {
 	
 	private static final long serialVersionUID = 4791465519402636642L;
 	
-	protected Catagory catagory; // 指定分类
+	protected Category catagory; // 指定分类
 
-	public Catagory getCatagory() {
+	public Category getCatagory() {
 		return catagory;
 	}
-	public void setCatagory(Catagory catagory) {
+	public void setCatagory(Category catagory) {
 		this.catagory = catagory;
 	}
 	
