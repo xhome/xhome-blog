@@ -111,10 +111,6 @@
 		DELETE FROM xhome_xblog_comment WHERE id = #{id} AND status != 0
 	</delete>
 	
-	<select id="isCommentExists" resultType="boolean" parameterType="org.xhome.xblog.Comment">
-		SELECT COUNT(*) FROM xhome_xblog_comment WHERE name = #{name} AND status != 0
-	</select>
-	
 	<select id="isCommentUpdateable" resultType="boolean" parameterType="org.xhome.xblog.Comment">
 		SELECT COUNT(*) FROM xhome_xblog_comment WHERE id = #{id} AND status != 0 AND status != 4
 	</select>

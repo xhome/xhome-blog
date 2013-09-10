@@ -18,7 +18,7 @@ import org.xhome.xblog.core.AbstractTest;
 public class CommentDAOTest extends AbstractTest {
 
 	private CommentDAO commentDAO;
-	private long id = 5L;
+	private long id = 1L;
 	
 	public CommentDAOTest() {
 		commentDAO = context.getBean(CommentDAO.class);
@@ -27,15 +27,15 @@ public class CommentDAOTest extends AbstractTest {
 	@Test
 	public void testAddComment() {
 		Article article = new Article();
-		article.setId(2L);
-		Comment comment = new Comment("bbbb", article);
-		comment.setType(Comment.TYPE_QUOTE);
+		article.setId(1L);
+		Comment comment = new Comment("TTTT", article);
 		comment.setOwner(1L);
 		comment.setModifier(1L);
 		
-		Comment target = new Comment();
-		target.setId(id);
-		comment.setTarget(target);
+//		comment.setType(Comment.TYPE_QUOTE);
+//		Comment target = new Comment();
+//		target.setId(id);
+//		comment.setTarget(target);
 		
 		commentDAO.addComment(comment);
 	}

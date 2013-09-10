@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.xhome.xauth.User;
 import org.xhome.xblog.Article;
 import org.xhome.xblog.Category;
 import org.xhome.xblog.Comment;
@@ -26,11 +27,11 @@ public abstract class AbstractTest {
 	
 	protected ApplicationContext	context	= null;
 	protected Logger				logger	= LoggerFactory.getLogger(this.getClass());
-	protected Tag oper;
+	protected User oper;
 	
 	public AbstractTest() {
 		context = new ClassPathXmlApplicationContext("classpath:applicationContext.xml");
-		oper = new Tag("jhat");
+		oper = new User("jhat");
 	}
 	
 	protected void printTag(List<Tag> tags) {

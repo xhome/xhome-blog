@@ -23,17 +23,26 @@ public class ManageLog extends Base {
 	public final static short TYPE_TAG = 3; // 表天
 	public final static short TYPE_ARTICLE_TAG = 4; // 文章标签
 	public final static short TYPE_COMMENT = 5; // 评论
-	public final static short TYPE_RECORDS = 6; // 文章访问记录
+	public final static short TYPE_RECORD = 6; // 文章访问记录
 	public final static short TYPE_CATAGORY_ROLE_PERMISSION = 7; // 分类角色访问权限
 	public final static short TYPE_CATAGORY_USER_PERMISSION = 8; // 分类用户访问权限
 	public final static short TYPE_ARTICLE_ROLE_PERMISSION = 9; // 文章角色访问权限
 	public final static short TYPE_ARTICLE_USER_PERMISSION = 10; // 文章用户访问权限
 	public final static short TYPE_TAG_ROLE_PERMISSION = 11; // 标签角色访问权限
 	public final static short TYPE_TAG_USER_PERMISSION = 12; // 标签用户访问权限
+	public final static short TYPE_MANAGE_LOG = 15;
 	
 	public ManageLog() {}
 	
 	public ManageLog (Short action, Short type, Long obj, Long user) {
+		this.setAction(action);
+		this.setType(type);
+		this.setObj(obj);
+		this.setOwner(user);
+	}
+	
+	public ManageLog (String content, Short action, Short type, Long obj, Long user) {
+		this.setContent(content);
 		this.setAction(action);
 		this.setType(type);
 		this.setObj(obj);

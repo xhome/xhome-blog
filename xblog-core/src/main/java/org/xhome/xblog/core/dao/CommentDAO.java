@@ -26,8 +26,6 @@ public interface CommentDAO {
 	
 	public int deleteComment(Comment comment);
 
-	public boolean isCommentExists(Comment comment);
-	
 	public boolean isCommentUpdateable(Comment comment);
 	
 	public boolean isCommentLocked(Comment comment);
