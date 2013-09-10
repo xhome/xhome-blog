@@ -100,13 +100,13 @@ public abstract class AbstractTest {
 		}
 		Article article = comment.getArticle();
 		logger.debug("Id:" + comment.getId() + "\tArticle:" + (article != null ? article.getId() : null)
-				+ "\tStatus:" + comment.getStatus());
+				+ "\tType:" + comment.getType() + "\tCotent:" + comment.getContent() + "\tStatus:" + comment.getStatus());
 		
 		Comment target = comment.getTarget();
 		if (target != null) {
 			article = target.getArticle();
 			logger.debug("\tTarget:\tId:" + target.getId() + "\tArticle:" + (article != null ? article.getId() : null)
-					+ "\tStatus:" + target.getStatus());
+					+ "\tType:" + target.getType() + "\tCotent:" + target.getContent() + "\tStatus:" + target.getStatus());
 		}
 	}
 	
@@ -150,6 +150,7 @@ public abstract class AbstractTest {
 				+ "\tAction:" + manageLog.getAction()
 				+ "\tType:" + manageLog.getType()
 				+ "\tObj:" + manageLog.getObj()
+				+ "\tContent:" + manageLog.getContent()
 				+ "\tTime:" + format.format(manageLog.getCreated())
 				+ "\tStatus:" + manageLog.getStatus());
 	}

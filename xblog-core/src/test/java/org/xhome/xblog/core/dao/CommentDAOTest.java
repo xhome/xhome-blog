@@ -18,6 +18,7 @@ import org.xhome.xblog.core.AbstractTest;
 public class CommentDAOTest extends AbstractTest {
 
 	private CommentDAO commentDAO;
+	private long id = 5L;
 	
 	public CommentDAOTest() {
 		commentDAO = context.getBean(CommentDAO.class);
@@ -26,22 +27,31 @@ public class CommentDAOTest extends AbstractTest {
 	@Test
 	public void testAddComment() {
 		Article article = new Article();
-		article.setId(1L);
-		Comment comment = new Comment("TTTTT", article);
+		article.setId(2L);
+		Comment comment = new Comment("bbbb", article);
+		comment.setType(Comment.TYPE_QUOTE);
 		comment.setOwner(1L);
 		comment.setModifier(1L);
+		
+		Comment target = new Comment();
+		target.setId(id);
+		comment.setTarget(target);
+		
 		commentDAO.addComment(comment);
 	}
 	
 	@Test
 	public void testGetComment() {
-		Comment comment = commentDAO.queryComment(1L);
+		Comment comment = commentDAO.queryComment(id);
 		printComment(comment);
 	}
 	
 	@Test
 	public void testQueryComment() {
 		QueryBase query = new QueryBase();
+		
+		query.addParameter("article_id", 2);
+		
 		List<Comment> comments = commentDAO.queryComments(query);
 		printComment(comments);
 	}
@@ -49,18 +59,18 @@ public class CommentDAOTest extends AbstractTest {
 	@Test
 	public void testUpdateComment() {
 		
-		Comment comment = commentDAO.queryComment(1L);
+		Comment comment = commentDAO.queryComment(id);
 		printComment(comment);
 		
 		commentDAO.updateComment(comment);
 		
-		comment = commentDAO.queryComment(1L);
+		comment = commentDAO.queryComment(id);
 		printComment(comment);
 	}
 	
 	@Test
 	public void testDeleteComment() {
-		Comment comment = commentDAO.queryComment(1L);
+		Comment comment = commentDAO.queryComment(id);
 		commentDAO.deleteComment(comment);
 	}
 	

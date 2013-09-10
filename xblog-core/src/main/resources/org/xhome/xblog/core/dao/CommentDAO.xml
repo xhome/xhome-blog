@@ -5,21 +5,87 @@
 	
 	<cache/>
 	
+	<!-- 
+	<resultMap id="commentResultMap" type="org.xhome.xblog.Comment">
+		<id property="id" column="id"/>
+		<result property="type" column="type"/>
+		<result property="content" column="content"/>
+		<result property="owner" column="owner"/>
+		<result property="modifier" column="modifier"/>
+		<result property="created" column="created"/>
+		<result property="modified" column="modified"/>
+		<result property="version" column="version"/>
+		<result property="status" column="status"/>
+		<association property="article" javaType="org.xhome.xblog.Article" columnPrefix="article_">
+			<id property="id" column="id"/>
+			<result property="title" column="title"/>
+			<result property="owner" column="owner"/>
+			<result property="modifier" column="modifier"/>
+			<result property="created" column="created"/>
+			<result property="modified" column="modified"/>
+			<result property="version" column="version"/>
+			<result property="status" column="status"/>
+		</association>
+		<association property="target" javaType="org.xhome.xblog.Comment" columnPrefix="target_">
+			<id property="id" column="id"/>
+			<result property="type" column="type"/>
+			<result property="content" column="content"/>
+			<result property="owner" column="owner"/>
+			<result property="modifier" column="modifier"/>
+			<result property="created" column="created"/>
+			<result property="modified" column="modified"/>
+			<result property="version" column="version"/>
+			<result property="status" column="status"/>
+		</association>
+	</resultMap>
+	 -->
+	
+	<resultMap id="commentResultMap" type="org.xhome.xblog.Comment">
+		<id property="id" column="id"/>
+		<result property="type" column="type"/>
+		<result property="content" column="content"/>
+		<result property="owner" column="owner"/>
+		<result property="modifier" column="modifier"/>
+		<result property="created" column="created"/>
+		<result property="modified" column="modified"/>
+		<result property="version" column="version"/>
+		<result property="status" column="status"/>
+		<association property="article" javaType="org.xhome.xblog.Article" columnPrefix="article_">
+			<id property="id" column="id"/>
+			<result property="title" column="title"/>
+			<result property="owner" column="owner"/>
+			<result property="modifier" column="modifier"/>
+			<result property="created" column="created"/>
+			<result property="modified" column="modified"/>
+			<result property="version" column="version"/>
+			<result property="status" column="status"/>
+		</association>
+		<association property="target" column="target_id" select="queryComment">
+		</association>
+	</resultMap>
+	
 	<insert id="addComment" parameterType="org.xhome.xblog.Comment" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO xhome_xblog_comment (article, type, target, content, owner, modifier, created, modified, version, status)
+		VALUES(#{article.id}, #{type},
 		<if test="target == null">
-			INSERT INTO xhome_xblog_comment (article, type, target, content, owner, modifier, created, modified, version, status)
-			VALUES(#{article.id}, #{type}, #{article.id}, #{content}, #{owner}, #{modifier}, #{created}, #{modified}, #{version}, #{status})
+			#{article.id},
 		</if>
 		<if test="target != null">
-			INSERT INTO xhome_xblog_comment (article, type, target, content, owner, modifier, created, modified, version, status)
-			VALUES(#{article.id}, #{type}, #{target.id}, #{content}, #{owner}, #{modifier}, #{created}, #{modified}, #{version}, #{status})
+			#{target.id},
 		</if>
+			#{content}, #{owner}, #{modifier}, #{created}, #{modified}, #{version}, #{status})
 	</insert>
 	
 	<update id="updateComment" parameterType="org.xhome.xblog.Comment">
 		UPDATE xhome_xblog_comment
-		SET name = #{name}, modifier = #{modifier}, modified = NOW(),
-			version = version + 1, status = #{status}
+		SET article = #{article.id}, type = #{type},
+		<if test="target == null">
+			target = #{article.id},
+		</if>
+		<if test="target != null">
+			target = #{target.id},
+		</if>
+			modifier = #{modifier}, modified = NOW(), version = version + 1, status = #{status}
 		WHERE id = #{id}
 	</update>
 	
@@ -65,13 +131,21 @@
 		SELECT COUNT(*) FROM xhome_xblog_comment WHERE id = #{id} AND status != 3 AND status != 4
 	</select>
 	
-	<select id="queryComment" resultType="org.xhome.xblog.Comment" parameterType="long">
-		SELECT * FROM xhome_xblog_comment WHERE id = #{id} LIMIT 1
+	<sql id="select_comment">
+		SELECT *, article AS article_id, IF(type > 0, target, NULL) AS target_id FROM xhome_xblog_comment
+	</sql>
+	
+	<select id="queryComment" resultMap="commentResultMap" parameterType="long">
+		<include refid="select_comment"/>
+		WHERE id = #{id} LIMIT 1
 	</select>
 	
 	<sql id="restriction_comments">
 		<trim prefix="WHERE" prefixOverrides="AND">
 			<if test="parameters != null">
+				<if test="parameters.article_id != null">
+					AND article = #{parameters.article_id}
+				</if>
 				<if test="parameters.content != null">
 					AND content LIKE CONCAT('%',#{parameters.content},'%')
 				</if>
@@ -121,8 +195,8 @@
 		</trim>
 	</sql>
 	
-	<select id="queryComments" resultType="org.xhome.xblog.Comment" parameterType="org.xhome.db.query.QueryBase">
-		SELECT * FROM xhome_xblog_comment
+	<select id="queryComments" resultMap="commentResultMap" parameterType="org.xhome.db.query.QueryBase">
+		<include refid="select_comment"/>
 		<include refid="restriction_comments"/>
 		ORDER BY modified DESC
 		<if test="_parameter != null">
