@@ -165,11 +165,11 @@ ALTER TABLE xhome_xblog_record COMMENT '文章访问记录';
 /*==============================================================*/
 /* Table: xhome_xblog_category_role_permission                  */
 /*==============================================================*/
-create table xhome_xblog_category_role_permission
+CREATE TABLE xhome_xblog_category_role_permission
 (
    id                   BIGINT NOT NULL AUTO_INCREMENT,
-   category             INTEGER UNSIGNED NOT NULL COMMENT 'NULL表示针对所有分类',
-   role                 INTEGER UNSIGNED COMMENT 'NULL表示针对所有角色',
+   category             INTEGER DEFAULT NULL COMMENT 'NULL表示针对所有分类',
+   role                 INTEGER DEFAULT NULL COMMENT 'NULL表示针对所有角色',
    permission           TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '0:不允许访问,1:允许访问,2:允许查看评论,3:允许评论,4:允许修改,5:允许删除,6:允许添加',
    owner                BIGINT NOT NULL COMMENT '创建者',
    modifier             BIGINT NOT NULL COMMENT '修改者',
@@ -184,7 +184,7 @@ DEFAULT CHARACTER SET = utf8
 COLLATE = utf8_general_ci
 AUTO_INCREMENT = 1;
 
-alter table xhome_xblog_category_role_permission comment '分类角色访问权限';
+ALTER TABLE xhome_xblog_category_role_permission comment '分类角色访问权限';
 
 /*==============================================================*/
 /* Table: xhome_xblog_category_user_permission                  */
@@ -192,8 +192,8 @@ alter table xhome_xblog_category_role_permission comment '分类角色访问权�
 CREATE TABLE xhome_xblog_category_user_permission
 (
    id                   BIGINT NOT NULL AUTO_INCREMENT,
-   category             INTEGER UNSIGNED NOT NULL COMMENT 'NULL表示针对所有分类',
-   user                 BIGINT UNSIGNED NOT NULL COMMENT 'NULL表示针对所有用户',
+   category             INTEGER DEFAULT NULL COMMENT 'NULL表示针对所有分类',
+   user                 BIGINT DEFAULT NULL COMMENT 'NULL表示针对所有用户',
    permission           TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '0:不允许访问,1:允许访问,2:允许查看评论,3:允许评论,4:允许修改,5:允许删除,6:允许添加',
    owner                BIGINT NOT NULL COMMENT '创建者',
    modifier             BIGINT NOT NULL COMMENT '修改者',
@@ -216,8 +216,8 @@ ALTER TABLE xhome_xblog_category_user_permission COMMENT '分类用户访问权�
 CREATE TABLE xhome_xblog_article_role_permission
 (
    id                   BIGINT NOT NULL AUTO_INCREMENT,
-   article              BIGINT UNSIGNED NOT NULL COMMENT 'NULL表示针对所有文章',
-   role                 INTEGER UNSIGNED NOT NULL COMMENT 'NULL表示针对所有角色',
+   article              BIGINT DEFAULT NULL COMMENT 'NULL表示针对所有文章',
+   role                 INTEGER DEFAULT NULL COMMENT 'NULL表示针对所有角色',
    permission           TINYINT UNSIGNED NOT NULL COMMENT '0:不允许访问,1:允许访问,2:允许查看评论,3:允许评论,4:允许修改,5:允许删除',
    owner                BIGINT NOT NULL COMMENT '创建者',
    modifier             BIGINT NOT NULL COMMENT '修改者',
@@ -240,8 +240,8 @@ ALTER TABLE xhome_xblog_article_role_permission COMMENT '文章角色访问权�
 CREATE TABLE xhome_xblog_article_user_permission
 (
    id                   BIGINT NOT NULL AUTO_INCREMENT,
-   article              BIGINT UNSIGNED NOT NULL COMMENT 'NULL表示针对所有文章',
-   user                 BIGINT UNSIGNED NOT NULL COMMENT 'NULL表示针对所有用户',
+   article              BIGINT DEFAULT NULL COMMENT 'NULL表示针对所有文章',
+   user                 BIGINT DEFAULT NULL COMMENT 'NULL表示针对所有用户',
    permission           TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '0:不允许访问,1:允许访问,2:允许查看评论,3:允许评论,4:允许修改,5:允许删除',
    owner                BIGINT NOT NULL COMMENT '创建者',
    modifier             BIGINT NOT NULL COMMENT '修改者',
@@ -264,8 +264,8 @@ ALTER TABLE xhome_xblog_article_user_permission COMMENT '文章用户访问权�
 CREATE TABLE xhome_xblog_tag_role_permission
 (
    id                   BIGINT NOT NULL AUTO_INCREMENT,
-   tag                  INTEGER UNSIGNED NOT NULL COMMENT 'NULL表示针对所有标签',
-   role                 INTEGER UNSIGNED NOT NULL COMMENT 'NULL表示针对所有角色',
+   tag                  INTEGER DEFAULT NULL COMMENT 'NULL表示针对所有标签',
+   role                 INTEGER DEFAULT NULL COMMENT 'NULL表示针对所有角色',
    permission           TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '0:不允许查看,1:允许查看,2:允许添加,3,:允许修改,4:允许删除',
    owner                BIGINT NOT NULL COMMENT '创建者',
    modifier             BIGINT NOT NULL COMMENT '修改者',
@@ -288,8 +288,8 @@ ALTER TABLE xhome_xblog_tag_role_permission COMMENT '标签角色访问权限';
 CREATE TABLE xhome_xblog_tag_user_permission
 (
    id                   BIGINT NOT NULL AUTO_INCREMENT,
-   tag                  INTEGER UNSIGNED NOT NULL COMMENT 'NULL表示针对所有标签',
-   user                 BIGINT UNSIGNED NOT NULL COMMENT 'NULL表示针对所有用户',
+   tag                  INTEGER DEFAULT NULL COMMENT 'NULL表示针对所有标签',
+   user                 BIGINT DEFAULT NULL COMMENT 'NULL表示针对所有用户',
    permission           TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '0:不允许查看,1:允许查看,2:允许添加,3,:允许修改,4:允许删除',
    owner                BIGINT NOT NULL COMMENT '创建者',
    modifier             BIGINT NOT NULL COMMENT '修改者',

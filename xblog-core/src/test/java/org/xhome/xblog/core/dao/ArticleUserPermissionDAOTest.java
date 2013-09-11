@@ -27,7 +27,7 @@ public class ArticleUserPermissionDAOTest extends AbstractTest {
 	
 	public ArticleUserPermissionDAOTest() {
 		articleUserPermissionDAO = context.getBean(ArticleUserPermissionDAO.class);
-		article = new Article("TTTT");
+		article = new Article("Article");
 		article.setId(1L);
 		user = new User("Jhat");
 		user.setId(1L);

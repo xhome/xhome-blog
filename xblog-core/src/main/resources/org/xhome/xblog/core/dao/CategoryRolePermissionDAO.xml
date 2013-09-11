@@ -93,12 +93,11 @@
 	</update>
 	
 	<delete id="deleteCategoryRolePermission" parameterType="org.xhome.xblog.CategoryRolePermission">
-		DELETE FROM xhome_xblog_category_role_permission WHERE id = #{id} AND status != 0
+		DELETE FROM xhome_xblog_category_role_permission WHERE id = #{id}
 	</delete>
 	
 	<select id="isCategoryRolePermissionExists" resultType="boolean" parameterType="org.xhome.xblog.CategoryRolePermission">
 		SELECT COUNT(*) FROM xhome_xblog_category_role_permission
-		WHERE
 		<trim prefix="WHERE" prefixOverrides="AND">
 			<if test="category != null">
 				AND category = #{category.id}
@@ -221,7 +220,7 @@
 	</select>
 	
 	<select id="countCategoryRolePermissions" resultType="long" parameterType="org.xhome.db.query.QueryBase">
-		SELECT COUNT(*) FROM xhome_xblog_category_role_permission
+		SELECT COUNT(*) FROM xhome_xblog_category_role_permission AS p
 		<include refid="restriction_permissions"/>
 	</select>
 	

@@ -27,7 +27,7 @@ public class ArticleRolePermissionDAOTest extends AbstractTest {
 	
 	public ArticleRolePermissionDAOTest() {
 		articleRolePermissionDAO = context.getBean(ArticleRolePermissionDAO.class);
-		article = new Article("TTTT");
+		article = new Article("Article");
 		article.setId(1L);
 		role = new Role("Admin");
 		role.setId(1L);

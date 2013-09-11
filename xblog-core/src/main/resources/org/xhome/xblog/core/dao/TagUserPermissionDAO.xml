@@ -93,12 +93,11 @@
 	</update>
 	
 	<delete id="deleteTagUserPermission" parameterType="org.xhome.xblog.TagUserPermission">
-		DELETE FROM xhome_xblog_tag_user_permission WHERE id = #{id} AND status != 0
+		DELETE FROM xhome_xblog_tag_user_permission WHERE id = #{id}
 	</delete>
 	
 	<select id="isTagUserPermissionExists" resultType="boolean" parameterType="org.xhome.xblog.TagUserPermission">
 		SELECT COUNT(*) FROM xhome_xblog_tag_user_permission
-		WHERE
 		<trim prefix="WHERE" prefixOverrides="AND">
 			<if test="tag != null">
 				AND tag = #{tag.id}
@@ -221,7 +220,7 @@
 	</select>
 	
 	<select id="countTagUserPermissions" resultType="long" parameterType="org.xhome.db.query.QueryBase">
-		SELECT COUNT(*) FROM xhome_xblog_tag_user_permission
+		SELECT COUNT(*) FROM xhome_xblog_tag_user_permission AS p
 		<include refid="restriction_permissions"/>
 	</select>
 	

@@ -75,7 +75,7 @@
 	</update>
 	
 	<delete id="deleteArticle" parameterType="org.xhome.xblog.Article">
-		DELETE FROM xhome_xblog_article WHERE id = #{id} AND status != 0
+		DELETE FROM xhome_xblog_article WHERE id = #{id}
 	</delete>
 	
 	<select id="isArticleUpdateable" resultType="boolean" parameterType="org.xhome.xblog.Article">
@@ -281,7 +281,7 @@
 	</update>
 	
 	<delete id="deleteArticleTag" parameterType="Map">
-		DELETE FROM xhome_xblog_article_tag WHERE status != 0 AND article = #{article.id} AND tag = #{tag.id}
+		DELETE FROM xhome_xblog_article_tag WHERE article = #{article.id} AND tag = #{tag.id}
 	</delete>
 	
 	<select id="hasArticleTag" resultType="boolean" parameterType="Map">
