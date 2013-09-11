@@ -18,7 +18,7 @@ public class CategoryRolePermission extends CategoryPermission {
 	public CategoryRolePermission() {}
 	
 	public CategoryRolePermission(Category catagory, Role role, int permission) {
-		this.setCatagory(catagory);
+		this.setCategory(catagory);
 		this.setRole(role);
 		this.setPermission(permission);
 	}

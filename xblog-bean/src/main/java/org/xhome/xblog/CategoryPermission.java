@@ -11,13 +11,13 @@ public abstract class CategoryPermission extends Permission {
 	
 	private static final long serialVersionUID = 4791465519402636642L;
 	
-	protected Category catagory; // 指定分类
+	protected Category category; // 指定分类
 
-	public Category getCatagory() {
-		return catagory;
+	public Category getCategory() {
+		return category;
 	}
-	public void setCatagory(Category catagory) {
-		this.catagory = catagory;
+	public void setCategory(Category category) {
+		this.category = category;
 	}
 	
 }

@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.xhome.xblog.core.dao.ArticleUserPermissionDAO">
+	
+	<cache/>
+	
+	<resultMap id="articleUserPermissionResultMap" type="org.xhome.xblog.ArticleUserPermission">
+		<id property="id" column="id"/>
+		<result property="permission" column="permission"/>
+		<result property="owner" column="owner"/>
+		<result property="modifier" column="modifier"/>
+		<result property="created" column="created"/>
+		<result property="modified" column="modified"/>
+		<result property="version" column="version"/>
+		<result property="status" column="status"/>
+		<association property="article" javaType="org.xhome.xblog.Article" columnPrefix="article_">
+			<id property="id" column="id"/>
+			<result property="title" column="title"/>
+			<result property="owner" column="owner"/>
+			<result property="modifier" column="modifier"/>
+			<result property="created" column="created"/>
+			<result property="modified" column="modified"/>
+			<result property="version" column="version"/>
+			<result property="status" column="status"/>
+		</association>
+		<association property="user" javaType="org.xhome.xauth.User" columnPrefix="user_">
+			<id property="id" column="id"/>
+			<result property="name" column="name"/>
+			<result property="owner" column="owner"/>
+			<result property="modifier" column="modifier"/>
+			<result property="created" column="created"/>
+			<result property="modified" column="modified"/>
+			<result property="version" column="version"/>
+			<result property="status" column="status"/>
+		</association>
+	</resultMap>
+	
+	<insert id="addArticleUserPermission" parameterType="org.xhome.xblog.ArticleUserPermission" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO xhome_xblog_article_user_permission (article, user, permission, owner, modifier, created, modified, version, status)
+		VALUES(
+		<if test="article != null">
+			#{article.id},
+		</if>
+		<if test="article == null">
+			NULL,
+		</if>
+		<if test="user != null">
+			#{user.id},
+		</if>
+		<if test="user == null">
+			NULL,
+		</if>
+		#{permission}, #{owner}, #{modifier}, #{created}, #{modified}, #{version}, #{status})
+	</insert>
+	
+	<update id="updateArticleUserPermission" parameterType="org.xhome.xblog.ArticleUserPermission">
+		UPDATE xhome_xblog_article_user_permission
+		SET 
+		<if test="article != null">
+			article = #{article.id},
+		</if>
+		<if test="article == null">
+			article = NULL,
+		</if>
+		<if test="user != null">
+			user = #{user.id},
+		</if>
+		<if test="user == null">
+			user = NULL,
+		</if>
+			permission = #{permission}, modifier = #{modifier}, modified = NOW(),
+			version = version + 1, status = #{status}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="lockArticleUserPermission" parameterType="org.xhome.xblog.ArticleUserPermission">
+		UPDATE xhome_xblog_article_user_permission
+		SET modifier = #{modifier}, modified = NOW(), version = version + 1, status = 5
+		WHERE id = #{id}
+	</update>
+	
+	<update id="unlockArticleUserPermission" parameterType="org.xhome.xblog.ArticleUserPermission">
+		UPDATE xhome_xblog_article_user_permission
+		SET modifier = #{modifier}, modified = NOW(), version = version + 1, status = 1
+		WHERE id = #{id}
+	</update>
+	
+	<update id="removeArticleUserPermission" parameterType="org.xhome.xblog.ArticleUserPermission">
+		UPDATE xhome_xblog_article_user_permission
+		SET modifier = #{modifier}, modified = NOW(), version = version + 1, status = 0
+		WHERE id = #{id}
+	</update>
+	
+	<delete id="deleteArticleUserPermission" parameterType="org.xhome.xblog.ArticleUserPermission">
+		DELETE FROM xhome_xblog_article_user_permission WHERE id = #{id} AND status != 0
+	</delete>
+	
+	<select id="isArticleUserPermissionExists" resultType="boolean" parameterType="org.xhome.xblog.ArticleUserPermission">
+		SELECT COUNT(*) FROM xhome_xblog_article_user_permission
+		WHERE
+		<trim prefix="WHERE" prefixOverrides="AND">
+			<if test="article != null">
+				AND article = #{article.id}
+			</if>
+			<if test="article == null">
+				AND article IS NULL
+			</if>
+			<if test="user != null">
+				AND user = #{user.id}
+			</if>
+			<if test="user == null">
+				AND user IS NULL
+			</if>
+			AND status != 0
+		</trim>
+	</select>
+	
+	<select id="isArticleUserPermissionUpdateable" resultType="boolean" parameterType="org.xhome.xblog.ArticleUserPermission">
+		SELECT COUNT(*) FROM xhome_xblog_article_user_permission WHERE id = #{id} AND status != 0 AND status != 4
+	</select>
+	
+	<select id="isArticleUserPermissionLocked" resultType="boolean" parameterType="org.xhome.xblog.ArticleUserPermission">
+		SELECT COUNT(*) FROM xhome_xblog_article_user_permission WHERE id = #{id} AND status != 0 AND status = 5
+	</select>
+	
+	<select id="isArticleUserPermissionRemoveable" resultType="boolean" parameterType="org.xhome.xblog.ArticleUserPermission">
+		SELECT COUNT(*) FROM xhome_xblog_article_user_permission WHERE id = #{id} AND status != 2 AND status != 4
+	</select>
+	
+	<select id="isArticleUserPermissionDeleteable" resultType="boolean" parameterType="org.xhome.xblog.ArticleUserPermission">
+		SELECT COUNT(*) FROM xhome_xblog_article_user_permission WHERE id = #{id} AND status != 3 AND status != 4
+	</select>
+	
+	<sql id="select_permission">
+		SELECT p.*, t.id AS article_id, t.title AS article_title, u.id AS user_id, u.name AS user_name
+		FROM xhome_xblog_article_user_permission AS p
+		LEFT JOIN xhome_xblog_article AS t ON p.article = t.id AND t.status != 0
+		LEFT JOIN xhome_xauth_user AS u ON p.user = u.id AND u.status != 0
+	</sql>
+	
+	<select id="queryArticleUserPermission" resultMap="articleUserPermissionResultMap" parameterType="long">
+		<include refid="select_permission"/>
+		WHERE p.id = #{id} LIMIT 1
+	</select>
+	
+	<sql id="restriction_permissions">
+		<trim prefix="WHERE" prefixOverrides="AND">
+			<if test="parameters != null">
+				<if test="parameters.article != null">
+					AND p.article = #{parameters.article}
+				</if>
+				<if test="parameters.article_null != null">
+					AND p.article IS NULL
+				</if>
+				<if test="parameters.user != null">
+					AND p.user = #{parameters.user}
+				</if>
+				<if test="parameters.user_null != null">
+					AND p.user IS NULL
+				</if>
+				<if test="parameters.permission != null">
+					AND p.permission = #{parameters.permission}
+				</if>
+				<if test="parameters.permission_lt != null">
+					AND p.permission &lt; #{parameters.permission_lt}
+				</if>
+				<if test="parameters.permission_le != null">
+					AND p.permission &lt;= #{parameters.permission_le}
+				</if>
+				<if test="parameters.permission_gt != null">
+					AND p.permission &gt; #{parameters.permission_gt}
+				</if>
+				<if test="parameters.permission_ge != null">
+					AND p.permission &gt;= #{parameters.permission_ge}
+				</if>
+				<if test="parameters.status != null">
+					AND p.status = #{parameters.status}
+				</if>
+				<if test="parameters.status_lt != null">
+					AND p.status &lt; #{parameters.status_lt}
+				</if>
+				<if test="parameters.status_le != null">
+					AND p.status &lt;= #{parameters.status_le}
+				</if>
+				<if test="parameters.status_gt != null">
+					AND p.status &gt; #{parameters.status_gt}
+				</if>
+				<if test="parameters.status_ge != null">
+					AND p.status &gt;= #{parameters.status_ge}
+				</if>
+				<if test="parameters.id != null">
+					AND p.id = #{parameters.id}
+				</if>
+				<if test="parameters.id_lt != null">
+					AND p.id &lt; #{parameters.id_lt}
+				</if>
+				<if test="parameters.id_le != null">
+					AND p.id &lt;= #{parameters.id_le}
+				</if>
+				<if test="parameters.id_gt != null">
+					AND p.id &gt; #{parameters.id_gt}
+				</if>
+				<if test="parameters.id_ge != null">
+					AND p.id &gt;= #{parameters.id_ge}
+				</if>
+			</if>
+			<if test="parameters == null or parameters.status == null">
+				AND p.status != 0
+			</if>
+		</trim>
+	</sql>
+	
+	<select id="queryArticleUserPermissions" resultMap="articleUserPermissionResultMap" parameterType="org.xhome.db.query.QueryBase">
+		<include refid="select_permission"/>
+		<include refid="restriction_permissions"/>
+		ORDER BY p.article, p.user, p.permission
+		<if test="_parameter != null">
+			LIMIT #{firstRow}, #{maxRow}
+		</if>
+	</select>
+	
+	<select id="countArticleUserPermissions" resultType="long" parameterType="org.xhome.db.query.QueryBase">
+		SELECT COUNT(*) FROM xhome_xblog_article_user_permission
+		<include refid="restriction_permissions"/>
+	</select>
+	
+</mapper>

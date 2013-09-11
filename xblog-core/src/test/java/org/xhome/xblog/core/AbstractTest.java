@@ -8,13 +8,20 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.xhome.xauth.Role;
 import org.xhome.xauth.User;
 import org.xhome.xblog.Article;
+import org.xhome.xblog.ArticleRolePermission;
+import org.xhome.xblog.ArticleUserPermission;
 import org.xhome.xblog.Category;
+import org.xhome.xblog.CategoryRolePermission;
+import org.xhome.xblog.CategoryUserPermission;
 import org.xhome.xblog.Comment;
 import org.xhome.xblog.ManageLog;
 import org.xhome.xblog.Record;
 import org.xhome.xblog.Tag;
+import org.xhome.xblog.TagRolePermission;
+import org.xhome.xblog.TagUserPermission;
 
 /**
  * @project xblog-core
@@ -154,6 +161,132 @@ public abstract class AbstractTest {
 				+ "\tContent:" + manageLog.getContent()
 				+ "\tTime:" + format.format(manageLog.getCreated())
 				+ "\tStatus:" + manageLog.getStatus());
+	}
+	
+	protected void printTagUserPermission(List<TagUserPermission> tagUserPermissions) {
+		if (tagUserPermissions != null) {
+			for (TagUserPermission tagUserPermission : tagUserPermissions) {
+				printTagUserPermission(tagUserPermission);
+			}
+		}
+	}
+	
+	protected void printTagUserPermission(TagUserPermission tagUserPermission) {
+		if (tagUserPermission == null) {
+			return;
+		}
+		Tag tag = tagUserPermission.getTag();
+		User user = tagUserPermission.getUser();
+		logger.debug("Id:" + tagUserPermission.getId()
+				+ "\tTag:" + (tag != null ? tag.getId() : null)
+				+ "\tUser:" + (user != null ? user.getId() : null)
+				+ "\tPermission:" + tagUserPermission.getPermission()
+				+ "\tStatus:" + tagUserPermission.getStatus());
+	}
+	
+	protected void printTagRolePermission(List<TagRolePermission> tagRolePermissions) {
+		if (tagRolePermissions != null) {
+			for (TagRolePermission tagRolePermission : tagRolePermissions) {
+				printTagRolePermission(tagRolePermission);
+			}
+		}
+	}
+	
+	protected void printTagRolePermission(TagRolePermission tagRolePermission) {
+		if (tagRolePermission == null) {
+			return;
+		}
+		Tag tag = tagRolePermission.getTag();
+		Role role = tagRolePermission.getRole();
+		logger.debug("Id:" + tagRolePermission.getId()
+				+ "\tTag:" + (tag != null ? tag.getId() : null)
+				+ "\tRole:" + (role != null ? role.getId() : null)
+				+ "\tPermission:" + tagRolePermission.getPermission()
+				+ "\tStatus:" + tagRolePermission.getStatus());
+	}
+	
+	protected void printCategoryUserPermission(List<CategoryUserPermission> categoryUserPermissions) {
+		if (categoryUserPermissions != null) {
+			for (CategoryUserPermission categoryUserPermission : categoryUserPermissions) {
+				printCategoryUserPermission(categoryUserPermission);
+			}
+		}
+	}
+	
+	protected void printCategoryUserPermission(CategoryUserPermission categoryUserPermission) {
+		if (categoryUserPermission == null) {
+			return;
+		}
+		Category category = categoryUserPermission.getCategory();
+		User user = categoryUserPermission.getUser();
+		logger.debug("Id:" + categoryUserPermission.getId()
+				+ "\tCategory:" + (category != null ? category.getId() : null)
+				+ "\tUser:" + (user != null ? user.getId() : null)
+				+ "\tPermission:" + categoryUserPermission.getPermission()
+				+ "\tStatus:" + categoryUserPermission.getStatus());
+	}
+	
+	protected void printCategoryRolePermission(List<CategoryRolePermission> categoryRolePermissions) {
+		if (categoryRolePermissions != null) {
+			for (CategoryRolePermission categoryRolePermission : categoryRolePermissions) {
+				printCategoryRolePermission(categoryRolePermission);
+			}
+		}
+	}
+	
+	protected void printCategoryRolePermission(CategoryRolePermission categoryRolePermission) {
+		if (categoryRolePermission == null) {
+			return;
+		}
+		Category category = categoryRolePermission.getCategory();
+		Role role = categoryRolePermission.getRole();
+		logger.debug("Id:" + categoryRolePermission.getId()
+				+ "\tCategory:" + (category != null ? category.getId() : null)
+				+ "\tRole:" + (role != null ? role.getId() : null)
+				+ "\tPermission:" + categoryRolePermission.getPermission()
+				+ "\tStatus:" + categoryRolePermission.getStatus());
+	}
+	
+	protected void printArticleUserPermission(List<ArticleUserPermission> articleUserPermissions) {
+		if (articleUserPermissions != null) {
+			for (ArticleUserPermission articleUserPermission : articleUserPermissions) {
+				printArticleUserPermission(articleUserPermission);
+			}
+		}
+	}
+	
+	protected void printArticleUserPermission(ArticleUserPermission articleUserPermission) {
+		if (articleUserPermission == null) {
+			return;
+		}
+		Article article = articleUserPermission.getArticle();
+		User user = articleUserPermission.getUser();
+		logger.debug("Id:" + articleUserPermission.getId()
+				+ "\tArticle:" + (article != null ? article.getId() : null)
+				+ "\tUser:" + (user != null ? user.getId() : null)
+				+ "\tPermission:" + articleUserPermission.getPermission()
+				+ "\tStatus:" + articleUserPermission.getStatus());
+	}
+	
+	protected void printArticleRolePermission(List<ArticleRolePermission> articleRolePermissions) {
+		if (articleRolePermissions != null) {
+			for (ArticleRolePermission articleRolePermission : articleRolePermissions) {
+				printArticleRolePermission(articleRolePermission);
+			}
+		}
+	}
+	
+	protected void printArticleRolePermission(ArticleRolePermission articleRolePermission) {
+		if (articleRolePermission == null) {
+			return;
+		}
+		Article article = articleRolePermission.getArticle();
+		Role role = articleRolePermission.getRole();
+		logger.debug("Id:" + articleRolePermission.getId()
+				+ "\tArticle:" + (article != null ? article.getId() : null)
+				+ "\tRole:" + (role != null ? role.getId() : null)
+				+ "\tPermission:" + articleRolePermission.getPermission()
+				+ "\tStatus:" + articleRolePermission.getStatus());
 	}
 	
 }
