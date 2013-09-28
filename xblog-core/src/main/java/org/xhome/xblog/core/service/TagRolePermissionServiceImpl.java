@@ -13,9 +13,11 @@ import org.springframework.transaction.annotation.Transactional;
 import org.xhome.common.constant.Action;
 import org.xhome.common.constant.Status;
 import org.xhome.db.query.QueryBase;
+import org.xhome.xauth.ManageLog;
 import org.xhome.xauth.Role;
 import org.xhome.xauth.User;
-import org.xhome.xblog.ManageLog;
+import org.xhome.xauth.core.service.ManageLogService;
+import org.xhome.xblog.ManageLogType;
 import org.xhome.xblog.Tag;
 import org.xhome.xblog.TagRolePermission;
 import org.xhome.xblog.core.dao.TagRolePermissionDAO;
@@ -599,7 +601,7 @@ public class TagRolePermissionServiceImpl implements TagRolePermissionService {
 	}
 	
 	private void logManage(String content, Short action, Long obj, Short status, User oper) {
-		ManageLog manageLog = new ManageLog(content, action, ManageLog.TYPE_TAG_ROLE_PERMISSION, obj, oper == null ? null : oper.getId());
+		ManageLog manageLog = new ManageLog(content, action, ManageLogType.TAG_ROLE_PERMISSION, obj, oper == null ? null : oper.getId());
 		manageLog.setStatus(status);
 		manageLogService.logManage(manageLog);
 	}

@@ -8,6 +8,7 @@
     <name>xblog-core Maven Project</name>
   
     <properties>
+        <xauth-core.version>1.0</xauth-core.version>
         <xblog-bean.version>1.0</xblog-bean.version>
         <xhome-db.version>1.0</xhome-db.version>
         <slf4j.version>1.7.5</slf4j.version>
@@ -24,6 +25,11 @@
     </properties>
   
     <dependencies>
+        <dependency>
+            <groupId>org.xhome</groupId>
+            <artifactId>xauth-core</artifactId>
+            <version>${xauth-core.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.xhome</groupId>
             <artifactId>xblog-bean</artifactId>

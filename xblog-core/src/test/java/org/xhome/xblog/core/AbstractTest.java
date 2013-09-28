@@ -17,7 +17,6 @@ import org.xhome.xblog.Category;
 import org.xhome.xblog.CategoryRolePermission;
 import org.xhome.xblog.CategoryUserPermission;
 import org.xhome.xblog.Comment;
-import org.xhome.xblog.ManageLog;
 import org.xhome.xblog.Record;
 import org.xhome.xblog.Tag;
 import org.xhome.xblog.TagRolePermission;
@@ -139,28 +138,6 @@ public abstract class AbstractTest {
 				+ "\tAgent:" + record.getAgent()
 				+ "\tNumber:" + record.getNumber()
 				+ "\tStatus:" + record.getStatus());
-	}
-	
-	protected void printManageLog(List<ManageLog> manageLogs) {
-		if (manageLogs != null) {
-			for (ManageLog manageLog : manageLogs) {
-				printManageLog(manageLog);
-			}
-		}
-	}
-	
-	protected void printManageLog(ManageLog manageLog) {
-		if (manageLog == null) {
-			return;
-		}
-		DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		logger.debug("Id:" + manageLog.getId()
-				+ "\tAction:" + manageLog.getAction()
-				+ "\tType:" + manageLog.getType()
-				+ "\tObj:" + manageLog.getObj()
-				+ "\tContent:" + manageLog.getContent()
-				+ "\tTime:" + format.format(manageLog.getCreated())
-				+ "\tStatus:" + manageLog.getStatus());
 	}
 	
 	protected void printTagUserPermission(List<TagUserPermission> tagUserPermissions) {

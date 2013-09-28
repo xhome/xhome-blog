@@ -15,10 +15,12 @@ import org.springframework.transaction.annotation.Transactional;
 import org.xhome.common.constant.Action;
 import org.xhome.common.constant.Status;
 import org.xhome.db.query.QueryBase;
+import org.xhome.xauth.ManageLog;
 import org.xhome.xauth.User;
+import org.xhome.xauth.core.service.ManageLogService;
 import org.xhome.xblog.Article;
 import org.xhome.xblog.BlogException;
-import org.xhome.xblog.ManageLog;
+import org.xhome.xblog.ManageLogType;
 import org.xhome.xblog.Tag;
 import org.xhome.xblog.core.dao.ArticleDAO;
 import org.xhome.xblog.core.dao.TagDAO;
@@ -985,11 +987,11 @@ public class ArticleServiceImpl implements ArticleService {
 	}
 	
 	private void logManageArticle(String content, Short action, Long obj, Short status, User oper) {
-		this.logManage(content, action, ManageLog.TYPE_ARTICLE, obj, status, oper);
+		this.logManage(content, action, ManageLogType.ARTICLE, obj, status, oper);
 	}
 	
 	private void logManageArticleTag(String content, Short action, Long obj, Short status, User oper) {
-		this.logManage(content, action, ManageLog.TYPE_ARTICLE_TAG, obj, status, oper);
+		this.logManage(content, action, ManageLogType.ARTICLE_TAG, obj, status, oper);
 	}
 	
 	private void logManage(String content, Short action, Short type, Long obj, Short status, User oper) {
