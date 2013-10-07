@@ -6,8 +6,13 @@ import java.util.Map;
 import org.xhome.validator.IdValidator;
 import org.xhome.validator.StatusValidator;
 import org.xhome.validator.VersionValidator;
+import org.xhome.xblog.web.action.ArticleAction;
 import org.xhome.xblog.web.action.CategoryAction;
 import org.xhome.xblog.web.action.TagAction;
+import org.xhome.xblog.web.validator.ArticleCategoryValidator;
+import org.xhome.xblog.web.validator.ArticleContentValidator;
+import org.xhome.xblog.web.validator.ArticleTagsValidator;
+import org.xhome.xblog.web.validator.ArticleTitleValidator;
 import org.xhome.xblog.web.validator.CategoryNameValidator;
 import org.xhome.xblog.web.validator.TagNameValidator;
 
@@ -56,6 +61,39 @@ public class BlogValidatorMapping implements Mapping {
 			mappings.put(CategoryAction.RM_CATEGORY_LOCKED, categoryIdNameValidator);
 			mappings.put(CategoryAction.RM_CATEGORY_REMOVEABLE, categoryIdNameValidator);
 			mappings.put(CategoryAction.RM_CATEGORY_DELETEABLE, categoryIdNameValidator);
+			
+		String articleTitleValidator = ArticleTitleValidator.class.getName(),
+			   articleContentValidator = ArticleContentValidator.class.getName(),
+			   articleCategoryValidator = ArticleCategoryValidator.class.getName(),
+			   articleTagsValidator = ArticleTagsValidator.class.getName(),
+			   articleAUValidator = articleTitleValidator + "," + articleContentValidator
+			   		+ "," + articleCategoryValidator + "," + articleTagsValidator,
+			   articleIdTitleValidator = idValidator + "," + articleTitleValidator,
+			   articleVersionValidator = articleIdTitleValidator + "," + versionValidator,
+			   articleTagValidator = articleIdTitleValidator + "," + tagIdNameValidator;
+		
+			mappings.put(ArticleAction.RM_ARTICLE_ADD, articleAUValidator);
+			mappings.put(ArticleAction.RM_ARTICLE_UPDATE, baseValidator + "," + articleAUValidator);
+			mappings.put(ArticleAction.RM_ARTICLE_LOCK, articleVersionValidator);
+			mappings.put(ArticleAction.RM_ARTICLE_UNLOCK, articleVersionValidator);
+			mappings.put(ArticleAction.RM_ARTICLE_REMOVE, articleVersionValidator);
+			mappings.put(ArticleAction.RM_ARTICLE_DELETE, articleVersionValidator);
+			mappings.put(ArticleAction.RM_ARTICLE_EXISTS, articleTitleValidator);
+			mappings.put(ArticleAction.RM_ARTICLE_UPDATEABLE, articleIdTitleValidator);
+			mappings.put(ArticleAction.RM_ARTICLE_LOCKED, articleIdTitleValidator);
+			mappings.put(ArticleAction.RM_ARTICLE_REMOVEABLE, articleIdTitleValidator);
+			mappings.put(ArticleAction.RM_ARTICLE_DELETEABLE, articleIdTitleValidator);
+			
+			mappings.put(ArticleAction.RM_ARTICLE_TAG_ADD, articleTagValidator);
+			mappings.put(ArticleAction.RM_ARTICLE_TAG_LOCK, articleTagValidator);
+			mappings.put(ArticleAction.RM_ARTICLE_TAG_UNLOCK, articleTagValidator);
+			mappings.put(ArticleAction.RM_ARTICLE_TAG_REMOVE, articleTagValidator);
+			mappings.put(ArticleAction.RM_ARTICLE_TAG_DELETE, articleTagValidator);
+			mappings.put(ArticleAction.RM_ARTICLE_TAG_EXISTS, articleTagValidator);
+			mappings.put(ArticleAction.RM_ARTICLE_TAG_UPDATEABLE, articleTagValidator);
+			mappings.put(ArticleAction.RM_ARTICLE_TAG_LOCKED, articleTagValidator);
+			mappings.put(ArticleAction.RM_ARTICLE_TAG_REMOVEABLE, articleTagValidator);
+			mappings.put(ArticleAction.RM_ARTICLE_TAG_DELETEABLE, articleTagValidator);
 		
 		return mappings;
 	}

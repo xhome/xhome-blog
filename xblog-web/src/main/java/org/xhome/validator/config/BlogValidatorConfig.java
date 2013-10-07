@@ -22,6 +22,16 @@ public class BlogValidatorConfig implements Config {
 	public final static String		CATEGORY_NAME_SIZE_MAX			= "xblog_category_name_size_max";
 	public final static String		CATEGORY_NAME_SIZE_MESSAGE		= "xblog_category_name_size_message";
 	
+	public final static String		ARTICLE_TITLE_EMPTY_MESSAGE		= "xblog_article_title_empty_message";
+	public final static String		ARTICLE_TITLE_SIZE_MIN			= "xblog_article_title_size_min";
+	public final static String		ARTICLE_TITLE_SIZE_MAX			= "xblog_article_title_size_max";
+	public final static String		ARTICLE_TITLE_SIZE_MESSAGE		= "xblog_article_title_size_message";
+	public final static String		ARTICLE_CONTENT_EMPTY_MESSAGE	= "xblog_article_content_empty_message";
+	public final static String		ARTICLE_CONTENT_SIZE_MIN		= "xblog_article_content_size_min";
+	public final static String		ARTICLE_CONTENT_SIZE_MAX		= "xblog_article_content_size_max";
+	public final static String		ARTICLE_CONTENT_SIZE_MESSAGE	= "xblog_article_content_size_message";
+	public final static String		ARTICLE_CATEGORY_EMPTY_MESSAGE	= "xblog_article_category_empty_message";
+	
 	public Map<String, String> validatorConfigs() {
 		Map<String, String> configs = new HashMap<String, String>();
 		
@@ -34,6 +44,17 @@ public class BlogValidatorConfig implements Config {
 		configs.put(CATEGORY_NAME_SIZE_MIN, "0");
 		configs.put(CATEGORY_NAME_SIZE_MAX, "30");
 		configs.put(CATEGORY_NAME_SIZE_MESSAGE, "栏目名不能超过30个字符");
+		
+		configs.put(ARTICLE_TITLE_EMPTY_MESSAGE, "文章标题不能为空");
+		configs.put(ARTICLE_TITLE_SIZE_MIN, "0");
+		configs.put(ARTICLE_TITLE_SIZE_MAX, "50");
+		configs.put(ARTICLE_TITLE_SIZE_MESSAGE, "文章标题不能超过50个字符");
+		
+		configs.put(ARTICLE_CONTENT_EMPTY_MESSAGE, "文章内容不能为空");
+		configs.put(ARTICLE_CONTENT_SIZE_MIN, "0");
+		configs.put(ARTICLE_CONTENT_SIZE_MAX, "50");
+		configs.put(ARTICLE_CONTENT_SIZE_MESSAGE, "文章内容不能超过60000个字符");
+		configs.put(ARTICLE_CATEGORY_EMPTY_MESSAGE, "文章分类不能为空");
 		
 		return configs;
 	}

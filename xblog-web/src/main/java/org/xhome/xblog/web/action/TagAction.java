@@ -96,7 +96,7 @@ public class TagAction {
 		}
 		
 		if (logger.isInfoEnabled()) {
-			logger.info("[" + status + "]" + user.getName() + msg);
+			logger.info("[{}] {} {}", status, user.getName(), msg);
 		}
 		
 		return r;
@@ -128,7 +128,7 @@ public class TagAction {
 		}
 		
 		if (logger.isInfoEnabled()) {
-			logger.info("[" + status + "]" + user.getName() + msg);
+			logger.info("[{}] {} {}", status, user.getName(), msg);
 		}
 		
 		return r;
@@ -160,7 +160,7 @@ public class TagAction {
 		}
 		
 		if (logger.isInfoEnabled()) {
-			logger.info("[" + status + "]" + user.getName() + msg);
+			logger.info("[{}] {} {}", status, user.getName(), msg);
 		}
 		
 		return r;
@@ -192,7 +192,7 @@ public class TagAction {
 		}
 		
 		if (logger.isInfoEnabled()) {
-			logger.info("[" + status + "]" + user.getName() + msg);
+			logger.info("[{}] {} {}", status, user.getName(), msg);
 		}
 		
 		return r;
@@ -224,7 +224,7 @@ public class TagAction {
 		}
 		
 		if (logger.isInfoEnabled()) {
-			logger.info("[" + status + "]" + user.getName() + msg);
+			logger.info("[{}] {} {}", status, user.getName(), msg);
 		}
 		
 		return r;
@@ -255,7 +255,7 @@ public class TagAction {
 		}
 		
 		if (logger.isInfoEnabled()) {
-			logger.info("[" + status + "]" + user.getName() + msg);
+			logger.info("[{}] {} {}", status, user.getName(), msg);
 		}
 		
 		return r;
@@ -286,7 +286,7 @@ public class TagAction {
 		}
 		
 		if (logger.isInfoEnabled()) {
-			logger.info("[" + status + "]" + user.getName() + msg);
+			logger.info("[{}] {} {}", status, user.getName(), msg);
 		}
 		
 		return r;
@@ -317,7 +317,7 @@ public class TagAction {
 		}
 		
 		if (logger.isInfoEnabled()) {
-			logger.info("[" + status + "]" + user.getName() + msg);
+			logger.info("[{}] {} {}", status, user.getName(), msg);
 		}
 		
 		return r;
@@ -348,7 +348,7 @@ public class TagAction {
 		}
 		
 		if (logger.isInfoEnabled()) {
-			logger.info("[" + status + "]" + user.getName() + msg);
+			logger.info("[{}] {} {}", status, user.getName(), msg);
 		}
 		
 		return r;
@@ -379,7 +379,7 @@ public class TagAction {
 		}
 		
 		if (logger.isInfoEnabled()) {
-			logger.info("[" + status + "]" + user.getName() + msg);
+			logger.info("[{}] {} {}", status, user.getName(), msg);
 		}
 		
 		return r;
@@ -410,7 +410,7 @@ public class TagAction {
 		}
 		
 		if (logger.isInfoEnabled()) {
-			logger.info("[" + status + "]" + user.getName() + msg);
+			logger.info("[{}] {} {}", status, user.getName(), msg);
 		}
 		
 		return r;
@@ -442,7 +442,8 @@ public class TagAction {
 		Result r = new Result(status, msg, tag);
 		
 		if (logger.isInfoEnabled()) {
-			logger.info("[" + status + "]" + uname + msg);
+			
+			logger.info("[{}] {} {}", status, uname, msg);
 		}
 		
 		return r;
@@ -456,10 +457,10 @@ public class TagAction {
 		
 		if (logger.isInfoEnabled()) {
 			if (query != null) {
-				logger.info("用户" + uname + "按条件" + query.getParameters() + "查询标签信息");
+				logger.info("用户{}按条件{}查询标签信息", uname, query.getParameters());
 			} else {
 				query = new QueryBase();
-				logger.info("用户" + uname + "查询标签信息");
+				logger.info("用户{}查询标签目信息", uname);
 			}
 		}
 		tagService.getTags(user, query);
@@ -470,7 +471,8 @@ public class TagAction {
 		Result r = new Result(status, msg, query);
 
 		if (logger.isInfoEnabled()) {
-			logger.info("[" + status + "]" + uname + msg);
+			
+			logger.info("[{}] {} {}", status, uname, msg);
 		}
 		
 		return r;
@@ -484,9 +486,9 @@ public class TagAction {
 		
 		if (logger.isInfoEnabled()) {
 			if (query != null) {
-				logger.info("用户" + uname + "按条件" + query.getParameters() + "统计标签信息");
+				logger.info("用户{}按条件{}统计标签信息", uname, query.getParameters());
 			} else {
-				logger.info("用户" + uname + "统计标签信息");
+				logger.info("用户{}统计标签目信息", uname);
 			}
 		}
 		long count = tagService.countTags(user, query);
@@ -497,7 +499,7 @@ public class TagAction {
 		Result r = new Result(status, msg, count);
 
 		if (logger.isInfoEnabled()) {
-			logger.info("[" + status + "]" + uname + msg);
+			logger.info("[{}] {} {}", status, uname, msg);
 		}
 		
 		return r;

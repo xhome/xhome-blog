@@ -22,8 +22,8 @@ public class TagNameValidator extends Validator {
 	
 	@Override
 	public boolean validate(Object target, Errors errors) {
-		Tag role = (Tag) target;
-		String name = role == null ? null : role.getName();
+		Tag tag = (Tag) target;
+		String name = tag == null ? null : tag.getName();
 		if (StringUtils.isEmpty(name)) {
 			errors.rejectValue(FIELD_NAME, CODE_NAME_EMPTY, validationConfig.getConfig(BlogValidatorConfig.TAG_NAME_EMPTY_MESSAGE));
 		} else {

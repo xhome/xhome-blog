@@ -65,7 +65,7 @@ public class CategoryAction {
 		commonValidator.setValidators(validatorMapping.getValidatorByUri(uri));
 		binder.setValidator(commonValidator);
 		if (logger.isDebugEnabled()) {
-			logger.debug("init binder for " + uri);
+			logger.debug("init binder for {}", uri);
 		}
 	}
 	
@@ -96,7 +96,7 @@ public class CategoryAction {
 		}
 		
 		if (logger.isInfoEnabled()) {
-			logger.info("[" + status + "]" + user.getName() + msg);
+			logger.info("[{}] {} {}", status, user.getName(), msg);
 		}
 		
 		return r;
@@ -128,7 +128,7 @@ public class CategoryAction {
 		}
 		
 		if (logger.isInfoEnabled()) {
-			logger.info("[" + status + "]" + user.getName() + msg);
+			logger.info("[{}] {} {}", status, user.getName(), msg);
 		}
 		
 		return r;
@@ -160,7 +160,7 @@ public class CategoryAction {
 		}
 		
 		if (logger.isInfoEnabled()) {
-			logger.info("[" + status + "]" + user.getName() + msg);
+			logger.info("[{}] {} {}", status, user.getName(), msg);
 		}
 		
 		return r;
@@ -192,7 +192,7 @@ public class CategoryAction {
 		}
 		
 		if (logger.isInfoEnabled()) {
-			logger.info("[" + status + "]" + user.getName() + msg);
+			logger.info("[{}] {} {}", status, user.getName(), msg);
 		}
 		
 		return r;
@@ -224,7 +224,7 @@ public class CategoryAction {
 		}
 		
 		if (logger.isInfoEnabled()) {
-			logger.info("[" + status + "]" + user.getName() + msg);
+			logger.info("[{}] {} {}", status, user.getName(), msg);
 		}
 		
 		return r;
@@ -255,7 +255,7 @@ public class CategoryAction {
 		}
 		
 		if (logger.isInfoEnabled()) {
-			logger.info("[" + status + "]" + user.getName() + msg);
+			logger.info("[{}] {} {}", status, user.getName(), msg);
 		}
 		
 		return r;
@@ -286,7 +286,7 @@ public class CategoryAction {
 		}
 		
 		if (logger.isInfoEnabled()) {
-			logger.info("[" + status + "]" + user.getName() + msg);
+			logger.info("[{}] {} {}", status, user.getName(), msg);
 		}
 		
 		return r;
@@ -317,7 +317,7 @@ public class CategoryAction {
 		}
 		
 		if (logger.isInfoEnabled()) {
-			logger.info("[" + status + "]" + user.getName() + msg);
+			logger.info("[{}] {} {}", status, user.getName(), msg);
 		}
 		
 		return r;
@@ -348,7 +348,7 @@ public class CategoryAction {
 		}
 		
 		if (logger.isInfoEnabled()) {
-			logger.info("[" + status + "]" + user.getName() + msg);
+			logger.info("[{}] {} {}", status, user.getName(), msg);
 		}
 		
 		return r;
@@ -379,7 +379,7 @@ public class CategoryAction {
 		}
 		
 		if (logger.isInfoEnabled()) {
-			logger.info("[" + status + "]" + user.getName() + msg);
+			logger.info("[{}] {} {}", status, user.getName(), msg);
 		}
 		
 		return r;
@@ -410,7 +410,7 @@ public class CategoryAction {
 		}
 		
 		if (logger.isInfoEnabled()) {
-			logger.info("[" + status + "]" + user.getName() + msg);
+			logger.info("[{}] {} {}", status, user.getName(), msg);
 		}
 		
 		return r;
@@ -423,10 +423,10 @@ public class CategoryAction {
 		String uname = user.getName();
 		Category category = null;
 		if (id != null) {
-			logger.info("用户" + uname + "按ID[" + id + "]查询栏目");
+			logger.info("用户{}按ID[{}]查询栏目", uname, id);
 			category = categoryService.getCategory(user, id);
 		} else if (StringUtils.isNotEmpty(name)) {
-			logger.info("用户" + uname + "按名称[" + name + "]查询栏目");
+			logger.info("用户{}按名称[{}]查询栏目", uname, name);
 			category = categoryService.getCategory(user, name);
 		}
 		
@@ -442,7 +442,7 @@ public class CategoryAction {
 		Result r = new Result(status, msg, category);
 		
 		if (logger.isInfoEnabled()) {
-			logger.info("[" + status + "]" + uname + msg);
+			logger.info("[{}] {} {}", status, uname, msg);
 		}
 		
 		return r;
@@ -456,10 +456,10 @@ public class CategoryAction {
 		
 		if (logger.isInfoEnabled()) {
 			if (query != null) {
-				logger.info("用户" + uname + "按条件" + query.getParameters() + "查询栏目信息");
+				logger.info("用户{}按条件{}查询栏目信息", uname, query.getParameters());
 			} else {
 				query = new QueryBase();
-				logger.info("用户" + uname + "查询栏目信息");
+				logger.info("用户{}查询栏目信息", uname);
 			}
 		}
 		categoryService.getCategorys(user, query);
@@ -470,7 +470,7 @@ public class CategoryAction {
 		Result r = new Result(status, msg, query);
 
 		if (logger.isInfoEnabled()) {
-			logger.info("[" + status + "]" + uname + msg);
+			logger.info("[{}] {} {}", status, uname, msg);
 		}
 		
 		return r;
@@ -484,9 +484,9 @@ public class CategoryAction {
 		
 		if (logger.isInfoEnabled()) {
 			if (query != null) {
-				logger.info("用户" + uname + "按条件" + query.getParameters() + "统计栏目信息");
+				logger.info("用户{}按条件{}统计栏目信息", uname, query.getParameters());
 			} else {
-				logger.info("用户" + uname + "统计栏目信息");
+				logger.info("用户{}统计栏目信息", uname);
 			}
 		}
 		long count = categoryService.countCategorys(user, query);
@@ -497,7 +497,7 @@ public class CategoryAction {
 		Result r = new Result(status, msg, count);
 
 		if (logger.isInfoEnabled()) {
-			logger.info("[" + status + "]" + uname + msg);
+			logger.info("[{}] {} {}", status, uname, msg);
 		}
 		
 		return r;

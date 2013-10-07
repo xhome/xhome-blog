@@ -22,8 +22,8 @@ public class CategoryNameValidator extends Validator {
 	
 	@Override
 	public boolean validate(Object target, Errors errors) {
-		Category role = (Category) target;
-		String name = role == null ? null : role.getName();
+		Category category = (Category) target;
+		String name = category == null ? null : category.getName();
 		if (StringUtils.isEmpty(name)) {
 			errors.rejectValue(FIELD_NAME, CODE_NAME_EMPTY, validationConfig.getConfig(BlogValidatorConfig.CATEGORY_NAME_EMPTY_MESSAGE));
 		} else {
