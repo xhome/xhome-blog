@@ -4,7 +4,7 @@ import org.springframework.validation.Errors;
 import org.xhome.util.StringUtils;
 import org.xhome.validator.Validator;
 import org.xhome.validator.config.BlogValidatorConfig;
-import org.xhome.xblog.Article;
+import org.xhome.xblog.Comment;
 
 /**
  * @project xblog-web
@@ -13,7 +13,7 @@ import org.xhome.xblog.Article;
  * @date 	Oct 7, 201310:52:15 PM
  * @describe 
  */
-public class ArticleContentValidator extends Validator {
+public class CommentContentValidator extends Validator {
 
 	public final static String	FIELD_CONTENT			= "content";
 	
@@ -22,16 +22,16 @@ public class ArticleContentValidator extends Validator {
 	
 	@Override
 	public boolean validate(Object target, Errors errors) {
-		Article article = (Article) target;
-		String content = article == null ? null : article.getContent();
+		Comment comment = (Comment) target;
+		String content = comment == null ? null : comment.getContent();
 		if (StringUtils.isEmpty(content)) {
-			errors.rejectValue(FIELD_CONTENT, CODE_CONTENT_EMPTY, validationConfig.getConfig(BlogValidatorConfig.ARTICLE_CONTENT_EMPTY_MESSAGE));
+			errors.rejectValue(FIELD_CONTENT, CODE_CONTENT_EMPTY, validationConfig.getConfig(BlogValidatorConfig.COMMENT_CONTENT_EMPTY_MESSAGE));
 		} else {
 			int size = content.length();
-			int min = Integer.parseInt(validationConfig.getConfig(BlogValidatorConfig.ARTICLE_CONTENT_SIZE_MIN)),
-				max = Integer.parseInt(validationConfig.getConfig(BlogValidatorConfig.ARTICLE_CONTENT_SIZE_MAX));
+			int min = Integer.parseInt(validationConfig.getConfig(BlogValidatorConfig.COMMENT_CONTENT_SIZE_MIN)),
+				max = Integer.parseInt(validationConfig.getConfig(BlogValidatorConfig.COMMENT_CONTENT_SIZE_MAX));
 			if (size < min || size > max) {
-				errors.rejectValue(FIELD_CONTENT, CODE_CONTENT_SIZE, validationConfig.getConfig(BlogValidatorConfig.ARTICLE_CONTENT_SIZE_MESSAGE));
+				errors.rejectValue(FIELD_CONTENT, CODE_CONTENT_SIZE, validationConfig.getConfig(BlogValidatorConfig.COMMENT_CONTENT_SIZE_MESSAGE));
 			} else {
 				return true;
 			}

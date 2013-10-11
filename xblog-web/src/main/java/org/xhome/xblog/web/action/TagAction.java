@@ -460,7 +460,7 @@ public class TagAction {
 				logger.info("用户{}按条件{}查询标签信息", uname, query.getParameters());
 			} else {
 				query = new QueryBase();
-				logger.info("用户{}查询标签目信息", uname);
+				logger.info("用户{}查询标签信息", uname);
 			}
 		}
 		tagService.getTags(user, query);
@@ -488,7 +488,7 @@ public class TagAction {
 			if (query != null) {
 				logger.info("用户{}按条件{}统计标签信息", uname, query.getParameters());
 			} else {
-				logger.info("用户{}统计标签目信息", uname);
+				logger.info("用户{}统计标签信息", uname);
 			}
 		}
 		long count = tagService.countTags(user, query);

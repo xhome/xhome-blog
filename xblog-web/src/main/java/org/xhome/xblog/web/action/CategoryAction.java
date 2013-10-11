@@ -87,10 +87,10 @@ public class CategoryAction {
 			AuthUtils.setModifier(request, category);
 			status = (short) categoryService.addCategory(user, category);
 			if (status == Status.SUCCESS) {
-				msg = "添加栏目" + category.getName() + "成功";
+				msg = "添加分类" + category.getName() + "成功";
 				r = new Result(status, msg, category);
 			} else {
-				msg = "添加栏目" + category.getName() + "失败";
+				msg = "添加分类" + category.getName() + "失败";
 				r = new Result(status, msg);
 			}
 		}
@@ -119,10 +119,10 @@ public class CategoryAction {
 			AuthUtils.setModifier(request, category);
 			status = (short) categoryService.updateCategory(user, category);
 			if (status == Status.SUCCESS) {
-				msg = "更新栏目[" + category.getId() + "]" + category.getName() + "成功";
+				msg = "更新分类[" + category.getId() + "]" + category.getName() + "成功";
 				r = new Result(status, msg, category);
 			} else {
-				msg = "更新栏目[" + category.getId() + "]" + category.getName() + "失败";
+				msg = "更新分类[" + category.getId() + "]" + category.getName() + "失败";
 				r = new Result(status, msg);
 			}
 		}
@@ -151,10 +151,10 @@ public class CategoryAction {
 			AuthUtils.setModifier(request, category);
 			status = (short) categoryService.lockCategory(user, category);
 			if (status == Status.SUCCESS) {
-				msg = "锁定栏目[" + category.getId() + "]" + category.getName() + "成功";
+				msg = "锁定分类[" + category.getId() + "]" + category.getName() + "成功";
 				r = new Result(status, msg, category);
 			} else {
-				msg = "锁定栏目[" + category.getId() + "]" + category.getName() + "失败";
+				msg = "锁定分类[" + category.getId() + "]" + category.getName() + "失败";
 				r = new Result(status, msg);
 			}
 		}
@@ -183,10 +183,10 @@ public class CategoryAction {
 			AuthUtils.setModifier(request, category);
 			status = (short) categoryService.unlockCategory(user, category);
 			if (status == Status.SUCCESS) {
-				msg = "解锁栏目[" + category.getId() + "]" + category.getName() + "成功";
+				msg = "解锁分类[" + category.getId() + "]" + category.getName() + "成功";
 				r = new Result(status, msg, category);
 			} else {
-				msg = "解锁栏目[" + category.getId() + "]" + category.getName() + "失败";
+				msg = "解锁分类[" + category.getId() + "]" + category.getName() + "失败";
 				r = new Result(status, msg);
 			}
 		}
@@ -215,10 +215,10 @@ public class CategoryAction {
 			AuthUtils.setModifier(request, category);
 			status = (short) categoryService.removeCategory(user, category);
 			if (status == Status.SUCCESS) {
-				msg = "移除栏目[" + category.getId() + "]" + category.getName() + "成功";
+				msg = "移除分类[" + category.getId() + "]" + category.getName() + "成功";
 				r = new Result(status, msg, category);
 			} else {
-				msg = "移除栏目[" + category.getId() + "]" + category.getName() + "失败";
+				msg = "移除分类[" + category.getId() + "]" + category.getName() + "失败";
 				r = new Result(status, msg);
 			}
 		}
@@ -246,10 +246,10 @@ public class CategoryAction {
 		} else {
 			status = (short) categoryService.deleteCategory(user, category);
 			if (status == Status.SUCCESS) {
-				msg = "删除栏目[" + category.getId() + "]" + category.getName() + "成功";
+				msg = "删除分类[" + category.getId() + "]" + category.getName() + "成功";
 				r = new Result(status, msg, category);
 			} else {
-				msg = "删除栏目[" + category.getId() + "]" + category.getName() + "失败";
+				msg = "删除分类[" + category.getId() + "]" + category.getName() + "失败";
 				r = new Result(status, msg);
 			}
 		}
@@ -277,10 +277,10 @@ public class CategoryAction {
 		} else {
 			boolean is = categoryService.isCategoryExists(user, category);
 			if (is) {
-				msg = "查询栏目" + category.getName() + "存在";
+				msg = "查询分类" + category.getName() + "存在";
 				r = new Result(status, msg, true);
 			} else {
-				msg = "查询栏目" + category.getName() + "不存在";
+				msg = "查询分类" + category.getName() + "不存在";
 				r = new Result(status, msg, false);
 			}
 		}
@@ -308,10 +308,10 @@ public class CategoryAction {
 		} else {
 			boolean is = categoryService.isCategoryUpdateable(user, category);
 			if (is) {
-				msg = "查询到栏目[" + category.getId() + "]" + category.getName() + "可以更新";
+				msg = "查询到分类[" + category.getId() + "]" + category.getName() + "可以更新";
 				r = new Result(status, msg, true);
 			} else {
-				msg = "查询到栏目[" + category.getId() + "]" + category.getName() + "不可以更新";
+				msg = "查询到分类[" + category.getId() + "]" + category.getName() + "不可以更新";
 				r = new Result(status, msg, false);
 			}
 		}
@@ -339,10 +339,10 @@ public class CategoryAction {
 		} else {
 			boolean is = categoryService.isCategoryLocked(user, category);
 			if (is) {
-				msg = "查询到栏目[" + category.getId() + "]" + category.getName() + "已被锁定";
+				msg = "查询到分类[" + category.getId() + "]" + category.getName() + "已被锁定";
 				r = new Result(status, msg, true);
 			} else {
-				msg = "查询到栏目[" + category.getId() + "]" + category.getName() + "未被锁定";
+				msg = "查询到分类[" + category.getId() + "]" + category.getName() + "未被锁定";
 				r = new Result(status, msg, false);
 			}
 		}
@@ -370,10 +370,10 @@ public class CategoryAction {
 		} else {
 			boolean is = categoryService.isCategoryRemoveable(user, category);
 			if (is) {
-				msg = "查询到栏目[" + category.getId() + "]" + category.getName() + "可以移除";
+				msg = "查询到分类[" + category.getId() + "]" + category.getName() + "可以移除";
 				r = new Result(status, msg, true);
 			} else {
-				msg = "查询到栏目[" + category.getId() + "]" + category.getName() + "不可以移除";
+				msg = "查询到分类[" + category.getId() + "]" + category.getName() + "不可以移除";
 				r = new Result(status, msg, false);
 			}
 		}
@@ -401,10 +401,10 @@ public class CategoryAction {
 		} else {
 			boolean is = categoryService.isCategoryDeleteable(user, category);
 			if (is) {
-				msg = "查询到栏目[" + category.getId() + "]" + category.getName() + "可以删除";
+				msg = "查询到分类[" + category.getId() + "]" + category.getName() + "可以删除";
 				r = new Result(status, msg, true);
 			} else {
-				msg = "查询到栏目[" + category.getId() + "]" + category.getName() + "不可以删除";
+				msg = "查询到分类[" + category.getId() + "]" + category.getName() + "不可以删除";
 				r = new Result(status, msg, false);
 			}
 		}
@@ -423,10 +423,10 @@ public class CategoryAction {
 		String uname = user.getName();
 		Category category = null;
 		if (id != null) {
-			logger.info("用户{}按ID[{}]查询栏目", uname, id);
+			logger.info("用户{}按ID[{}]查询分类", uname, id);
 			category = categoryService.getCategory(user, id);
 		} else if (StringUtils.isNotEmpty(name)) {
-			logger.info("用户{}按名称[{}]查询栏目", uname, name);
+			logger.info("用户{}按名称[{}]查询分类", uname, name);
 			category = categoryService.getCategory(user, name);
 		}
 		
@@ -434,10 +434,10 @@ public class CategoryAction {
 		short status = Status.SUCCESS;
 		
 		if (category != null) {
-			msg = "栏目[" + category.getId() + "]" + category.getName() + "查询成功";
+			msg = "分类[" + category.getId() + "]" + category.getName() + "查询成功";
 		} else {
 			status = Status.ERROR;
-			msg = "栏目查询失败";
+			msg = "分类查询失败";
 		}
 		Result r = new Result(status, msg, category);
 		
@@ -456,15 +456,15 @@ public class CategoryAction {
 		
 		if (logger.isInfoEnabled()) {
 			if (query != null) {
-				logger.info("用户{}按条件{}查询栏目信息", uname, query.getParameters());
+				logger.info("用户{}按条件{}查询分类信息", uname, query.getParameters());
 			} else {
 				query = new QueryBase();
-				logger.info("用户{}查询栏目信息", uname);
+				logger.info("用户{}查询分类信息", uname);
 			}
 		}
 		categoryService.getCategorys(user, query);
 		
-		String msg = "条件查询栏目信息";
+		String msg = "条件查询分类信息";
 		short status = Status.SUCCESS;
 		
 		Result r = new Result(status, msg, query);
@@ -484,14 +484,14 @@ public class CategoryAction {
 		
 		if (logger.isInfoEnabled()) {
 			if (query != null) {
-				logger.info("用户{}按条件{}统计栏目信息", uname, query.getParameters());
+				logger.info("用户{}按条件{}统计分类信息", uname, query.getParameters());
 			} else {
-				logger.info("用户{}统计栏目信息", uname);
+				logger.info("用户{}统计分类信息", uname);
 			}
 		}
 		long count = categoryService.countCategorys(user, query);
 		
-		String msg = "条件统计栏目信息，共" + count;
+		String msg = "条件统计分类信息，共" + count;
 		short status = Status.SUCCESS;
 		
 		Result r = new Result(status, msg, count);

@@ -20,14 +20,17 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.xhome.common.constant.Status;
 import org.xhome.db.query.QueryBase;
 import org.xhome.http.response.Result;
+import org.xhome.http.util.RequestUtils;
 import org.xhome.validator.CommonValidator;
 import org.xhome.validator.ValidatorMapping;
 import org.xhome.xauth.User;
 import org.xhome.xauth.web.util.AuthUtils;
 import org.xhome.xblog.Article;
 import org.xhome.xblog.BlogException;
+import org.xhome.xblog.Record;
 import org.xhome.xblog.Tag;
 import org.xhome.xblog.core.service.ArticleService;
+import org.xhome.xblog.core.service.RecordService;
 import org.xhome.xblog.web.util.ValidatorUtils;
 
 /**
@@ -42,6 +45,8 @@ public class ArticleAction {
 
 	@Autowired(required = false)
 	private ArticleService articleService;
+	@Autowired(required = false)
+	private RecordService recordService;
 	private Logger logger = LoggerFactory.getLogger(ArticleAction.class);
 	private CommonValidator		commonValidator 	= new CommonValidator();
 	private	ValidatorMapping	validatorMapping	= ValidatorMapping.getInstance();
@@ -421,6 +426,12 @@ public class ArticleAction {
 		if (logger.isInfoEnabled()) {
 			logger.info("[{}] {} {}", status, uname, msg);
 		}
+		
+		Record record = new Record(article, user,
+				RequestUtils.getRequestAddress(request),
+				RequestUtils.getRequestAgent(request),
+				request.getHeader("User-Agent"));
+		recordService.logRecord(record);
 		
 		return r;
 	}
