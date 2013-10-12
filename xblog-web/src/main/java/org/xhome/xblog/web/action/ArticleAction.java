@@ -828,4 +828,12 @@ public class ArticleAction {
 		return articleService;
 	}
 	
+	public void setRecordService(RecordService recordService) {
+		this.recordService = recordService;
+	}
+	
+	public RecordService getRecordService() {
+		return recordService;
+	}
+	
 }

@@ -36,8 +36,8 @@ public class RecordAction {
 	private CommonValidator		commonValidator 	= new CommonValidator();
 	private	ValidatorMapping	validatorMapping	= ValidatorMapping.getInstance();
 	
-	public final static String	RM_RECORD_QUERY	= "xauth/record/query.do";
-	public final static String	RM_RECORD_COUNT	= "xauth/record/count.do";
+	public final static String	RM_RECORD_QUERY	= "xblog/record/query.do";
+	public final static String	RM_RECORD_COUNT	= "xblog/record/count.do";
 	
 	@InitBinder
 	public void initBinder(HttpServletRequest request, WebDataBinder binder) {

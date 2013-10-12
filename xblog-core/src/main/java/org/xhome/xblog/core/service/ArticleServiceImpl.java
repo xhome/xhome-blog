@@ -1045,6 +1045,14 @@ public class ArticleServiceImpl implements ArticleService {
 	public ArticleDAO getArticleDAO() {
 		return this.articleDAO;
 	}
+	
+	public void setTagDAO(TagDAO tagDAO) {
+		this.tagDAO = tagDAO;
+	}
+	
+	public TagDAO getTagDAO() {
+		return this.tagDAO;
+	}
 
 	public void setManageLogService(ManageLogService manageLogService) {
 		this.manageLogService = manageLogService;

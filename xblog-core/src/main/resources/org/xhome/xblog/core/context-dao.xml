@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">  
+
+  <import resource="classpath:context-db.xml"/>  
+
+  <bean id="tagDAO" class="org.mybatis.spring.mapper.MapperFactoryBean" scope="singleton"> 
+    <property name="sqlSessionFactory" ref="sqlSessionFactory"/>  
+    <property name="mapperInterface" value="org.xhome.xblog.core.dao.TagDAO"/> 
+  </bean>
+  
+  <bean id="categoryDAO" class="org.mybatis.spring.mapper.MapperFactoryBean" scope="singleton"> 
+    <property name="sqlSessionFactory" ref="sqlSessionFactory"/>  
+    <property name="mapperInterface" value="org.xhome.xblog.core.dao.CategoryDAO"/> 
+  </bean>
+
+  <bean id="articleDAO" class="org.mybatis.spring.mapper.MapperFactoryBean" scope="singleton"> 
+    <property name="sqlSessionFactory" ref="sqlSessionFactory"/>  
+    <property name="mapperInterface" value="org.xhome.xblog.core.dao.ArticleDAO"/> 
+  </bean>
+  
+  <bean id="commentDAO" class="org.mybatis.spring.mapper.MapperFactoryBean" scope="singleton"> 
+    <property name="sqlSessionFactory" ref="sqlSessionFactory"/>  
+    <property name="mapperInterface" value="org.xhome.xblog.core.dao.CommentDAO"/> 
+  </bean>
+  
+  <bean id="recordDAO" class="org.mybatis.spring.mapper.MapperFactoryBean" scope="singleton"> 
+    <property name="sqlSessionFactory" ref="sqlSessionFactory"/>  
+    <property name="mapperInterface" value="org.xhome.xblog.core.dao.RecordDAO"/> 
+  </bean>
+  
+  <bean id="categoryRolePermissionDAO" class="org.mybatis.spring.mapper.MapperFactoryBean" scope="singleton"> 
+    <property name="sqlSessionFactory" ref="sqlSessionFactory"/>  
+    <property name="mapperInterface" value="org.xhome.xblog.core.dao.CategoryRolePermissionDAO"/> 
+  </bean>
+  
+  <bean id="categoryUserPermissionDAO" class="org.mybatis.spring.mapper.MapperFactoryBean" scope="singleton"> 
+    <property name="sqlSessionFactory" ref="sqlSessionFactory"/>  
+    <property name="mapperInterface" value="org.xhome.xblog.core.dao.CategoryUserPermissionDAO"/> 
+  </bean>
+  
+  <bean id="tagRolePermissionDAO" class="org.mybatis.spring.mapper.MapperFactoryBean" scope="singleton"> 
+    <property name="sqlSessionFactory" ref="sqlSessionFactory"/>  
+    <property name="mapperInterface" value="org.xhome.xblog.core.dao.TagRolePermissionDAO"/> 
+  </bean>
+  
+  <bean id="tagUserPermissionDAO" class="org.mybatis.spring.mapper.MapperFactoryBean" scope="singleton"> 
+    <property name="sqlSessionFactory" ref="sqlSessionFactory"/>  
+    <property name="mapperInterface" value="org.xhome.xblog.core.dao.TagUserPermissionDAO"/> 
+  </bean>
+  
+  <bean id="articleRolePermissionDAO" class="org.mybatis.spring.mapper.MapperFactoryBean" scope="singleton"> 
+    <property name="sqlSessionFactory" ref="sqlSessionFactory"/>  
+    <property name="mapperInterface" value="org.xhome.xblog.core.dao.ArticleRolePermissionDAO"/> 
+  </bean>
+  
+  <bean id="articleUserPermissionDAO" class="org.mybatis.spring.mapper.MapperFactoryBean" scope="singleton"> 
+    <property name="sqlSessionFactory" ref="sqlSessionFactory"/>  
+    <property name="mapperInterface" value="org.xhome.xblog.core.dao.ArticleUserPermissionDAO"/> 
+  </bean>
+    
+</beans>

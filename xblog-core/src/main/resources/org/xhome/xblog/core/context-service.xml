@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">  
+  
+  <import resource="classpath*:org/xhome/xblog/core/context-dao.xml"/>
+  <import resource="classpath*:org/xhome/xauth/core/context-service.xml"/>
+  
+  <bean id="categoryService" class="org.xhome.xblog.core.service.CategoryServiceImpl" scope="singleton">
+  	<property name="categoryDAO" ref="categoryDAO"/>
+  	<property name="manageLogService" ref="manageLogService"/>
+  </bean>
+  
+  <bean id="tagService" class="org.xhome.xblog.core.service.TagServiceImpl" scope="singleton">
+  	<property name="tagDAO" ref="tagDAO"/>
+  	<property name="manageLogService" ref="manageLogService"/>
+  </bean>
+  
+  <bean id="articleService" class="org.xhome.xblog.core.service.ArticleServiceImpl" scope="singleton">
+  	<property name="articleDAO" ref="articleDAO"/>
+  	<property name="tagDAO" ref="tagDAO"/>
+  	<property name="manageLogService" ref="manageLogService"/>
+  </bean>
+  
+  <bean id="commentService" class="org.xhome.xblog.core.service.CommentServiceImpl" scope="singleton">
+  	<property name="commentDAO" ref="commentDAO"/>
+  	<property name="manageLogService" ref="manageLogService"/>
+  </bean>
+  
+  <bean id="recordService" class="org.xhome.xblog.core.service.RecordServiceImpl" scope="singleton">
+  	<property name="recordDAO" ref="recordDAO"/>
+  	<property name="manageLogService" ref="manageLogService"/>
+  </bean>
+  
+  <bean id="categoryRolePermissionService" class="org.xhome.xblog.core.service.CategoryRolePermissionServiceImpl" scope="singleton">
+  	<property name="categoryRolePermissionDAO" ref="categoryRolePermissionDAO"/>
+  	<property name="manageLogService" ref="manageLogService"/>
+  </bean>
+  
+  <bean id="categoryUserPermissionService" class="org.xhome.xblog.core.service.CategoryUserPermissionServiceImpl" scope="singleton">
+  	<property name="categoryUserPermissionDAO" ref="categoryUserPermissionDAO"/>
+  	<property name="manageLogService" ref="manageLogService"/>
+  </bean>
+  
+  <bean id="tagRolePermissionService" class="org.xhome.xblog.core.service.TagRolePermissionServiceImpl" scope="singleton">
+  	<property name="tagRolePermissionDAO" ref="tagRolePermissionDAO"/>
+  	<property name="manageLogService" ref="manageLogService"/>
+  </bean>
+  
+  <bean id="tagUserPermissionService" class="org.xhome.xblog.core.service.TagUserPermissionServiceImpl" scope="singleton">
+  	<property name="tagUserPermissionDAO" ref="tagUserPermissionDAO"/>
+  	<property name="manageLogService" ref="manageLogService"/>
+  </bean>
+  
+  <bean id="articleRolePermissionService" class="org.xhome.xblog.core.service.ArticleRolePermissionServiceImpl" scope="singleton">
+  	<property name="articleRolePermissionDAO" ref="articleRolePermissionDAO"/>
+  	<property name="manageLogService" ref="manageLogService"/>
+  </bean>
+  
+  <bean id="articleUserPermissionService" class="org.xhome.xblog.core.service.ArticleUserPermissionServiceImpl" scope="singleton">
+  	<property name="articleUserPermissionDAO" ref="articleUserPermissionDAO"/>
+  	<property name="manageLogService" ref="manageLogService"/>
+  </bean>
+  
+</beans>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">  
+  
+  <import resource="classpath*:org/xhome/xblog/core/context-service.xml"/>
+  <import resource="classpath*:org/xhome/xauth/web/context-action.xml"/>
+  
+  <bean id="categoryAction" class="org.xhome.xblog.web.action.CategoryAction" scope="singleton">
+  	<property name="categoryService" ref="categoryService"/>
+  </bean>
+  
+  <bean id="tagAction" class="org.xhome.xblog.web.action.TagAction" scope="singleton">
+  	<property name="tagService" ref="tagService"/>
+  </bean>
+  
+  <bean id="articleAction" class="org.xhome.xblog.web.action.ArticleAction" scope="singleton">
+  	<property name="articleService" ref="articleService"/>
+  	<property name="recordService" ref="recordService"/>
+  </bean>
+  
+  <bean id="commentAction" class="org.xhome.xblog.web.action.CommentAction" scope="singleton">
+  	<property name="commentService" ref="commentService"/>
+  </bean>
+  
+  <bean id="recordAction" class="org.xhome.xblog.web.action.RecordAction" scope="singleton">
+  	<property name="recordService" ref="recordService"/>
+  </bean>
+  
+  <bean id="categoryRolePermissionAction" class="org.xhome.xblog.web.action.CategoryRolePermissionAction" scope="singleton">
+  	<property name="categoryRolePermissionService" ref="categoryRolePermissionService"/>
+  </bean>
+  
+  <bean id="categoryUserPermissionAction" class="org.xhome.xblog.web.action.CategoryUserPermissionAction" scope="singleton">
+  	<property name="categoryUserPermissionService" ref="categoryUserPermissionService"/>
+  </bean>
+  
+  <bean id="tagRolePermissionAction" class="org.xhome.xblog.web.action.TagRolePermissionAction" scope="singleton">
+  	<property name="tagRolePermissionService" ref="tagRolePermissionService"/>
+  </bean>
+  
+  <bean id="tagUserPermissionAction" class="org.xhome.xblog.web.action.TagUserPermissionAction" scope="singleton">
+  	<property name="tagUserPermissionService" ref="tagUserPermissionService"/>
+  </bean>
+  
+  <bean id="articleRolePermissionAction" class="org.xhome.xblog.web.action.ArticleRolePermissionAction" scope="singleton">
+  	<property name="articleRolePermissionService" ref="articleRolePermissionService"/>
+  </bean>
+  
+  <bean id="articleUserPermissionAction" class="org.xhome.xblog.web.action.ArticleUserPermissionAction" scope="singleton">
+  	<property name="articleUserPermissionService" ref="articleUserPermissionService"/>
+  </bean>
+  
+</beans>
