@@ -9,6 +9,7 @@
   
     <properties>
         <xauth-bean.version>1.0</xauth-bean.version>
+        <xhome-common.version>1.0</xhome-common.version>
         <junit.version>4.11</junit.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.6</java.version>
@@ -20,7 +21,15 @@
             <groupId>org.xhome</groupId>
             <artifactId>xauth-bean</artifactId>
             <version>${xauth-bean.version}</version>
+            <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>org.xhome</groupId>
+            <artifactId>xhome-common</artifactId>
+            <version>${xhome-common.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -44,11 +53,11 @@
             </plugins>
         </pluginManagement>
     </build>
-	
+    
     <distributionManagement>
-		<repository>
-			<id>nexus_xhome</id>
-			<url>http://nexus.xhomestudio.org/content/repositories/releases/</url>
-		</repository>
-	</distributionManagement>
+        <repository>
+            <id>nexus_xhome</id>
+            <url>http://nexus.xhomestudio.org/content/repositories/releases/</url>
+        </repository>
+    </distributionManagement>
 </project>

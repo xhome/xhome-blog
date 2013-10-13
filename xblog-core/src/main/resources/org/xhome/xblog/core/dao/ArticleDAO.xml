@@ -9,7 +9,6 @@
 		<id property="id" column="id"/>
 		<result property="title" column="title"/>
 		<result property="attribute" column="attribute"/>
-		<result property="category" column="category"/>
 		<result property="owner" column="owner"/>
 		<result property="modifier" column="modifier"/>
 		<result property="created" column="created"/>

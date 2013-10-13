@@ -8,79 +8,112 @@
     <name>xblog-web</name>
   
     <properties>
-    	<xblog-core.version>1.0</xblog-core.version>
-		<xauth-web.version>1.0</xauth-web.version>
-		<xhome-http.version>1.0</xhome-http.version>
-		<xhome-validator.version>1.0</xhome-validator.version>
-		<spring-mvc-extend.version>1.0</spring-mvc-extend.version>
+        <xblog-core.version>1.0</xblog-core.version>
+        <xauth-web.version>1.0</xauth-web.version>
+        <xhome-validator.version>1.0</xhome-validator.version>
+        <xhome-http.version>1.0</xhome-http.version>
+        <xhome-crypto.version>1.0</xhome-crypto.version>
+        <xhome-util.version>1.0</xhome-util.version>
+        <xhome-db.version>1.0</xhome-db.version>
+        <xhome-common.version>1.0</xhome-common.version>
+        <spring-mvc-extend.version>1.0</spring-mvc-extend.version>
         <spring.version>3.1.3.RELEASE</spring.version>
         <slf4j-api.version>1.7.5</slf4j-api.version>
         <junit.version>4.11</junit.version>
-		<javax.servlet.version>2.5</javax.servlet.version>
+        <javax.servlet.version>2.5</javax.servlet.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.6</java.version>
         <java.encoding>UTF-8</java.encoding>
     </properties>
   
     <dependencies>
-		<dependency>
-			<groupId>org.xhome</groupId>
-			<artifactId>xblog-core</artifactId>
-			<version>${xblog-core.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.xhome</groupId>
-			<artifactId>xauth-web</artifactId>
-			<version>${xauth-web.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.xhome</groupId>
-			<artifactId>xhome-http</artifactId>
-			<version>${xhome-http.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.xhome</groupId>
-			<artifactId>xhome-validator</artifactId>
-			<version>${xhome-validator.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.jhat</groupId>
-			<artifactId>spring-mvc-extend</artifactId>
-			<version>${spring-mvc-extend.version}</version>
-		</dependency>
+        <dependency>
+            <groupId>org.xhome</groupId>
+            <artifactId>xblog-core</artifactId>
+            <version>${xblog-core.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.xhome</groupId>
+            <artifactId>xauth-web</artifactId>
+            <version>${xauth-web.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.xhome</groupId>
+            <artifactId>xhome-validator</artifactId>
+            <version>${xhome-validator.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.xhome</groupId>
+            <artifactId>xhome-http</artifactId>
+            <version>${xhome-http.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.xhome</groupId>
+            <artifactId>xhome-crypto</artifactId>
+            <version>${xhome-crypto.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.xhome</groupId>
+            <artifactId>xhome-util</artifactId>
+            <version>${xhome-util.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.xhome</groupId>
+            <artifactId>xhome-db</artifactId>
+            <version>${xhome-db.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.xhome</groupId>
+            <artifactId>xhome-common</artifactId>
+            <version>${xhome-common.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jhat</groupId>
+            <artifactId>spring-mvc-extend</artifactId>
+            <version>${spring-mvc-extend.version}</version>
+            <scope>provided</scope>
+        </dependency>
 
-		<!-- Start Spring -->
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-jdbc</artifactId>
-			<version>${spring.version}</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-tx</artifactId>
-			<version>${spring.version}</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-webmvc</artifactId>
-			<version>${spring.version}</version>
-			<scope>compile</scope>
-		</dependency>
-		<!-- End Spring -->
+        <!-- Start Spring -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-jdbc</artifactId>
+            <version>${spring.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-tx</artifactId>
+            <version>${spring.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
+            <version>${spring.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <!-- End Spring -->
 
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-			<version>${slf4j-api.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>servlet-api</artifactId>
-			<version>${javax.servlet.version}</version>
-			<scope>compile</scope>
-		</dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j-api.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version>${javax.servlet.version}</version>
+            <scope>provided</scope>
+        </dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -113,10 +146,10 @@
             </plugins>
         </pluginManagement>
     </build>
-	<distributionManagement>
-		<repository>
-			<id>nexus_xhome</id>
-			<url>http://nexus.xhomestudio.org/content/repositories/releases/</url>
-		</repository>
-	</distributionManagement>
+    <distributionManagement>
+        <repository>
+            <id>nexus_xhome</id>
+            <url>http://nexus.xhomestudio.org/content/repositories/releases/</url>
+        </repository>
+    </distributionManagement>
 </project>
