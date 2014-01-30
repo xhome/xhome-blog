@@ -19,40 +19,39 @@ import org.xhome.xblog.core.listener.TestRecordManageListener;
  * @date Feb 1, 201310:49:01 AM
  */
 public class RecordServiceTest extends AbstractTest {
-	
-	private RecordService	recordService;
-	
+
+	private RecordService recordService;
+
 	public RecordServiceTest() {
 		recordService = context.getBean(RecordServiceImpl.class);
 		oper.setId(103L);
-		
-		((RecordServiceImpl)recordService).registerRecordManageListener(new TestRecordManageListener());
+
+		((RecordServiceImpl) recordService)
+				.registerRecordManageListener(new TestRecordManageListener());
 	}
-	
+
 	@Test
 	public void testAddRecord() {
 		User user = new User("jhat");
 		user.setId(2L);
 		Article article = new Article("Article");
 		article.setId(1L);
-		Record record = new Record(article, user, "127.0.0.1", Agent.CHROME, "chrome 20.01 ubuntu 64bit");
+		Record record = new Record(article, user, "127.0.0.1", Agent.CHROME,
+				"chrome 20.01 ubuntu 64bit");
 		record.setCreated(new Timestamp(System.currentTimeMillis()));
 		recordService.logRecord(record);
 	}
-	
+
 	@Test
 	public void testGetRecords() {
-		List<Record> records = recordService.getRecords(oper);
-		printRecord(records);
-		
 		QueryBase query = new QueryBase();
 		query.addParameter("user", "jhat");
 		query.addParameter("auth", "2013-");
 		query.addParameter("address", "192");
 		query.addParameter("type", "0");
 		query.addParameter("status", "0");
-		records = recordService.getRecords(oper, query);
+		List<Record> records = recordService.getRecords(oper, query);
 		printRecord(records);
 	}
-	
+
 }

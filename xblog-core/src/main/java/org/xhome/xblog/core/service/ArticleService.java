@@ -11,72 +11,70 @@ import org.xhome.xblog.Tag;
 
 /**
  * @project xblog-core
- * @author 	jhat
- * @email 	cpf624@126.com
- * @date 	Sep 10, 201311:21:14 PM
- * @describe 
+ * @author jhat
+ * @email cpf624@126.com
+ * @date Sep 10, 201311:21:14 PM
+ * @describe
  */
 @Service
 public interface ArticleService {
 
 	public int addArticle(User oper, Article article);
-	
+
 	public int updateArticle(User oper, Article article);
-	
+
 	public int lockArticle(User oper, Article article);
-	
+
 	public int unlockArticle(User oper, Article article);
 
 	public int removeArticle(User oper, Article article);
-	
+
 	public int deleteArticle(User oper, Article article);
-	
+
 	public boolean isArticleUpdateable(User oper, Article article);
 
 	public boolean isArticleLocked(User oper, Article article);
-	
+
 	public boolean isArticleRemoveable(User oper, Article article);
-	
+
 	public boolean isArticleDeleteable(User oper, Article article);
-	
+
 	public Article getArticle(User oper, long id);
-	
-	public List<Article> getArticles(User oper);
-	
+
 	public List<Article> getArticles(User oper, QueryBase query);
-	
-	public long countArticles(User oper);
-	
+
 	public long countArticles(User oper, QueryBase query);
-	
-	public int addArticleTag(User oper, Article article, Tag tag) throws BlogException;
-	
-	public int addArticleTag(User oper, Article article, List<Tag> tags) throws BlogException;
-	
+
+	public int addArticleTag(User oper, Article article, Tag tag)
+			throws BlogException;
+
+	public int addArticleTag(User oper, Article article, List<Tag> tags)
+			throws BlogException;
+
 	public int lockArticleTag(User oper, Article article, Tag tag);
-	
+
 	public int lockArticleTag(User oper, Article article, List<Tag> tags);
-	
+
 	public int unlockArticleTag(User oper, Article article, Tag tag);
-	
+
 	public int unlockArticleTag(User oper, Article article, List<Tag> tags);
-	
+
 	public int removeArticleTag(User oper, Article article, Tag tag);
-	
+
 	public int removeArticleTag(User oper, Article article, List<Tag> tags);
-	
+
 	public int deleteArticleTag(User oper, Article article, Tag tag);
-	
+
 	public int deleteArticleTag(User oper, Article article, List<Tag> tags);
-	
+
 	public boolean hasArticleTag(User oper, Article article, Tag tag);
-	
+
 	public boolean isArticleTagUpdateable(User oper, Article article, Tag tag);
-	
+
 	public boolean isArticleTagLocked(User oper, Article article, Tag tag);
 
 	public boolean isArticleTagRemoveable(User oper, Article article, Tag tag);
-	
+
 	public boolean isArticleTagDeleteable(User oper, Article article, Tag tag);
-	
+
 }

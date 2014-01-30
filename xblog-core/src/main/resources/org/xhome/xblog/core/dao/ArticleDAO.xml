@@ -125,113 +125,111 @@
 		SELECT a.id
 		<include refid="fromArticle"/>
 		<trim prefix="WHERE" prefixOverrides="AND">
-			<if test="parameters != null">
-				<if test="parameters.title != null">
-					AND a.title LIKE CONCAT('%',#{parameters.title},'%')
-				</if>
-				<if test="parameters.title_llike != null">
-					AND a.title LIKE CONCAT('%',#{parameters.title_llike})
-				</if>
-				<if test="parameters.title_rlike != null">
-					AND a.title LIKE CONCAT(#{parameters.title_rlike},'%')
-				</if>
-				<if test="parameters.title_equal != null">
-					AND a.title = #{parameters.title_equal}
-				</if>
-				AND ((a.attribute &amp; 1) != 0
-				<if test="parameters.user != null">
-					OR ((a.attribute &amp; 2) != 0 AND a.owner = #{parameters.user})
-				</if>
-				)
-				<if test="parameters.content != null">
-					AND a.content LIKE CONCAT('%',#{parameters.content},'%')
-				</if>
-				<if test="parameters.status != null">
-					AND a.status = #{parameters.status}
-				</if>
-				<if test="parameters.status_lt != null">
-					AND a.status &lt; #{parameters.status_lt}
-				</if>
-				<if test="parameters.status_le != null">
-					AND a.status &lt;= #{parameters.status_le}
-				</if>
-				<if test="parameters.status_gt != null">
-					AND a.status &gt; #{parameters.status_gt}
-				</if>
-				<if test="parameters.status_ge != null">
-					AND a.status &gt;= #{parameters.status_ge}
-				</if>
-				<if test="parameters.id != null">
-					AND a.id = #{parameters.id}
-				</if>
-				<if test="parameters.id_lt != null">
-					AND a.id &lt; #{parameters.id_lt}
-				</if>
-				<if test="parameters.id_le != null">
-					AND a.id &lt;= #{parameters.id_le}
-				</if>
-				<if test="parameters.id_gt != null">
-					AND a.id &gt; #{parameters.id_gt}
-				</if>
-				<if test="parameters.id_ge != null">
-					AND a.id &gt;= #{parameters.id_ge}
-				</if>
-				<if test="parameters.category_id != null">
-					AND c.id = #{parameters.category_id}
-				</if>
-				<if test="parameters.category_id_lt != null">
-					AND c.id &lt; #{parameters.category_id_lt}
-				</if>
-				<if test="parameters.category_id_le != null">
-					AND c.id &lt;= #{parameters.category_id_le}
-				</if>
-				<if test="parameters.category_id_gt != null">
-					AND c.id &gt; #{parameters.category_id_gt}
-				</if>
-				<if test="parameters.category_id_ge != null">
-					AND c.id &gt;= #{parameters.category_id_ge}
-				</if>
-				<if test="parameters.category_name != null">
-					AND c.name LIKE CONCAT('%',#{parameters.category_name},'%')
-				</if>
-				<if test="parameters.category_name_llike != null">
-					AND c.name LIKE CONCAT('%',#{parameters.category_name_llike})
-				</if>
-				<if test="parameters.category_name_rlike != null">
-					AND c.name LIKE CONCAT(#{parameters.category_name_rlike},'%')
-				</if>
-				<if test="parameters.category_name_equal != null">
-					AND c.name = #{parameters.category_name_equal}
-				</if>
-				<if test="parameters.tag_id != null">
-					AND t.id = #{parameters.tag_id}
-				</if>
-				<if test="parameters.tag_id_lt != null">
-					AND t.id &lt; #{parameters.tag_id_lt}
-				</if>
-				<if test="parameters.tag_id_le != null">
-					AND t.id &lt;= #{parameters.tag_id_le}
-				</if>
-				<if test="parameters.tag_id_gt != null">
-					AND t.id &gt; #{parameters.tag_id_gt}
-				</if>
-				<if test="parameters.tag_id_ge != null">
-					AND t.id &gt;= #{parameters.tag_id_ge}
-				</if>
-				<if test="parameters.tag_name != null">
-					AND t.name LIKE CONCAT('%',#{parameters.tag_name},'%')
-				</if>
-				<if test="parameters.tag_name_llike != null">
-					AND t.name LIKE CONCAT('%',#{parameters.tag_name_llike})
-				</if>
-				<if test="parameters.tag_name_rlike != null">
-					AND t.name LIKE CONCAT(#{parameters.tag_name_rlike},'%')
-				</if>
-				<if test="parameters.tag_name_equal != null">
-					AND t.name = #{parameters.tag_name_equal}
-				</if>
+			<if test="parameters.title != null and parameters.title != ''">
+				AND a.title LIKE CONCAT('%',#{parameters.title},'%')
 			</if>
-			<if test="parameters == null or parameters.status == null">
+			<if test="parameters.title_llike != null and parameters.title_llike != ''">
+				AND a.title LIKE CONCAT('%',#{parameters.title_llike})
+			</if>
+			<if test="parameters.title_rlike != null and parameters.title_rlike != ''">
+				AND a.title LIKE CONCAT(#{parameters.title_rlike},'%')
+			</if>
+			<if test="parameters.title_equal != null and parameters.title_equal != ''">
+				AND a.title = #{parameters.title_equal}
+			</if>
+			AND ((a.attribute &amp; 1) != 0
+			<if test="parameters.user != null and parameters.user != ''">
+				OR ((a.attribute &amp; 2) != 0 AND a.owner = #{parameters.user})
+			</if>
+			)
+			<if test="parameters.content != null and parameters.content != ''">
+				AND a.content LIKE CONCAT('%',#{parameters.content},'%')
+			</if>
+			<if test="parameters.status != null and parameters.status != ''">
+				AND a.status = #{parameters.status}
+			</if>
+			<if test="parameters.status_lt != null and parameters.status_lt != ''">
+				AND a.status &lt; #{parameters.status_lt}
+			</if>
+			<if test="parameters.status_le != null and parameters.status_le != ''">
+				AND a.status &lt;= #{parameters.status_le}
+			</if>
+			<if test="parameters.status_gt != null and parameters.status_gt != ''">
+				AND a.status &gt; #{parameters.status_gt}
+			</if>
+			<if test="parameters.status_ge != null and parameters.status_ge != ''">
+				AND a.status &gt;= #{parameters.status_ge}
+			</if>
+			<if test="parameters.id != null and parameters.id != ''">
+				AND a.id = #{parameters.id}
+			</if>
+			<if test="parameters.id_lt != null and parameters.id_lt != ''">
+				AND a.id &lt; #{parameters.id_lt}
+			</if>
+			<if test="parameters.id_le != null and parameters.id_le != ''">
+				AND a.id &lt;= #{parameters.id_le}
+			</if>
+			<if test="parameters.id_gt != null and parameters.id_gt != ''">
+				AND a.id &gt; #{parameters.id_gt}
+			</if>
+			<if test="parameters.id_ge != null and parameters.id_ge != ''">
+				AND a.id &gt;= #{parameters.id_ge}
+			</if>
+			<if test="parameters.category_id != null and parameters.category_id != ''">
+				AND c.id = #{parameters.category_id}
+			</if>
+			<if test="parameters.category_id_lt != null and parameters.category_id_lt != ''">
+				AND c.id &lt; #{parameters.category_id_lt}
+			</if>
+			<if test="parameters.category_id_le != null and parameters.category_id_le != ''">
+				AND c.id &lt;= #{parameters.category_id_le}
+			</if>
+			<if test="parameters.category_id_gt != null and parameters.category_id_gt != ''">
+				AND c.id &gt; #{parameters.category_id_gt}
+			</if>
+			<if test="parameters.category_id_ge != null and parameters.category_id_ge != ''">
+				AND c.id &gt;= #{parameters.category_id_ge}
+			</if>
+			<if test="parameters.category_name != null and parameters.category_name != ''">
+				AND c.name LIKE CONCAT('%',#{parameters.category_name},'%')
+			</if>
+			<if test="parameters.category_name_llike != null and parameters.category_name_llike != ''">
+				AND c.name LIKE CONCAT('%',#{parameters.category_name_llike})
+			</if>
+			<if test="parameters.category_name_rlike != null and parameters.category_name_rlike != ''">
+				AND c.name LIKE CONCAT(#{parameters.category_name_rlike},'%')
+			</if>
+			<if test="parameters.category_name_equal != null and parameters.category_name_equal != ''">
+				AND c.name = #{parameters.category_name_equal}
+			</if>
+			<if test="parameters.tag_id != null and parameters.tag_id != ''">
+				AND t.id = #{parameters.tag_id}
+			</if>
+			<if test="parameters.tag_id_lt != null and parameters.tag_id_lt != ''">
+				AND t.id &lt; #{parameters.tag_id_lt}
+			</if>
+			<if test="parameters.tag_id_le != null and parameters.tag_id_le != ''">
+				AND t.id &lt;= #{parameters.tag_id_le}
+			</if>
+			<if test="parameters.tag_id_gt != null and parameters.tag_id_gt != ''">
+				AND t.id &gt; #{parameters.tag_id_gt}
+			</if>
+			<if test="parameters.tag_id_ge != null and parameters.tag_id_ge != ''">
+				AND t.id &gt;= #{parameters.tag_id_ge}
+			</if>
+			<if test="parameters.tag_name != null and parameters.tag_name != ''">
+				AND t.name LIKE CONCAT('%',#{parameters.tag_name},'%')
+			</if>
+			<if test="parameters.tag_name_llike != null and parameters.tag_name_llike != ''">
+				AND t.name LIKE CONCAT('%',#{parameters.tag_name_llike})
+			</if>
+			<if test="parameters.tag_name_rlike != null and parameters.tag_name_rlike != ''">
+				AND t.name LIKE CONCAT(#{parameters.tag_name_rlike},'%')
+			</if>
+			<if test="parameters.tag_name_equal != null and parameters.tag_name_equal != ''">
+				AND t.name = #{parameters.tag_name_equal}
+			</if>
+			<if test="parameters.status == null or parameters.status == ''">
 				AND a.status != 0
 			</if>
 		</trim>
@@ -245,9 +243,7 @@
 			<include refid="queryArticleId"/>
 		)
 		ORDER BY modified DESC
-		<if test="_parameter != null">
-			LIMIT #{firstRow}, #{maxRow}
-		</if>
+		LIMIT #{start}, #{limit}
 	</select>
 	
 	<select id="countArticles" resultType="long" parameterType="org.xhome.db.query.QueryBase">

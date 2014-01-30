@@ -2,533 +2,434 @@ package org.xhome.xblog.web.action;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.jhat.spring.mvc.extend.bind.annotation.RequestAttribute;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.xhome.common.constant.Status;
 import org.xhome.db.query.QueryBase;
-import org.xhome.http.response.Result;
-import org.xhome.validator.CommonValidator;
-import org.xhome.validator.ValidatorMapping;
+import org.xhome.spring.mvc.extend.bind.annotation.RequestAttribute;
+import org.xhome.web.action.AbstractAction;
+import org.xhome.web.response.CommonResult;
 import org.xhome.xauth.User;
 import org.xhome.xauth.web.util.AuthUtils;
 import org.xhome.xblog.Article;
 import org.xhome.xblog.ArticleUserPermission;
 import org.xhome.xblog.core.service.ArticleUserPermissionService;
-import org.xhome.xblog.web.util.ValidatorUtils;
 
 /**
  * @project xblog-web
  * @blogor jhat
  * @email cpf624@126.com
  * @date Aug 13, 201310:49:20 PM
- * @description 
+ * @description
  */
 @Controller
-public class ArticleUserPermissionAction {
+public class ArticleUserPermissionAction extends AbstractAction {
 
-	@Autowired(required = false)
+	@Autowired
 	private ArticleUserPermissionService permissionService;
-	private Logger logger = LoggerFactory.getLogger(ArticleUserPermissionAction.class);
-	private CommonValidator		commonValidator 	= new CommonValidator();
-	private	ValidatorMapping	validatorMapping	= ValidatorMapping.getInstance();
-	
-	public final static String	RM_ARTICLE_USER_PERMISSION_ADD			= "xblog/permission/article/user/add.do";
-	public final static String	RM_ARTICLE_USER_PERMISSION_UPDATE		= "xblog/permission/article/user/update.do";
-	public final static String	RM_ARTICLE_USER_PERMISSION_LOCK			= "xblog/permission/article/user/lock.do";
-	public final static String	RM_ARTICLE_USER_PERMISSION_UNLOCK		= "xblog/permission/article/user/unlock.do";
-	public final static String	RM_ARTICLE_USER_PERMISSION_REMOVE		= "xblog/permission/article/user/remove.do";
-	public final static String	RM_ARTICLE_USER_PERMISSION_DELETE		= "xblog/permission/article/user/delete.do";
-	
-	public final static String	RM_ARTICLE_USER_PERMISSION_EXISTS		= "xblog/permission/article/user/exists.do";
-	public final static String	RM_ARTICLE_USER_PERMISSION_UPDATEABLE	= "xblog/permission/article/user/updateable.do";
-	public final static String	RM_ARTICLE_USER_PERMISSION_LOCKED		= "xblog/permission/article/user/locked.do";
-	public final static String	RM_ARTICLE_USER_PERMISSION_REMOVEABLE	= "xblog/permission/article/user/removeable.do";
-	public final static String	RM_ARTICLE_USER_PERMISSION_DELETEABLE	= "xblog/permission/article/user/deleteable.do";
-	public final static String	RM_ARTICLE_USER_PERMISSION_GET			= "xblog/permission/article/user/get.do";
-	public final static String	RM_ARTICLE_USER_PERMISSION_QUERY		= "xblog/permission/article/user/query.do";
-	public final static String	RM_ARTICLE_USER_PERMISSION_COUNT		= "xblog/permission/article/user/count.do";
-	
-	@InitBinder
-	public void initBinder(HttpServletRequest request, WebDataBinder binder) {
-		String uri = request.getRequestURI();
-		commonValidator.setValidators(validatorMapping.getValidatorByUri(uri));
-		binder.setValidator(commonValidator);
-		if (logger.isDebugEnabled()) {
-			logger.debug("init binder for " + uri);
-		}
-	}
-	
-	@ResponseBody
+
+	public final static String RM_ARTICLE_USER_PERMISSION_ADD = "xblog/permission/article/user/add";
+	public final static String RM_ARTICLE_USER_PERMISSION_UPDATE = "xblog/permission/article/user/update";
+	public final static String RM_ARTICLE_USER_PERMISSION_LOCK = "xblog/permission/article/user/lock";
+	public final static String RM_ARTICLE_USER_PERMISSION_UNLOCK = "xblog/permission/article/user/unlock";
+	public final static String RM_ARTICLE_USER_PERMISSION_REMOVE = "xblog/permission/article/user/remove";
+	public final static String RM_ARTICLE_USER_PERMISSION_DELETE = "xblog/permission/article/user/delete";
+
+	public final static String RM_ARTICLE_USER_PERMISSION_EXISTS = "xblog/permission/article/user/exists";
+	public final static String RM_ARTICLE_USER_PERMISSION_UPDATEABLE = "xblog/permission/article/user/updateable";
+	public final static String RM_ARTICLE_USER_PERMISSION_LOCKED = "xblog/permission/article/user/locked";
+	public final static String RM_ARTICLE_USER_PERMISSION_REMOVEABLE = "xblog/permission/article/user/removeable";
+	public final static String RM_ARTICLE_USER_PERMISSION_DELETEABLE = "xblog/permission/article/user/deleteable";
+	public final static String RM_ARTICLE_USER_PERMISSION_GET = "xblog/permission/article/user/get";
+	public final static String RM_ARTICLE_USER_PERMISSION_QUERY = "xblog/permission/article/user/query";
+	public final static String RM_ARTICLE_USER_PERMISSION_COUNT = "xblog/permission/article/user/count";
+
 	@RequestMapping(value = RM_ARTICLE_USER_PERMISSION_ADD, method = RequestMethod.POST)
-	public Object addArticleUserPermission(@Validated @RequestAttribute("permission") ArticleUserPermission permission, BindingResult result, HttpServletRequest request) {
-		Object r = null;
+	public Object addArticleUserPermission(
+			@Validated @RequestAttribute("permission") ArticleUserPermission permission,
+			HttpServletRequest request) {
 		short status = 0;
 		String msg = null;
-		
+
 		User user = AuthUtils.getCurrentUser(request);
-		if (result.hasErrors()) {
-			Result re = ValidatorUtils.errorResult(result);
-			status = re.getStatus();
-			msg = re.getMessage();
-			r = re;
+		AuthUtils.setOwner(request, permission);
+		AuthUtils.setModifier(request, permission);
+		status = (short) permissionService.addArticleUserPermission(user,
+				permission);
+		Article article = permission.getArticle();
+		User puser = permission.getUser();
+		if (status == Status.SUCCESS) {
+			msg = "用户为文章" + article.getTitle() + "[" + article.getId()
+					+ "]添加用户" + puser.getName() + "[" + puser.getId() + "]权限"
+					+ permission.getPermission() + "成功";
 		} else {
-			AuthUtils.setOwner(request, permission);
-			AuthUtils.setModifier(request, permission);
-			status = (short) permissionService.addArticleUserPermission(user, permission);
-			Article article = permission.getArticle();
-			User puser = permission.getUser();
-			if (status == Status.SUCCESS) {
-				msg = "用户为文章" + article.getTitle() + "[" + article.getId()
-						+ "]添加用户" + puser.getName() + "[" + puser.getId()
-						+ "]权限" + permission.getPermission() + "成功";
-				r = new Result(status, msg, permission);
-			} else {
-				msg = "用户为文章" + article.getTitle() + "[" + article.getId()
-						+ "]添加用户" + puser.getName() + "[" + puser.getId()
-						+ "]权限" + permission.getPermission() + "失败";
-				r = new Result(status, msg);
-			}
+			msg = "用户为文章" + article.getTitle() + "[" + article.getId()
+					+ "]添加用户" + puser.getName() + "[" + puser.getId() + "]权限"
+					+ permission.getPermission() + "失败";
 		}
-		
+
 		if (logger.isInfoEnabled()) {
 			logger.info("[{}] {} {}", status, user.getName(), msg);
 		}
-		
-		return r;
+
+		return new CommonResult(status, msg, permission);
 	}
-	
-	@ResponseBody
+
 	@RequestMapping(value = RM_ARTICLE_USER_PERMISSION_UPDATE, method = RequestMethod.POST)
-	public Object updateArticleUserPermission(@Validated ArticleUserPermission permission, BindingResult result, HttpServletRequest request) {
-		Object r = null;
+	public Object updateArticleUserPermission(
+			@Validated @RequestAttribute("permission") ArticleUserPermission permission,
+			HttpServletRequest request) {
 		short status = 0;
 		String msg = null;
-		
+
 		User user = AuthUtils.getCurrentUser(request);
-		if (result.hasErrors()) {
-			Result re = ValidatorUtils.errorResult(result);
-			status = re.getStatus();
-			msg = re.getMessage();
-			r = re;
+		AuthUtils.setModifier(request, permission);
+		status = (short) permissionService.updateArticleUserPermission(user,
+				permission);
+		Article article = permission.getArticle();
+		User puser = permission.getUser();
+		if (status == Status.SUCCESS) {
+			msg = "用户为文章" + article.getTitle() + "[" + article.getId()
+					+ "]更新用户" + puser.getName() + "[" + puser.getId() + "]权限"
+					+ permission.getPermission() + "[" + permission.getId()
+					+ "]" + "成功";
 		} else {
-			AuthUtils.setModifier(request, permission);
-			status = (short) permissionService.updateArticleUserPermission(user, permission);
-			Article article = permission.getArticle();
-			User puser = permission.getUser();
-			if (status == Status.SUCCESS) {
-				msg = "用户为文章" + article.getTitle() + "[" + article.getId()
-						+ "]更新用户" + puser.getName() + "[" + puser.getId()
-						+ "]权限" + permission.getPermission() + "[" + permission.getId() + "]" + "成功";
-				r = new Result(status, msg, permission);
-			} else {
-				msg = "用户为文章" + article.getTitle() + "[" + article.getId()
-						+ "]更新用户" + puser.getName() + "[" + puser.getId()
-						+ "]权限" + permission.getPermission() + "[" + permission.getId() + "]" + "失败";
-				r = new Result(status, msg);
-			}
+			msg = "用户为文章" + article.getTitle() + "[" + article.getId()
+					+ "]更新用户" + puser.getName() + "[" + puser.getId() + "]权限"
+					+ permission.getPermission() + "[" + permission.getId()
+					+ "]" + "失败";
 		}
-		
+
 		if (logger.isInfoEnabled()) {
 			logger.info("[{}] {} {}", status, user.getName(), msg);
 		}
-		
-		return r;
+
+		return new CommonResult(status, msg, permission);
 	}
-	
-	@ResponseBody
+
 	@RequestMapping(value = RM_ARTICLE_USER_PERMISSION_LOCK, method = RequestMethod.POST)
-	public Object lockArticleUserPermission(@Validated ArticleUserPermission permission, BindingResult result, HttpServletRequest request) {
-		Object r = null;
+	public Object lockArticleUserPermission(
+			@Validated @RequestAttribute("permission") ArticleUserPermission permission,
+			HttpServletRequest request) {
 		short status = 0;
 		String msg = null;
-		
+
 		User user = AuthUtils.getCurrentUser(request);
-		if (result.hasErrors()) {
-			Result re = ValidatorUtils.errorResult(result);
-			status = re.getStatus();
-			msg = re.getMessage();
-			r = re;
+		AuthUtils.setModifier(request, permission);
+		status = (short) permissionService.lockArticleUserPermission(user,
+				permission);
+		Article article = permission.getArticle();
+		User puser = permission.getUser();
+		if (status == Status.SUCCESS) {
+			msg = "用户为文章" + article.getTitle() + "[" + article.getId()
+					+ "]锁定用户" + puser.getName() + "[" + puser.getId() + "]权限"
+					+ permission.getPermission() + "[" + permission.getId()
+					+ "]" + "成功";
 		} else {
-			AuthUtils.setModifier(request, permission);
-			status = (short) permissionService.lockArticleUserPermission(user, permission);
-			Article article = permission.getArticle();
-			User puser = permission.getUser();
-			if (status == Status.SUCCESS) {
-				msg = "用户为文章" + article.getTitle() + "[" + article.getId()
-						+ "]锁定用户" + puser.getName() + "[" + puser.getId()
-						+ "]权限" + permission.getPermission() + "[" + permission.getId() + "]" + "成功";
-				r = new Result(status, msg, article);
-			} else {
-				msg = "用户为文章" + article.getTitle() + "[" + article.getId()
-						+ "]锁定用户" + puser.getName() + "[" + puser.getId()
-						+ "]权限" + permission.getPermission() + "[" + permission.getId() + "]" + "失败";
-				r = new Result(status, msg);
-			}
+			msg = "用户为文章" + article.getTitle() + "[" + article.getId()
+					+ "]锁定用户" + puser.getName() + "[" + puser.getId() + "]权限"
+					+ permission.getPermission() + "[" + permission.getId()
+					+ "]" + "失败";
 		}
-		
+
 		if (logger.isInfoEnabled()) {
 			logger.info("[{}] {} {}", status, user.getName(), msg);
 		}
-		
-		return r;
+
+		return new CommonResult(status, msg, article);
 	}
-	
-	@ResponseBody
+
 	@RequestMapping(value = RM_ARTICLE_USER_PERMISSION_UNLOCK, method = RequestMethod.POST)
-	public Object unlockArticleUserPermission(@Validated ArticleUserPermission permission, BindingResult result, HttpServletRequest request) {
-		Object r = null;
+	public Object unlockArticleUserPermission(
+			@Validated @RequestAttribute("permission") ArticleUserPermission permission,
+			HttpServletRequest request) {
 		short status = 0;
 		String msg = null;
-		
+
 		User user = AuthUtils.getCurrentUser(request);
-		if (result.hasErrors()) {
-			Result re = ValidatorUtils.errorResult(result);
-			status = re.getStatus();
-			msg = re.getMessage();
-			r = re;
+		AuthUtils.setModifier(request, permission);
+		status = (short) permissionService.unlockArticleUserPermission(user,
+				permission);
+		Article article = permission.getArticle();
+		User puser = permission.getUser();
+		if (status == Status.SUCCESS) {
+			msg = "用户为文章" + article.getTitle() + "[" + article.getId()
+					+ "]解锁用户" + puser.getName() + "[" + puser.getId() + "]权限"
+					+ permission.getPermission() + "[" + permission.getId()
+					+ "]" + "成功";
 		} else {
-			AuthUtils.setModifier(request, permission);
-			status = (short) permissionService.unlockArticleUserPermission(user, permission);
-			Article article = permission.getArticle();
-			User puser = permission.getUser();
-			if (status == Status.SUCCESS) {
-				msg = "用户为文章" + article.getTitle() + "[" + article.getId()
-						+ "]解锁用户" + puser.getName() + "[" + puser.getId()
-						+ "]权限" + permission.getPermission() + "[" + permission.getId() + "]" + "成功";
-				r = new Result(status, msg, permission);
-			} else {
-				msg = "用户为文章" + article.getTitle() + "[" + article.getId()
-						+ "]解锁用户" + puser.getName() + "[" + puser.getId()
-						+ "]权限" + permission.getPermission() + "[" + permission.getId() + "]" + "失败";
-				r = new Result(status, msg);
-			}
+			msg = "用户为文章" + article.getTitle() + "[" + article.getId()
+					+ "]解锁用户" + puser.getName() + "[" + puser.getId() + "]权限"
+					+ permission.getPermission() + "[" + permission.getId()
+					+ "]" + "失败";
 		}
-		
+
 		if (logger.isInfoEnabled()) {
 			logger.info("[{}] {} {}", status, user.getName(), msg);
 		}
-		
-		return r;
+
+		return new CommonResult(status, msg, permission);
 	}
-	
-	@ResponseBody
+
 	@RequestMapping(value = RM_ARTICLE_USER_PERMISSION_REMOVE, method = RequestMethod.POST)
-	public Object removeArticleUserPermission(@Validated ArticleUserPermission permission, BindingResult result, HttpServletRequest request) {
-		Object r = null;
+	public Object removeArticleUserPermission(
+			@Validated @RequestAttribute("permission") ArticleUserPermission permission,
+			HttpServletRequest request) {
 		short status = 0;
 		String msg = null;
-		
+
 		User user = AuthUtils.getCurrentUser(request);
-		if (result.hasErrors()) {
-			Result re = ValidatorUtils.errorResult(result);
-			status = re.getStatus();
-			msg = re.getMessage();
-			r = re;
+		AuthUtils.setModifier(request, permission);
+		status = (short) permissionService.removeArticleUserPermission(user,
+				permission);
+		Article article = permission.getArticle();
+		User puser = permission.getUser();
+		if (status == Status.SUCCESS) {
+			msg = "用户为文章" + article.getTitle() + "[" + article.getId()
+					+ "]移除用户" + puser.getName() + "[" + puser.getId() + "]权限"
+					+ permission.getPermission() + "[" + permission.getId()
+					+ "]" + "成功";
 		} else {
-			AuthUtils.setModifier(request, permission);
-			status = (short) permissionService.removeArticleUserPermission(user, permission);
-			Article article = permission.getArticle();
-			User puser = permission.getUser();
-			if (status == Status.SUCCESS) {
-				msg = "用户为文章" + article.getTitle() + "[" + article.getId()
-						+ "]移除用户" + puser.getName() + "[" + puser.getId()
-						+ "]权限" + permission.getPermission() + "[" + permission.getId() + "]" + "成功";
-				r = new Result(status, msg, permission);
-			} else {
-				msg = "用户为文章" + article.getTitle() + "[" + article.getId()
-						+ "]移除用户" + puser.getName() + "[" + puser.getId()
-						+ "]权限" + permission.getPermission() + "[" + permission.getId() + "]" + "失败";
-				r = new Result(status, msg);
-			}
+			msg = "用户为文章" + article.getTitle() + "[" + article.getId()
+					+ "]移除用户" + puser.getName() + "[" + puser.getId() + "]权限"
+					+ permission.getPermission() + "[" + permission.getId()
+					+ "]" + "失败";
 		}
-		
+
 		if (logger.isInfoEnabled()) {
 			logger.info("[{}] {} {}", status, user.getName(), msg);
 		}
-		
-		return r;
+
+		return new CommonResult(status, msg, permission);
 	}
-	
-	@ResponseBody
+
 	@RequestMapping(value = RM_ARTICLE_USER_PERMISSION_DELETE, method = RequestMethod.POST)
-	public Object deleteArticleUserPermission(@Validated ArticleUserPermission permission, BindingResult result, HttpServletRequest request) {
-		Object r = null;
+	public Object deleteArticleUserPermission(
+			@Validated @RequestAttribute("permission") ArticleUserPermission permission,
+			HttpServletRequest request) {
 		short status = 0;
 		String msg = null;
-		
+
 		User user = AuthUtils.getCurrentUser(request);
-		if (result.hasErrors()) {
-			Result re = ValidatorUtils.errorResult(result);
-			status = re.getStatus();
-			msg = re.getMessage();
-			r = re;
+		status = (short) permissionService.deleteArticleUserPermission(user,
+				permission);
+		Article article = permission.getArticle();
+		User puser = permission.getUser();
+		if (status == Status.SUCCESS) {
+			msg = "用户为文章" + article.getTitle() + "[" + article.getId()
+					+ "]删除用户" + puser.getName() + "[" + puser.getId() + "]权限"
+					+ permission.getPermission() + "[" + permission.getId()
+					+ "]" + "成功";
 		} else {
-			status = (short) permissionService.deleteArticleUserPermission(user, permission);
-			Article article = permission.getArticle();
-			User puser = permission.getUser();
-			if (status == Status.SUCCESS) {
-				msg = "用户为文章" + article.getTitle() + "[" + article.getId()
-						+ "]删除用户" + puser.getName() + "[" + puser.getId()
-						+ "]权限" + permission.getPermission() + "[" + permission.getId() + "]" + "成功";
-				r = new Result(status, msg, permission);
-			} else {
-				msg = "用户为文章" + article.getTitle() + "[" + article.getId()
-						+ "]删除用户" + puser.getName() + "[" + puser.getId()
-						+ "]权限" + permission.getPermission() + "[" + permission.getId() + "]" + "失败";
-				r = new Result(status, msg);
-			}
+			msg = "用户为文章" + article.getTitle() + "[" + article.getId()
+					+ "]删除用户" + puser.getName() + "[" + puser.getId() + "]权限"
+					+ permission.getPermission() + "[" + permission.getId()
+					+ "]" + "失败";
 		}
-		
+
 		if (logger.isInfoEnabled()) {
 			logger.info("[{}] {} {}", status, user.getName(), msg);
 		}
-		
-		return r;
+
+		return new CommonResult(status, msg, permission);
 	}
-	
-	@ResponseBody
+
 	@RequestMapping(value = RM_ARTICLE_USER_PERMISSION_EXISTS, method = RequestMethod.GET)
-	public Object isArticleUserPermissionExists(@Validated ArticleUserPermission permission, BindingResult result, HttpServletRequest request) {
-		Object r = null;
+	public Object isArticleUserPermissionExists(
+			@Validated @RequestAttribute("permission") ArticleUserPermission permission,
+			HttpServletRequest request) {
 		short status = Status.SUCCESS;
 		String msg = null;
-		
+
 		User user = AuthUtils.getCurrentUser(request);
-		if (result.hasErrors()) {
-			Result re = ValidatorUtils.errorResult(result);
-			status = re.getStatus();
-			msg = re.getMessage();
-			r = re;
+		boolean exists = permissionService.isArticleUserPermissionExists(user,
+				permission);
+		Article article = permission.getArticle();
+		User puser = permission.getUser();
+		if (exists) {
+			msg = "用户查询到文章" + article.getTitle() + "[" + article.getId()
+					+ "]用户" + puser.getName() + "[" + puser.getId() + "]权限"
+					+ permission.getPermission() + "[" + permission.getId()
+					+ "]存在";
 		} else {
-			boolean is = permissionService.isArticleUserPermissionExists(user, permission);
-			Article article = permission.getArticle();
-			User puser = permission.getUser();
-			if (is) {
-				msg = "用户查询到文章" + article.getTitle() + "[" + article.getId()
-						+ "]用户" + puser.getName() + "[" + puser.getId()
-						+ "]权限" + permission.getPermission() + "[" + permission.getId()
-						+ "]存在";
-				r = new Result(status, msg, true);
-			} else {
-				msg = "用户查询到文章" + article.getTitle() + "[" + article.getId()
-						+ "]用户" + puser.getName() + "[" + puser.getId()
-						+ "]权限" + permission.getPermission() + "[" + permission.getId()
-						+ "]不存在";
-				r = new Result(status, msg, false);
-			}
+			msg = "用户查询到文章" + article.getTitle() + "[" + article.getId()
+					+ "]用户" + puser.getName() + "[" + puser.getId() + "]权限"
+					+ permission.getPermission() + "[" + permission.getId()
+					+ "]不存在";
 		}
-		
+
 		if (logger.isInfoEnabled()) {
 			logger.info("[{}] {} {}", status, user.getName(), msg);
 		}
-		
-		return r;
+
+		return new CommonResult(status, msg, exists);
 	}
-	
-	@ResponseBody
+
 	@RequestMapping(value = RM_ARTICLE_USER_PERMISSION_UPDATEABLE, method = RequestMethod.GET)
-	public Object isArticleUserPermissionUpdateable(@Validated ArticleUserPermission permission, BindingResult result, HttpServletRequest request) {
-		Object r = null;
+	public Object isArticleUserPermissionUpdateable(
+			@Validated @RequestAttribute("permission") ArticleUserPermission permission,
+			HttpServletRequest request) {
 		short status = Status.SUCCESS;
 		String msg = null;
-		
+
 		User user = AuthUtils.getCurrentUser(request);
-		if (result.hasErrors()) {
-			Result re = ValidatorUtils.errorResult(result);
-			status = re.getStatus();
-			msg = re.getMessage();
-			r = re;
+		boolean updateable = permissionService
+				.isArticleUserPermissionUpdateable(user, permission);
+		Article article = permission.getArticle();
+		User puser = permission.getUser();
+		if (updateable) {
+			msg = "用户查询到文章" + article.getTitle() + "[" + article.getId()
+					+ "]用户" + puser.getName() + "[" + puser.getId() + "]权限"
+					+ permission.getPermission() + "[" + permission.getId()
+					+ "]可以更新";
 		} else {
-			boolean is = permissionService.isArticleUserPermissionUpdateable(user, permission);
-			Article article = permission.getArticle();
-			User puser = permission.getUser();
-			if (is) {
-				msg = "用户查询到文章" + article.getTitle() + "[" + article.getId()
-						+ "]用户" + puser.getName() + "[" + puser.getId()
-						+ "]权限" + permission.getPermission() + "[" + permission.getId()
-						+ "]可以更新";
-				r = new Result(status, msg, true);
-			} else {
-				msg = "用户查询到文章" + article.getTitle() + "[" + article.getId()
-						+ "]用户" + puser.getName() + "[" + puser.getId()
-						+ "]权限" + permission.getPermission() + "[" + permission.getId()
-						+ "]不可以更新";
-				r = new Result(status, msg, false);
-			}
+			msg = "用户查询到文章" + article.getTitle() + "[" + article.getId()
+					+ "]用户" + puser.getName() + "[" + puser.getId() + "]权限"
+					+ permission.getPermission() + "[" + permission.getId()
+					+ "]不可以更新";
 		}
-		
+
 		if (logger.isInfoEnabled()) {
 			logger.info("[{}] {} {}", status, user.getName(), msg);
 		}
-		
-		return r;
+
+		return new CommonResult(status, msg, updateable);
 	}
-	
-	@ResponseBody
+
 	@RequestMapping(value = RM_ARTICLE_USER_PERMISSION_LOCKED, method = RequestMethod.GET)
-	public Object isArticleUserPermissionLocked(@Validated ArticleUserPermission permission, BindingResult result, HttpServletRequest request) {
-		Object r = null;
+	public Object isArticleUserPermissionLocked(
+			@Validated @RequestAttribute("permission") ArticleUserPermission permission,
+			HttpServletRequest request) {
 		short status = Status.SUCCESS;
 		String msg = null;
-		
+
 		User user = AuthUtils.getCurrentUser(request);
-		if (result.hasErrors()) {
-			Result re = ValidatorUtils.errorResult(result);
-			status = re.getStatus();
-			msg = re.getMessage();
-			r = re;
+		boolean locked = permissionService.isArticleUserPermissionLocked(user,
+				permission);
+		Article article = permission.getArticle();
+		User puser = permission.getUser();
+		if (locked) {
+			msg = "用户查询到文章" + article.getTitle() + "[" + article.getId()
+					+ "]用户" + puser.getName() + "[" + puser.getId() + "]权限"
+					+ permission.getPermission() + "[" + permission.getId()
+					+ "]已被锁定";
 		} else {
-			boolean is = permissionService.isArticleUserPermissionLocked(user, permission);
-			Article article = permission.getArticle();
-			User puser = permission.getUser();
-			if (is) {
-				msg = "用户查询到文章" + article.getTitle() + "[" + article.getId()
-						+ "]用户" + puser.getName() + "[" + puser.getId()
-						+ "]权限" + permission.getPermission() + "[" + permission.getId()
-						+ "]已被锁定";
-				r = new Result(status, msg, true);
-			} else {
-				msg = "用户查询到文章" + article.getTitle() + "[" + article.getId()
-						+ "]用户" + puser.getName() + "[" + puser.getId()
-						+ "]权限" + permission.getPermission() + "[" + permission.getId()
-						+ "]未被锁定";
-				r = new Result(status, msg, false);
-			}
+			msg = "用户查询到文章" + article.getTitle() + "[" + article.getId()
+					+ "]用户" + puser.getName() + "[" + puser.getId() + "]权限"
+					+ permission.getPermission() + "[" + permission.getId()
+					+ "]未被锁定";
 		}
-		
+
 		if (logger.isInfoEnabled()) {
 			logger.info("[{}] {} {}", status, user.getName(), msg);
 		}
-		
-		return r;
+
+		return new CommonResult(status, msg, locked);
 	}
-	
-	@ResponseBody
+
 	@RequestMapping(value = RM_ARTICLE_USER_PERMISSION_REMOVEABLE, method = RequestMethod.GET)
-	public Object isArticleUserPermissionRemoveable(@Validated ArticleUserPermission permission, BindingResult result, HttpServletRequest request) {
-		Object r = null;
+	public Object isArticleUserPermissionRemoveable(
+			@Validated @RequestAttribute("permission") ArticleUserPermission permission,
+			HttpServletRequest request) {
 		short status = Status.SUCCESS;
 		String msg = null;
-		
+
 		User user = AuthUtils.getCurrentUser(request);
-		if (result.hasErrors()) {
-			Result re = ValidatorUtils.errorResult(result);
-			status = re.getStatus();
-			msg = re.getMessage();
-			r = re;
+		boolean removeable = permissionService
+				.isArticleUserPermissionRemoveable(user, permission);
+		Article article = permission.getArticle();
+		User puser = permission.getUser();
+		if (removeable) {
+			msg = "用户查询到文章" + article.getTitle() + "[" + article.getId()
+					+ "]用户" + puser.getName() + "[" + puser.getId() + "]权限"
+					+ permission.getPermission() + "[" + permission.getId()
+					+ "]可以移除";
 		} else {
-			boolean is = permissionService.isArticleUserPermissionRemoveable(user, permission);
-			Article article = permission.getArticle();
-			User puser = permission.getUser();
-			if (is) {
-				msg = "用户查询到文章" + article.getTitle() + "[" + article.getId()
-						+ "]用户" + puser.getName() + "[" + puser.getId()
-						+ "]权限" + permission.getPermission() + "[" + permission.getId()
-						+ "]可以移除";
-				r = new Result(status, msg, true);
-			} else {
-				msg = "用户查询到文章" + article.getTitle() + "[" + article.getId()
-						+ "]用户" + puser.getName() + "[" + puser.getId()
-						+ "]权限" + permission.getPermission() + "[" + permission.getId()
-						+ "]不可以移除";
-				r = new Result(status, msg, false);
-			}
+			msg = "用户查询到文章" + article.getTitle() + "[" + article.getId()
+					+ "]用户" + puser.getName() + "[" + puser.getId() + "]权限"
+					+ permission.getPermission() + "[" + permission.getId()
+					+ "]不可以移除";
 		}
-		
+
 		if (logger.isInfoEnabled()) {
 			logger.info("[{}] {} {}", status, user.getName(), msg);
 		}
-		
-		return r;
+
+		return new CommonResult(status, msg, removeable);
 	}
-	
-	@ResponseBody
+
 	@RequestMapping(value = RM_ARTICLE_USER_PERMISSION_DELETEABLE, method = RequestMethod.GET)
-	public Object isArticleUserPermissionDeleteable(@Validated ArticleUserPermission permission, BindingResult result, HttpServletRequest request) {
-		Object r = null;
+	public Object isArticleUserPermissionDeleteable(
+			@Validated @RequestAttribute("permission") ArticleUserPermission permission,
+			HttpServletRequest request) {
 		short status = Status.SUCCESS;
 		String msg = null;
-		
+
 		User user = AuthUtils.getCurrentUser(request);
-		if (result.hasErrors()) {
-			Result re = ValidatorUtils.errorResult(result);
-			status = re.getStatus();
-			msg = re.getMessage();
-			r = re;
+		boolean deleteable = permissionService
+				.isArticleUserPermissionDeleteable(user, permission);
+		Article article = permission.getArticle();
+		User puser = permission.getUser();
+		if (deleteable) {
+			msg = "用户查询到文章" + article.getTitle() + "[" + article.getId()
+					+ "]用户" + puser.getName() + "[" + puser.getId() + "]权限"
+					+ permission.getPermission() + "[" + permission.getId()
+					+ "]可以删除";
 		} else {
-			boolean is = permissionService.isArticleUserPermissionDeleteable(user, permission);
-			Article article = permission.getArticle();
-			User puser = permission.getUser();
-			if (is) {
-				msg = "用户查询到文章" + article.getTitle() + "[" + article.getId()
-						+ "]用户" + puser.getName() + "[" + puser.getId()
-						+ "]权限" + permission.getPermission() + "[" + permission.getId()
-						+ "]可以删除";
-				r = new Result(status, msg, true);
-			} else {
-				msg = "用户查询到文章" + article.getTitle() + "[" + article.getId()
-						+ "]用户" + puser.getName() + "[" + puser.getId()
-						+ "]权限" + permission.getPermission() + "[" + permission.getId()
-						+ "]不可以删除";
-				r = new Result(status, msg, false);
-			}
+			msg = "用户查询到文章" + article.getTitle() + "[" + article.getId()
+					+ "]用户" + puser.getName() + "[" + puser.getId() + "]权限"
+					+ permission.getPermission() + "[" + permission.getId()
+					+ "]不可以删除";
 		}
-		
+
 		if (logger.isInfoEnabled()) {
 			logger.info("[{}] {} {}", status, user.getName(), msg);
 		}
-		
-		return r;
+
+		return new CommonResult(status, msg, deleteable);
 	}
-	
-	@ResponseBody
+
 	@RequestMapping(value = RM_ARTICLE_USER_PERMISSION_GET, method = RequestMethod.GET)
-	public Object getArticleUserPermission(@RequestParam("id") Long id, HttpServletRequest request) {
+	public Object getArticleUserPermission(@RequestParam("id") Long id,
+			HttpServletRequest request) {
 		User user = AuthUtils.getCurrentUser(request);
 		String uname = user.getName();
 		ArticleUserPermission permission = null;
-		
+
 		String msg = null;
 		short status = Status.SUCCESS;
-		
+
 		permission = permissionService.getArticleUserPermission(user, id);
 		if (permission != null) {
 			Article article = permission.getArticle();
 			User puser = permission.getUser();
-			msg = "用户查询到文章" + article.getTitle() + "[" + article.getId() + "]用户"
-					+ puser.getName() + "[" + puser.getId() + "]权限"
-					+ permission.getPermission() + "[" + permission.getId() + "]";
+			msg = "用户查询到文章" + article.getTitle() + "[" + article.getId()
+					+ "]用户" + puser.getName() + "[" + puser.getId() + "]权限"
+					+ permission.getPermission() + "[" + permission.getId()
+					+ "]";
 		} else {
 			status = Status.ERROR;
 			msg = "文章查询失败";
 		}
-		Result r = new Result(status, msg, permission);
-		
+
 		if (logger.isInfoEnabled()) {
-			
+
 			logger.info("[{}] {} {}", status, uname, msg);
 		}
-		
-		return r;
+
+		return new CommonResult(status, msg, permission);
 	}
-	
-	@ResponseBody
+
 	@RequestMapping(value = RM_ARTICLE_USER_PERMISSION_QUERY, method = RequestMethod.GET)
-	public Object getArticleUserPermissions(QueryBase query, HttpServletRequest request) {
+	public Object getArticleUserPermissions(QueryBase query,
+			HttpServletRequest request) {
 		User user = AuthUtils.getCurrentUser(request);
 		String uname = user.getName();
-		
+
 		if (logger.isInfoEnabled()) {
 			if (query != null) {
 				logger.info("用户{}按条件{}查询文章用户权限信息", uname, query.getParameters());
@@ -538,26 +439,24 @@ public class ArticleUserPermissionAction {
 			}
 		}
 		permissionService.getArticleUserPermissions(user, query);
-		
+
 		String msg = "条件查询文章用户权限信息";
 		short status = Status.SUCCESS;
-		
-		Result r = new Result(status, msg, query);
 
 		if (logger.isInfoEnabled()) {
-			
+
 			logger.info("[{}] {} {}", status, uname, msg);
 		}
-		
-		return r;
+
+		return new CommonResult(status, msg, query);
 	}
-	
-	@ResponseBody
+
 	@RequestMapping(value = RM_ARTICLE_USER_PERMISSION_COUNT, method = RequestMethod.GET)
-	public Object countArticleUserPermissions(QueryBase query, HttpServletRequest request) {
+	public Object countArticleUserPermissions(QueryBase query,
+			HttpServletRequest request) {
 		User user = AuthUtils.getCurrentUser(request);
 		String uname = user.getName();
-		
+
 		if (logger.isInfoEnabled()) {
 			if (query != null) {
 				logger.info("用户{}按条件{}统计文章用户权限信息", uname, query.getParameters());
@@ -566,25 +465,24 @@ public class ArticleUserPermissionAction {
 			}
 		}
 		long count = permissionService.countArticleUserPermissions(user, query);
-		
+
 		String msg = "条件统计文章用户权限信息，共" + count;
 		short status = Status.SUCCESS;
-		
-		Result r = new Result(status, msg, count);
 
 		if (logger.isInfoEnabled()) {
 			logger.info("[{}] {} {}", status, uname, msg);
 		}
-		
-		return r;
+
+		return new CommonResult(status, msg, count);
 	}
 
-	public void setArticleUserPermissionService(ArticleUserPermissionService permissionService) {
+	public void setArticleUserPermissionService(
+			ArticleUserPermissionService permissionService) {
 		this.permissionService = permissionService;
 	}
 
 	public ArticleUserPermissionService getArticleUserPermissionService() {
 		return permissionService;
 	}
-	
+
 }

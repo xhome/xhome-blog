@@ -2,534 +2,435 @@ package org.xhome.xblog.web.action;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.jhat.spring.mvc.extend.bind.annotation.RequestAttribute;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.xhome.common.constant.Status;
 import org.xhome.db.query.QueryBase;
-import org.xhome.http.response.Result;
-import org.xhome.validator.CommonValidator;
-import org.xhome.validator.ValidatorMapping;
+import org.xhome.spring.mvc.extend.bind.annotation.RequestAttribute;
+import org.xhome.web.action.AbstractAction;
+import org.xhome.web.response.CommonResult;
 import org.xhome.xauth.Role;
 import org.xhome.xauth.User;
 import org.xhome.xauth.web.util.AuthUtils;
 import org.xhome.xblog.Tag;
 import org.xhome.xblog.TagRolePermission;
 import org.xhome.xblog.core.service.TagRolePermissionService;
-import org.xhome.xblog.web.util.ValidatorUtils;
 
 /**
  * @project xblog-web
  * @blogor jhat
  * @email cpf624@126.com
  * @date Aug 13, 201310:49:20 PM
- * @description 
+ * @description
  */
 @Controller
-public class TagRolePermissionAction {
+public class TagRolePermissionAction extends AbstractAction {
 
 	@Autowired(required = false)
 	private TagRolePermissionService permissionService;
-	private Logger logger = LoggerFactory.getLogger(TagRolePermissionAction.class);
-	private CommonValidator		commonValidator 	= new CommonValidator();
-	private	ValidatorMapping	validatorMapping	= ValidatorMapping.getInstance();
-	
-	public final static String	RM_TAG_ROLE_PERMISSION_ADD			= "xblog/permission/tag/role/add.do";
-	public final static String	RM_TAG_ROLE_PERMISSION_UPDATE		= "xblog/permission/tag/role/update.do";
-	public final static String	RM_TAG_ROLE_PERMISSION_LOCK			= "xblog/permission/tag/role/lock.do";
-	public final static String	RM_TAG_ROLE_PERMISSION_UNLOCK		= "xblog/permission/tag/role/unlock.do";
-	public final static String	RM_TAG_ROLE_PERMISSION_REMOVE		= "xblog/permission/tag/role/remove.do";
-	public final static String	RM_TAG_ROLE_PERMISSION_DELETE		= "xblog/permission/tag/role/delete.do";
-	
-	public final static String	RM_TAG_ROLE_PERMISSION_EXISTS		= "xblog/permission/tag/role/exists.do";
-	public final static String	RM_TAG_ROLE_PERMISSION_UPDATEABLE	= "xblog/permission/tag/role/updateable.do";
-	public final static String	RM_TAG_ROLE_PERMISSION_LOCKED		= "xblog/permission/tag/role/locked.do";
-	public final static String	RM_TAG_ROLE_PERMISSION_REMOVEABLE	= "xblog/permission/tag/role/removeable.do";
-	public final static String	RM_TAG_ROLE_PERMISSION_DELETEABLE	= "xblog/permission/tag/role/deleteable.do";
-	public final static String	RM_TAG_ROLE_PERMISSION_GET			= "xblog/permission/tag/role/get.do";
-	public final static String	RM_TAG_ROLE_PERMISSION_QUERY		= "xblog/permission/tag/role/query.do";
-	public final static String	RM_TAG_ROLE_PERMISSION_COUNT		= "xblog/permission/tag/role/count.do";
-	
-	@InitBinder
-	public void initBinder(HttpServletRequest request, WebDataBinder binder) {
-		String uri = request.getRequestURI();
-		commonValidator.setValidators(validatorMapping.getValidatorByUri(uri));
-		binder.setValidator(commonValidator);
-		if (logger.isDebugEnabled()) {
-			logger.debug("init binder for " + uri);
-		}
-	}
-	
-	@ResponseBody
+
+	public final static String RM_TAG_ROLE_PERMISSION_ADD = "xblog/permission/tag/role/add";
+	public final static String RM_TAG_ROLE_PERMISSION_UPDATE = "xblog/permission/tag/role/update";
+	public final static String RM_TAG_ROLE_PERMISSION_LOCK = "xblog/permission/tag/role/lock";
+	public final static String RM_TAG_ROLE_PERMISSION_UNLOCK = "xblog/permission/tag/role/unlock";
+	public final static String RM_TAG_ROLE_PERMISSION_REMOVE = "xblog/permission/tag/role/remove";
+	public final static String RM_TAG_ROLE_PERMISSION_DELETE = "xblog/permission/tag/role/delete";
+
+	public final static String RM_TAG_ROLE_PERMISSION_EXISTS = "xblog/permission/tag/role/exists";
+	public final static String RM_TAG_ROLE_PERMISSION_UPDATEABLE = "xblog/permission/tag/role/updateable";
+	public final static String RM_TAG_ROLE_PERMISSION_LOCKED = "xblog/permission/tag/role/locked";
+	public final static String RM_TAG_ROLE_PERMISSION_REMOVEABLE = "xblog/permission/tag/role/removeable";
+	public final static String RM_TAG_ROLE_PERMISSION_DELETEABLE = "xblog/permission/tag/role/deleteable";
+	public final static String RM_TAG_ROLE_PERMISSION_GET = "xblog/permission/tag/role/get";
+	public final static String RM_TAG_ROLE_PERMISSION_QUERY = "xblog/permission/tag/role/query";
+	public final static String RM_TAG_ROLE_PERMISSION_COUNT = "xblog/permission/tag/role/count";
+
 	@RequestMapping(value = RM_TAG_ROLE_PERMISSION_ADD, method = RequestMethod.POST)
-	public Object addTagRolePermission(@Validated @RequestAttribute("permission") TagRolePermission permission, BindingResult result, HttpServletRequest request) {
-		Object r = null;
+	public Object addTagRolePermission(
+			@Validated @RequestAttribute("permission") TagRolePermission permission,
+			HttpServletRequest request) {
 		short status = 0;
 		String msg = null;
-		
+
 		User user = AuthUtils.getCurrentUser(request);
-		if (result.hasErrors()) {
-			Result re = ValidatorUtils.errorResult(result);
-			status = re.getStatus();
-			msg = re.getMessage();
-			r = re;
+		AuthUtils.setOwner(request, permission);
+		AuthUtils.setModifier(request, permission);
+		status = (short) permissionService.addTagRolePermission(user,
+				permission);
+		Tag tag = permission.getTag();
+		Role role = permission.getRole();
+		if (status == Status.SUCCESS) {
+			msg = "用户为标签" + tag.getName() + "[" + tag.getId() + "]添加角色"
+					+ role.getName() + "[" + role.getId() + "]权限"
+					+ permission.getPermission() + "成功";
 		} else {
-			AuthUtils.setOwner(request, permission);
-			AuthUtils.setModifier(request, permission);
-			status = (short) permissionService.addTagRolePermission(user, permission);
-			Tag tag = permission.getTag();
-			Role role = permission.getRole();
-			if (status == Status.SUCCESS) {
-				msg = "用户为标签" + tag.getName() + "[" + tag.getId()
-						+ "]添加角色" + role.getName() + "[" + role.getId()
-						+ "]权限" + permission.getPermission() + "成功";
-				r = new Result(status, msg, permission);
-			} else {
-				msg = "用户为标签" + tag.getName() + "[" + tag.getId()
-						+ "]添加角色" + role.getName() + "[" + role.getId()
-						+ "]权限" + permission.getPermission() + "失败";
-				r = new Result(status, msg);
-			}
+			msg = "用户为标签" + tag.getName() + "[" + tag.getId() + "]添加角色"
+					+ role.getName() + "[" + role.getId() + "]权限"
+					+ permission.getPermission() + "失败";
 		}
-		
+
 		if (logger.isInfoEnabled()) {
 			logger.info("[{}] {} {}", status, user.getName(), msg);
 		}
-		
-		return r;
+
+		return new CommonResult(status, msg, permission);
 	}
-	
-	@ResponseBody
+
 	@RequestMapping(value = RM_TAG_ROLE_PERMISSION_UPDATE, method = RequestMethod.POST)
-	public Object updateTagRolePermission(@Validated TagRolePermission permission, BindingResult result, HttpServletRequest request) {
-		Object r = null;
+	public Object updateTagRolePermission(
+			@Validated @RequestAttribute("permission") TagRolePermission permission,
+			HttpServletRequest request) {
 		short status = 0;
 		String msg = null;
-		
+
 		User user = AuthUtils.getCurrentUser(request);
-		if (result.hasErrors()) {
-			Result re = ValidatorUtils.errorResult(result);
-			status = re.getStatus();
-			msg = re.getMessage();
-			r = re;
+		AuthUtils.setModifier(request, permission);
+		status = (short) permissionService.updateTagRolePermission(user,
+				permission);
+		Tag tag = permission.getTag();
+		Role role = permission.getRole();
+		if (status == Status.SUCCESS) {
+			msg = "用户为标签" + tag.getName() + "[" + tag.getId() + "]更新角色"
+					+ role.getName() + "[" + role.getId() + "]权限"
+					+ permission.getPermission() + "[" + permission.getId()
+					+ "]" + "成功";
 		} else {
-			AuthUtils.setModifier(request, permission);
-			status = (short) permissionService.updateTagRolePermission(user, permission);
-			Tag tag = permission.getTag();
-			Role role = permission.getRole();
-			if (status == Status.SUCCESS) {
-				msg = "用户为标签" + tag.getName() + "[" + tag.getId()
-						+ "]更新角色" + role.getName() + "[" + role.getId()
-						+ "]权限" + permission.getPermission() + "[" + permission.getId() + "]" + "成功";
-				r = new Result(status, msg, permission);
-			} else {
-				msg = "用户为标签" + tag.getName() + "[" + tag.getId()
-						+ "]更新角色" + role.getName() + "[" + role.getId()
-						+ "]权限" + permission.getPermission() + "[" + permission.getId() + "]" + "失败";
-				r = new Result(status, msg);
-			}
+			msg = "用户为标签" + tag.getName() + "[" + tag.getId() + "]更新角色"
+					+ role.getName() + "[" + role.getId() + "]权限"
+					+ permission.getPermission() + "[" + permission.getId()
+					+ "]" + "失败";
 		}
-		
+
 		if (logger.isInfoEnabled()) {
 			logger.info("[{}] {} {}", status, user.getName(), msg);
 		}
-		
-		return r;
+
+		return new CommonResult(status, msg, permission);
 	}
-	
-	@ResponseBody
+
 	@RequestMapping(value = RM_TAG_ROLE_PERMISSION_LOCK, method = RequestMethod.POST)
-	public Object lockTagRolePermission(@Validated TagRolePermission permission, BindingResult result, HttpServletRequest request) {
-		Object r = null;
+	public Object lockTagRolePermission(
+			@Validated @RequestAttribute("permission") TagRolePermission permission,
+			HttpServletRequest request) {
 		short status = 0;
 		String msg = null;
-		
+
 		User user = AuthUtils.getCurrentUser(request);
-		if (result.hasErrors()) {
-			Result re = ValidatorUtils.errorResult(result);
-			status = re.getStatus();
-			msg = re.getMessage();
-			r = re;
+		AuthUtils.setModifier(request, permission);
+		status = (short) permissionService.lockTagRolePermission(user,
+				permission);
+		Tag tag = permission.getTag();
+		Role role = permission.getRole();
+		if (status == Status.SUCCESS) {
+			msg = "用户为标签" + tag.getName() + "[" + tag.getId() + "]锁定角色"
+					+ role.getName() + "[" + role.getId() + "]权限"
+					+ permission.getPermission() + "[" + permission.getId()
+					+ "]" + "成功";
 		} else {
-			AuthUtils.setModifier(request, permission);
-			status = (short) permissionService.lockTagRolePermission(user, permission);
-			Tag tag = permission.getTag();
-			Role role = permission.getRole();
-			if (status == Status.SUCCESS) {
-				msg = "用户为标签" + tag.getName() + "[" + tag.getId()
-						+ "]锁定角色" + role.getName() + "[" + role.getId()
-						+ "]权限" + permission.getPermission() + "[" + permission.getId() + "]" + "成功";
-				r = new Result(status, msg, tag);
-			} else {
-				msg = "用户为标签" + tag.getName() + "[" + tag.getId()
-						+ "]锁定角色" + role.getName() + "[" + role.getId()
-						+ "]权限" + permission.getPermission() + "[" + permission.getId() + "]" + "失败";
-				r = new Result(status, msg);
-			}
+			msg = "用户为标签" + tag.getName() + "[" + tag.getId() + "]锁定角色"
+					+ role.getName() + "[" + role.getId() + "]权限"
+					+ permission.getPermission() + "[" + permission.getId()
+					+ "]" + "失败";
 		}
-		
+
 		if (logger.isInfoEnabled()) {
 			logger.info("[{}] {} {}", status, user.getName(), msg);
 		}
-		
-		return r;
+
+		return new CommonResult(status, msg, permission);
 	}
-	
-	@ResponseBody
+
 	@RequestMapping(value = RM_TAG_ROLE_PERMISSION_UNLOCK, method = RequestMethod.POST)
-	public Object unlockTagRolePermission(@Validated TagRolePermission permission, BindingResult result, HttpServletRequest request) {
-		Object r = null;
+	public Object unlockTagRolePermission(
+			@Validated @RequestAttribute("permission") TagRolePermission permission,
+			HttpServletRequest request) {
 		short status = 0;
 		String msg = null;
-		
+
 		User user = AuthUtils.getCurrentUser(request);
-		if (result.hasErrors()) {
-			Result re = ValidatorUtils.errorResult(result);
-			status = re.getStatus();
-			msg = re.getMessage();
-			r = re;
+		AuthUtils.setModifier(request, permission);
+		status = (short) permissionService.unlockTagRolePermission(user,
+				permission);
+		Tag tag = permission.getTag();
+		Role role = permission.getRole();
+		if (status == Status.SUCCESS) {
+			msg = "用户为标签" + tag.getName() + "[" + tag.getId() + "]解锁角色"
+					+ role.getName() + "[" + role.getId() + "]权限"
+					+ permission.getPermission() + "[" + permission.getId()
+					+ "]" + "成功";
 		} else {
-			AuthUtils.setModifier(request, permission);
-			status = (short) permissionService.unlockTagRolePermission(user, permission);
-			Tag tag = permission.getTag();
-			Role role = permission.getRole();
-			if (status == Status.SUCCESS) {
-				msg = "用户为标签" + tag.getName() + "[" + tag.getId()
-						+ "]解锁角色" + role.getName() + "[" + role.getId()
-						+ "]权限" + permission.getPermission() + "[" + permission.getId() + "]" + "成功";
-				r = new Result(status, msg, permission);
-			} else {
-				msg = "用户为标签" + tag.getName() + "[" + tag.getId()
-						+ "]解锁角色" + role.getName() + "[" + role.getId()
-						+ "]权限" + permission.getPermission() + "[" + permission.getId() + "]" + "失败";
-				r = new Result(status, msg);
-			}
+			msg = "用户为标签" + tag.getName() + "[" + tag.getId() + "]解锁角色"
+					+ role.getName() + "[" + role.getId() + "]权限"
+					+ permission.getPermission() + "[" + permission.getId()
+					+ "]" + "失败";
 		}
-		
+
 		if (logger.isInfoEnabled()) {
 			logger.info("[{}] {} {}", status, user.getName(), msg);
 		}
-		
-		return r;
+
+		return new CommonResult(status, msg, permission);
 	}
-	
-	@ResponseBody
+
 	@RequestMapping(value = RM_TAG_ROLE_PERMISSION_REMOVE, method = RequestMethod.POST)
-	public Object removeTagRolePermission(@Validated TagRolePermission permission, BindingResult result, HttpServletRequest request) {
-		Object r = null;
+	public Object removeTagRolePermission(
+			@Validated @RequestAttribute("permission") TagRolePermission permission,
+			HttpServletRequest request) {
 		short status = 0;
 		String msg = null;
-		
+
 		User user = AuthUtils.getCurrentUser(request);
-		if (result.hasErrors()) {
-			Result re = ValidatorUtils.errorResult(result);
-			status = re.getStatus();
-			msg = re.getMessage();
-			r = re;
+		AuthUtils.setModifier(request, permission);
+		status = (short) permissionService.removeTagRolePermission(user,
+				permission);
+		Tag tag = permission.getTag();
+		Role role = permission.getRole();
+		if (status == Status.SUCCESS) {
+			msg = "用户为标签" + tag.getName() + "[" + tag.getId() + "]移除角色"
+					+ role.getName() + "[" + role.getId() + "]权限"
+					+ permission.getPermission() + "[" + permission.getId()
+					+ "]" + "成功";
 		} else {
-			AuthUtils.setModifier(request, permission);
-			status = (short) permissionService.removeTagRolePermission(user, permission);
-			Tag tag = permission.getTag();
-			Role role = permission.getRole();
-			if (status == Status.SUCCESS) {
-				msg = "用户为标签" + tag.getName() + "[" + tag.getId()
-						+ "]移除角色" + role.getName() + "[" + role.getId()
-						+ "]权限" + permission.getPermission() + "[" + permission.getId() + "]" + "成功";
-				r = new Result(status, msg, permission);
-			} else {
-				msg = "用户为标签" + tag.getName() + "[" + tag.getId()
-						+ "]移除角色" + role.getName() + "[" + role.getId()
-						+ "]权限" + permission.getPermission() + "[" + permission.getId() + "]" + "失败";
-				r = new Result(status, msg);
-			}
+			msg = "用户为标签" + tag.getName() + "[" + tag.getId() + "]移除角色"
+					+ role.getName() + "[" + role.getId() + "]权限"
+					+ permission.getPermission() + "[" + permission.getId()
+					+ "]" + "失败";
 		}
-		
+
 		if (logger.isInfoEnabled()) {
 			logger.info("[{}] {} {}", status, user.getName(), msg);
 		}
-		
-		return r;
+
+		return new CommonResult(status, msg, permission);
 	}
-	
-	@ResponseBody
+
 	@RequestMapping(value = RM_TAG_ROLE_PERMISSION_DELETE, method = RequestMethod.POST)
-	public Object deleteTagRolePermission(@Validated TagRolePermission permission, BindingResult result, HttpServletRequest request) {
-		Object r = null;
+	public Object deleteTagRolePermission(
+			@Validated @RequestAttribute("permission") TagRolePermission permission,
+			HttpServletRequest request) {
 		short status = 0;
 		String msg = null;
-		
+
 		User user = AuthUtils.getCurrentUser(request);
-		if (result.hasErrors()) {
-			Result re = ValidatorUtils.errorResult(result);
-			status = re.getStatus();
-			msg = re.getMessage();
-			r = re;
+		status = (short) permissionService.deleteTagRolePermission(user,
+				permission);
+		Tag tag = permission.getTag();
+		Role role = permission.getRole();
+		if (status == Status.SUCCESS) {
+			msg = "用户为标签" + tag.getName() + "[" + tag.getId() + "]删除角色"
+					+ role.getName() + "[" + role.getId() + "]权限"
+					+ permission.getPermission() + "[" + permission.getId()
+					+ "]" + "成功";
 		} else {
-			status = (short) permissionService.deleteTagRolePermission(user, permission);
-			Tag tag = permission.getTag();
-			Role role = permission.getRole();
-			if (status == Status.SUCCESS) {
-				msg = "用户为标签" + tag.getName() + "[" + tag.getId()
-						+ "]删除角色" + role.getName() + "[" + role.getId()
-						+ "]权限" + permission.getPermission() + "[" + permission.getId() + "]" + "成功";
-				r = new Result(status, msg, permission);
-			} else {
-				msg = "用户为标签" + tag.getName() + "[" + tag.getId()
-						+ "]删除角色" + role.getName() + "[" + role.getId()
-						+ "]权限" + permission.getPermission() + "[" + permission.getId() + "]" + "失败";
-				r = new Result(status, msg);
-			}
+			msg = "用户为标签" + tag.getName() + "[" + tag.getId() + "]删除角色"
+					+ role.getName() + "[" + role.getId() + "]权限"
+					+ permission.getPermission() + "[" + permission.getId()
+					+ "]" + "失败";
 		}
-		
+
 		if (logger.isInfoEnabled()) {
 			logger.info("[{}] {} {}", status, user.getName(), msg);
 		}
-		
-		return r;
+
+		return new CommonResult(status, msg, permission);
 	}
-	
-	@ResponseBody
+
 	@RequestMapping(value = RM_TAG_ROLE_PERMISSION_EXISTS, method = RequestMethod.GET)
-	public Object isTagRolePermissionExists(@Validated TagRolePermission permission, BindingResult result, HttpServletRequest request) {
-		Object r = null;
+	public Object isTagRolePermissionExists(
+			@Validated @RequestAttribute("permission") TagRolePermission permission,
+			HttpServletRequest request) {
 		short status = Status.SUCCESS;
 		String msg = null;
-		
+
 		User user = AuthUtils.getCurrentUser(request);
-		if (result.hasErrors()) {
-			Result re = ValidatorUtils.errorResult(result);
-			status = re.getStatus();
-			msg = re.getMessage();
-			r = re;
+		boolean exists = permissionService.isTagRolePermissionExists(user,
+				permission);
+		Tag tag = permission.getTag();
+		Role role = permission.getRole();
+		if (exists) {
+			msg = "用户查询到标签" + tag.getName() + "[" + tag.getId() + "]角色"
+					+ role.getName() + "[" + role.getId() + "]权限"
+					+ permission.getPermission() + "[" + permission.getId()
+					+ "]存在";
 		} else {
-			boolean is = permissionService.isTagRolePermissionExists(user, permission);
-			Tag tag = permission.getTag();
-			Role role = permission.getRole();
-			if (is) {
-				msg = "用户查询到标签" + tag.getName() + "[" + tag.getId()
-						+ "]角色" + role.getName() + "[" + role.getId()
-						+ "]权限" + permission.getPermission() + "[" + permission.getId()
-						+ "]存在";
-				r = new Result(status, msg, true);
-			} else {
-				msg = "用户查询到标签" + tag.getName() + "[" + tag.getId()
-						+ "]角色" + role.getName() + "[" + role.getId()
-						+ "]权限" + permission.getPermission() + "[" + permission.getId()
-						+ "]不存在";
-				r = new Result(status, msg, false);
-			}
+			msg = "用户查询到标签" + tag.getName() + "[" + tag.getId() + "]角色"
+					+ role.getName() + "[" + role.getId() + "]权限"
+					+ permission.getPermission() + "[" + permission.getId()
+					+ "]不存在";
 		}
-		
+
 		if (logger.isInfoEnabled()) {
 			logger.info("[{}] {} {}", status, user.getName(), msg);
 		}
-		
-		return r;
+
+		return new CommonResult(status, msg, exists);
 	}
-	
-	@ResponseBody
+
 	@RequestMapping(value = RM_TAG_ROLE_PERMISSION_UPDATEABLE, method = RequestMethod.GET)
-	public Object isTagRolePermissionUpdateable(@Validated TagRolePermission permission, BindingResult result, HttpServletRequest request) {
-		Object r = null;
+	public Object isTagRolePermissionUpdateable(
+			@Validated @RequestAttribute("permission") TagRolePermission permission,
+			HttpServletRequest request) {
 		short status = Status.SUCCESS;
 		String msg = null;
-		
+
 		User user = AuthUtils.getCurrentUser(request);
-		if (result.hasErrors()) {
-			Result re = ValidatorUtils.errorResult(result);
-			status = re.getStatus();
-			msg = re.getMessage();
-			r = re;
+		boolean updateable = permissionService.isTagRolePermissionUpdateable(
+				user, permission);
+		Tag tag = permission.getTag();
+		Role role = permission.getRole();
+		if (updateable) {
+			msg = "用户查询到标签" + tag.getName() + "[" + tag.getId() + "]角色"
+					+ role.getName() + "[" + role.getId() + "]权限"
+					+ permission.getPermission() + "[" + permission.getId()
+					+ "]可以更新";
 		} else {
-			boolean is = permissionService.isTagRolePermissionUpdateable(user, permission);
-			Tag tag = permission.getTag();
-			Role role = permission.getRole();
-			if (is) {
-				msg = "用户查询到标签" + tag.getName() + "[" + tag.getId()
-						+ "]角色" + role.getName() + "[" + role.getId()
-						+ "]权限" + permission.getPermission() + "[" + permission.getId()
-						+ "]可以更新";
-				r = new Result(status, msg, true);
-			} else {
-				msg = "用户查询到标签" + tag.getName() + "[" + tag.getId()
-						+ "]角色" + role.getName() + "[" + role.getId()
-						+ "]权限" + permission.getPermission() + "[" + permission.getId()
-						+ "]不可以更新";
-				r = new Result(status, msg, false);
-			}
+			msg = "用户查询到标签" + tag.getName() + "[" + tag.getId() + "]角色"
+					+ role.getName() + "[" + role.getId() + "]权限"
+					+ permission.getPermission() + "[" + permission.getId()
+					+ "]不可以更新";
 		}
-		
+
 		if (logger.isInfoEnabled()) {
 			logger.info("[{}] {} {}", status, user.getName(), msg);
 		}
-		
-		return r;
+
+		return new CommonResult(status, msg, updateable);
 	}
-	
-	@ResponseBody
+
 	@RequestMapping(value = RM_TAG_ROLE_PERMISSION_LOCKED, method = RequestMethod.GET)
-	public Object isTagRolePermissionLocked(@Validated TagRolePermission permission, BindingResult result, HttpServletRequest request) {
-		Object r = null;
+	public Object isTagRolePermissionLocked(
+			@Validated @RequestAttribute("permission") TagRolePermission permission,
+			HttpServletRequest request) {
 		short status = Status.SUCCESS;
 		String msg = null;
-		
+
 		User user = AuthUtils.getCurrentUser(request);
-		if (result.hasErrors()) {
-			Result re = ValidatorUtils.errorResult(result);
-			status = re.getStatus();
-			msg = re.getMessage();
-			r = re;
+		boolean locked = permissionService.isTagRolePermissionLocked(user,
+				permission);
+		Tag tag = permission.getTag();
+		Role role = permission.getRole();
+		if (locked) {
+			msg = "用户查询到标签" + tag.getName() + "[" + tag.getId() + "]角色"
+					+ role.getName() + "[" + role.getId() + "]权限"
+					+ permission.getPermission() + "[" + permission.getId()
+					+ "]已被锁定";
 		} else {
-			boolean is = permissionService.isTagRolePermissionLocked(user, permission);
-			Tag tag = permission.getTag();
-			Role role = permission.getRole();
-			if (is) {
-				msg = "用户查询到标签" + tag.getName() + "[" + tag.getId()
-						+ "]角色" + role.getName() + "[" + role.getId()
-						+ "]权限" + permission.getPermission() + "[" + permission.getId()
-						+ "]已被锁定";
-				r = new Result(status, msg, true);
-			} else {
-				msg = "用户查询到标签" + tag.getName() + "[" + tag.getId()
-						+ "]角色" + role.getName() + "[" + role.getId()
-						+ "]权限" + permission.getPermission() + "[" + permission.getId()
-						+ "]未被锁定";
-				r = new Result(status, msg, false);
-			}
+			msg = "用户查询到标签" + tag.getName() + "[" + tag.getId() + "]角色"
+					+ role.getName() + "[" + role.getId() + "]权限"
+					+ permission.getPermission() + "[" + permission.getId()
+					+ "]未被锁定";
 		}
-		
+
 		if (logger.isInfoEnabled()) {
 			logger.info("[{}] {} {}", status, user.getName(), msg);
 		}
-		
-		return r;
+
+		return new CommonResult(status, msg, locked);
 	}
-	
-	@ResponseBody
+
 	@RequestMapping(value = RM_TAG_ROLE_PERMISSION_REMOVEABLE, method = RequestMethod.GET)
-	public Object isTagRolePermissionRemoveable(@Validated TagRolePermission permission, BindingResult result, HttpServletRequest request) {
-		Object r = null;
+	public Object isTagRolePermissionRemoveable(
+			@Validated @RequestAttribute("permission") TagRolePermission permission,
+			HttpServletRequest request) {
 		short status = Status.SUCCESS;
 		String msg = null;
-		
+
 		User user = AuthUtils.getCurrentUser(request);
-		if (result.hasErrors()) {
-			Result re = ValidatorUtils.errorResult(result);
-			status = re.getStatus();
-			msg = re.getMessage();
-			r = re;
+		boolean removeable = permissionService.isTagRolePermissionRemoveable(
+				user, permission);
+		Tag tag = permission.getTag();
+		Role role = permission.getRole();
+		if (removeable) {
+			msg = "用户查询到标签" + tag.getName() + "[" + tag.getId() + "]角色"
+					+ role.getName() + "[" + role.getId() + "]权限"
+					+ permission.getPermission() + "[" + permission.getId()
+					+ "]可以移除";
 		} else {
-			boolean is = permissionService.isTagRolePermissionRemoveable(user, permission);
-			Tag tag = permission.getTag();
-			Role role = permission.getRole();
-			if (is) {
-				msg = "用户查询到标签" + tag.getName() + "[" + tag.getId()
-						+ "]角色" + role.getName() + "[" + role.getId()
-						+ "]权限" + permission.getPermission() + "[" + permission.getId()
-						+ "]可以移除";
-				r = new Result(status, msg, true);
-			} else {
-				msg = "用户查询到标签" + tag.getName() + "[" + tag.getId()
-						+ "]角色" + role.getName() + "[" + role.getId()
-						+ "]权限" + permission.getPermission() + "[" + permission.getId()
-						+ "]不可以移除";
-				r = new Result(status, msg, false);
-			}
+			msg = "用户查询到标签" + tag.getName() + "[" + tag.getId() + "]角色"
+					+ role.getName() + "[" + role.getId() + "]权限"
+					+ permission.getPermission() + "[" + permission.getId()
+					+ "]不可以移除";
 		}
-		
+
 		if (logger.isInfoEnabled()) {
 			logger.info("[{}] {} {}", status, user.getName(), msg);
 		}
-		
-		return r;
+
+		return new CommonResult(status, msg, removeable);
 	}
-	
-	@ResponseBody
+
 	@RequestMapping(value = RM_TAG_ROLE_PERMISSION_DELETEABLE, method = RequestMethod.GET)
-	public Object isTagRolePermissionDeleteable(@Validated TagRolePermission permission, BindingResult result, HttpServletRequest request) {
-		Object r = null;
+	public Object isTagRolePermissionDeleteable(
+			@Validated @RequestAttribute("permission") TagRolePermission permission,
+			HttpServletRequest request) {
 		short status = Status.SUCCESS;
 		String msg = null;
-		
+
 		User user = AuthUtils.getCurrentUser(request);
-		if (result.hasErrors()) {
-			Result re = ValidatorUtils.errorResult(result);
-			status = re.getStatus();
-			msg = re.getMessage();
-			r = re;
+		boolean deleteable = permissionService.isTagRolePermissionDeleteable(
+				user, permission);
+		Tag tag = permission.getTag();
+		Role role = permission.getRole();
+		if (deleteable) {
+			msg = "用户查询到标签" + tag.getName() + "[" + tag.getId() + "]角色"
+					+ role.getName() + "[" + role.getId() + "]权限"
+					+ permission.getPermission() + "[" + permission.getId()
+					+ "]可以删除";
 		} else {
-			boolean is = permissionService.isTagRolePermissionDeleteable(user, permission);
-			Tag tag = permission.getTag();
-			Role role = permission.getRole();
-			if (is) {
-				msg = "用户查询到标签" + tag.getName() + "[" + tag.getId()
-						+ "]角色" + role.getName() + "[" + role.getId()
-						+ "]权限" + permission.getPermission() + "[" + permission.getId()
-						+ "]可以删除";
-				r = new Result(status, msg, true);
-			} else {
-				msg = "用户查询到标签" + tag.getName() + "[" + tag.getId()
-						+ "]角色" + role.getName() + "[" + role.getId()
-						+ "]权限" + permission.getPermission() + "[" + permission.getId()
-						+ "]不可以删除";
-				r = new Result(status, msg, false);
-			}
+			msg = "用户查询到标签" + tag.getName() + "[" + tag.getId() + "]角色"
+					+ role.getName() + "[" + role.getId() + "]权限"
+					+ permission.getPermission() + "[" + permission.getId()
+					+ "]不可以删除";
 		}
-		
+
 		if (logger.isInfoEnabled()) {
 			logger.info("[{}] {} {}", status, user.getName(), msg);
 		}
-		
-		return r;
+
+		return new CommonResult(status, msg, deleteable);
 	}
-	
-	@ResponseBody
+
 	@RequestMapping(value = RM_TAG_ROLE_PERMISSION_GET, method = RequestMethod.GET)
-	public Object getTagRolePermission(@RequestParam("id") Long id, HttpServletRequest request) {
+	public Object getTagRolePermission(@RequestParam("id") Long id,
+			HttpServletRequest request) {
 		User user = AuthUtils.getCurrentUser(request);
 		String uname = user.getName();
 		TagRolePermission permission = null;
-		
+
 		String msg = null;
 		short status = Status.SUCCESS;
-		
+
 		permission = permissionService.getTagRolePermission(user, id);
 		if (permission != null) {
 			Tag tag = permission.getTag();
 			Role role = permission.getRole();
 			msg = "用户查询到标签" + tag.getName() + "[" + tag.getId() + "]角色"
 					+ role.getName() + "[" + role.getId() + "]权限"
-					+ permission.getPermission() + "[" + permission.getId() + "]";
+					+ permission.getPermission() + "[" + permission.getId()
+					+ "]";
 		} else {
 			status = Status.ERROR;
 			msg = "标签查询失败";
 		}
-		Result r = new Result(status, msg, permission);
-		
+
 		if (logger.isInfoEnabled()) {
-			
+
 			logger.info("[{}] {} {}", status, uname, msg);
 		}
-		
-		return r;
+
+		return new CommonResult(status, msg, permission);
 	}
-	
-	@ResponseBody
+
 	@RequestMapping(value = RM_TAG_ROLE_PERMISSION_QUERY, method = RequestMethod.GET)
-	public Object getTagRolePermissions(QueryBase query, HttpServletRequest request) {
+	public Object getTagRolePermissions(QueryBase query,
+			HttpServletRequest request) {
 		User user = AuthUtils.getCurrentUser(request);
 		String uname = user.getName();
-		
+
 		if (logger.isInfoEnabled()) {
 			if (query != null) {
 				logger.info("用户{}按条件{}查询标签角色权限信息", uname, query.getParameters());
@@ -539,26 +440,24 @@ public class TagRolePermissionAction {
 			}
 		}
 		permissionService.getTagRolePermissions(user, query);
-		
+
 		String msg = "条件查询标签角色权限信息";
 		short status = Status.SUCCESS;
-		
-		Result r = new Result(status, msg, query);
 
 		if (logger.isInfoEnabled()) {
-			
+
 			logger.info("[{}] {} {}", status, uname, msg);
 		}
-		
-		return r;
+
+		return new CommonResult(status, msg, query);
 	}
-	
-	@ResponseBody
+
 	@RequestMapping(value = RM_TAG_ROLE_PERMISSION_COUNT, method = RequestMethod.GET)
-	public Object countTagRolePermissions(QueryBase query, HttpServletRequest request) {
+	public Object countTagRolePermissions(QueryBase query,
+			HttpServletRequest request) {
 		User user = AuthUtils.getCurrentUser(request);
 		String uname = user.getName();
-		
+
 		if (logger.isInfoEnabled()) {
 			if (query != null) {
 				logger.info("用户{}按条件{}统计标签角色权限信息", uname, query.getParameters());
@@ -567,25 +466,24 @@ public class TagRolePermissionAction {
 			}
 		}
 		long count = permissionService.countTagRolePermissions(user, query);
-		
+
 		String msg = "条件统计标签角色权限信息，共" + count;
 		short status = Status.SUCCESS;
-		
-		Result r = new Result(status, msg, count);
 
 		if (logger.isInfoEnabled()) {
 			logger.info("[{}] {} {}", status, uname, msg);
 		}
-		
-		return r;
+
+		return new CommonResult(status, msg, count);
 	}
 
-	public void setTagRolePermissionService(TagRolePermissionService permissionService) {
+	public void setTagRolePermissionService(
+			TagRolePermissionService permissionService) {
 		this.permissionService = permissionService;
 	}
 
 	public TagRolePermissionService getTagRolePermissionService() {
 		return permissionService;
 	}
-	
+
 }

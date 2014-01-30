@@ -145,66 +145,64 @@
 	
 	<sql id="restriction_permissions">
 		<trim prefix="WHERE" prefixOverrides="AND">
-			<if test="parameters != null">
-				<if test="parameters.article != null">
-					AND p.article = #{parameters.article}
-				</if>
-				<if test="parameters.article_null != null">
-					AND p.article IS NULL
-				</if>
-				<if test="parameters.role != null">
-					AND p.role = #{parameters.role}
-				</if>
-				<if test="parameters.role_null != null">
-					AND p.role IS NULL
-				</if>
-				<if test="parameters.permission != null">
-					AND p.permission = #{parameters.permission}
-				</if>
-				<if test="parameters.permission_lt != null">
-					AND p.permission &lt; #{parameters.permission_lt}
-				</if>
-				<if test="parameters.permission_le != null">
-					AND p.permission &lt;= #{parameters.permission_le}
-				</if>
-				<if test="parameters.permission_gt != null">
-					AND p.permission &gt; #{parameters.permission_gt}
-				</if>
-				<if test="parameters.permission_ge != null">
-					AND p.permission &gt;= #{parameters.permission_ge}
-				</if>
-				<if test="parameters.status != null">
-					AND p.status = #{parameters.status}
-				</if>
-				<if test="parameters.status_lt != null">
-					AND p.status &lt; #{parameters.status_lt}
-				</if>
-				<if test="parameters.status_le != null">
-					AND p.status &lt;= #{parameters.status_le}
-				</if>
-				<if test="parameters.status_gt != null">
-					AND p.status &gt; #{parameters.status_gt}
-				</if>
-				<if test="parameters.status_ge != null">
-					AND p.status &gt;= #{parameters.status_ge}
-				</if>
-				<if test="parameters.id != null">
-					AND p.id = #{parameters.id}
-				</if>
-				<if test="parameters.id_lt != null">
-					AND p.id &lt; #{parameters.id_lt}
-				</if>
-				<if test="parameters.id_le != null">
-					AND p.id &lt;= #{parameters.id_le}
-				</if>
-				<if test="parameters.id_gt != null">
-					AND p.id &gt; #{parameters.id_gt}
-				</if>
-				<if test="parameters.id_ge != null">
-					AND p.id &gt;= #{parameters.id_ge}
-				</if>
+			<if test="parameters.article != null and parameters.article != ''">
+				AND p.article = #{parameters.article}
 			</if>
-			<if test="parameters == null or parameters.status == null">
+			<if test="parameters.article_null != null and parameters.article_null != ''">
+				AND p.article IS NULL
+			</if>
+			<if test="parameters.role != null and parameters.role != ''">
+				AND p.role = #{parameters.role}
+			</if>
+			<if test="parameters.role_null != null and parameters.role_null != ''">
+				AND p.role IS NULL
+			</if>
+			<if test="parameters.permission != null and parameters.permission != ''">
+				AND p.permission = #{parameters.permission}
+			</if>
+			<if test="parameters.permission_lt != null and parameters.permission_lt != ''">
+				AND p.permission &lt; #{parameters.permission_lt}
+			</if>
+			<if test="parameters.permission_le != null and parameters.permission_le != ''">
+				AND p.permission &lt;= #{parameters.permission_le}
+			</if>
+			<if test="parameters.permission_gt != null and parameters.permission_gt != ''">
+				AND p.permission &gt; #{parameters.permission_gt}
+			</if>
+			<if test="parameters.permission_ge != null and parameters.permission_ge != ''">
+				AND p.permission &gt;= #{parameters.permission_ge}
+			</if>
+			<if test="parameters.status != null and parameters.status != ''">
+				AND p.status = #{parameters.status}
+			</if>
+			<if test="parameters.status_lt != null and parameters.status_lt != ''">
+				AND p.status &lt; #{parameters.status_lt}
+			</if>
+			<if test="parameters.status_le != null and parameters.status_le != ''">
+				AND p.status &lt;= #{parameters.status_le}
+			</if>
+			<if test="parameters.status_gt != null and parameters.status_gt != ''">
+				AND p.status &gt; #{parameters.status_gt}
+			</if>
+			<if test="parameters.status_ge != null and parameters.status_ge != ''">
+				AND p.status &gt;= #{parameters.status_ge}
+			</if>
+			<if test="parameters.id != null and parameters.id != ''">
+				AND p.id = #{parameters.id}
+			</if>
+			<if test="parameters.id_lt != null and parameters.id_lt != ''">
+				AND p.id &lt; #{parameters.id_lt}
+			</if>
+			<if test="parameters.id_le != null and parameters.id_le != ''">
+				AND p.id &lt;= #{parameters.id_le}
+			</if>
+			<if test="parameters.id_gt != null and parameters.id_gt != ''">
+				AND p.id &gt; #{parameters.id_gt}
+			</if>
+			<if test="parameters.id_ge != null and parameters.id_ge != ''">
+				AND p.id &gt;= #{parameters.id_ge}
+			</if>
+			<if test="parameters.status == null or parameters.status == ''">
 				AND p.status != 0
 			</if>
 		</trim>
@@ -214,9 +212,7 @@
 		<include refid="select_permission"/>
 		<include refid="restriction_permissions"/>
 		ORDER BY p.article, p.role, p.permission
-		<if test="_parameter != null">
-			LIMIT #{firstRow}, #{maxRow}
-		</if>
+		LIMIT #{start}, #{limit}
 	</select>
 	
 	<select id="countArticleRolePermissions" resultType="long" parameterType="org.xhome.db.query.QueryBase">
