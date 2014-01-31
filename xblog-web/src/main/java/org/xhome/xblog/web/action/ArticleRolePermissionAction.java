@@ -1,5 +1,7 @@
 package org.xhome.xblog.web.action;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,7 @@ import org.xhome.db.query.QueryBase;
 import org.xhome.spring.mvc.extend.bind.annotation.RequestAttribute;
 import org.xhome.web.action.AbstractAction;
 import org.xhome.web.response.CommonResult;
+import org.xhome.web.response.DataResult;
 import org.xhome.xauth.Role;
 import org.xhome.xauth.User;
 import org.xhome.xauth.web.util.AuthUtils;
@@ -178,65 +181,62 @@ public class ArticleRolePermissionAction extends AbstractAction {
 
 	@RequestMapping(value = RM_ARTICLE_ROLE_PERMISSION_REMOVE, method = RequestMethod.POST)
 	public Object removeArticleRolePermission(
-			@Validated @RequestAttribute("permission") ArticleRolePermission permission,
+			@Validated @RequestAttribute("permissions") List<ArticleRolePermission> permissions,
 			HttpServletRequest request) {
 		short status = 0;
 		String msg = null;
 
 		User user = AuthUtils.getCurrentUser(request);
-		AuthUtils.setModifier(request, permission);
-		status = (short) permissionService.removeArticleRolePermission(user,
-				permission);
-		Article article = permission.getArticle();
-		Role role = permission.getRole();
+		for (ArticleRolePermission permission : permissions) {
+			AuthUtils.setModifier(request, permission);
+		}
+		try {
+			status = (short) permissionService.removeArticleRolePermissions(
+					user, permissions);
+		} catch (RuntimeException e) {
+			status = Status.ERROR;
+		}
 		if (status == Status.SUCCESS) {
-			msg = "用户为文章" + article.getTitle() + "[" + article.getId()
-					+ "]移除角色" + role.getName() + "[" + role.getId() + "]权限"
-					+ permission.getPermission() + "[" + permission.getId()
-					+ "]" + "成功";
+			msg = "用户为文章移除角色权限成功";
 		} else {
-			msg = "用户为文章" + article.getTitle() + "[" + article.getId()
-					+ "]移除角色" + role.getName() + "[" + role.getId() + "]权限"
-					+ permission.getPermission() + "[" + permission.getId()
-					+ "]" + "失败";
+			msg = "用户为文章移除角色权限失败";
 		}
 
 		if (logger.isInfoEnabled()) {
 			logger.info("[{}] {} {}", status, user.getName(), msg);
 		}
 
-		return new CommonResult(status, msg, permission);
+		return new CommonResult(status, msg, permissions);
 	}
 
 	@RequestMapping(value = RM_ARTICLE_ROLE_PERMISSION_DELETE, method = RequestMethod.POST)
 	public Object deleteArticleRolePermission(
-			@Validated @RequestAttribute("permission") ArticleRolePermission permission,
+			@Validated @RequestAttribute("permissions") List<ArticleRolePermission> permissions,
 			HttpServletRequest request) {
 		short status = 0;
 		String msg = null;
 
 		User user = AuthUtils.getCurrentUser(request);
-		status = (short) permissionService.deleteArticleRolePermission(user,
-				permission);
-		Article article = permission.getArticle();
-		Role role = permission.getRole();
+		for (ArticleRolePermission permission : permissions) {
+			AuthUtils.setModifier(request, permission);
+		}
+		try {
+			status = (short) permissionService.deleteArticleRolePermissions(
+					user, permissions);
+		} catch (RuntimeException e) {
+			status = Status.ERROR;
+		}
 		if (status == Status.SUCCESS) {
-			msg = "用户为文章" + article.getTitle() + "[" + article.getId()
-					+ "]删除角色" + role.getName() + "[" + role.getId() + "]权限"
-					+ permission.getPermission() + "[" + permission.getId()
-					+ "]" + "成功";
+			msg = "用户为文章删除角色权限成功";
 		} else {
-			msg = "用户为文章" + article.getTitle() + "[" + article.getId()
-					+ "]删除角色" + role.getName() + "[" + role.getId() + "]权限"
-					+ permission.getPermission() + "[" + permission.getId()
-					+ "]" + "失败";
+			msg = "用户为文章删除角色权限失败";
 		}
 
 		if (logger.isInfoEnabled()) {
 			logger.info("[{}] {} {}", status, user.getName(), msg);
 		}
 
-		return new CommonResult(status, msg, permission);
+		return new CommonResult(status, msg, permissions);
 	}
 
 	@RequestMapping(value = RM_ARTICLE_ROLE_PERMISSION_EXISTS, method = RequestMethod.GET)
@@ -449,7 +449,7 @@ public class ArticleRolePermissionAction extends AbstractAction {
 			logger.info("[{}] {} {}", status, uname, msg);
 		}
 
-		return new CommonResult(status, msg, query);
+		return new DataResult(status, msg, query);
 	}
 
 	@RequestMapping(value = RM_ARTICLE_ROLE_PERMISSION_COUNT, method = RequestMethod.GET)

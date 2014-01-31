@@ -28,6 +28,8 @@
 	<!-- 
 	<context:component-scan base-package="org.xhome.xauth; org.xhome.xblog;"/>
 	 -->
+	 
+	<bean class="org.xhome.web.action.DashboardAction"/>
     
     <tx:annotation-driven />
 	<mvc:annotation-driven>
@@ -45,7 +47,7 @@
 	 -->
 
 	<bean id="fmXmlEscape" class="freemarker.template.utility.XmlEscape" />
-
+	
 	<!-- 配置freeMarker的模板路径 -->
 	<bean id="freemarkerConfig"
 		class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">

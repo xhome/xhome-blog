@@ -32,8 +32,14 @@ public interface CategoryRolePermissionService {
 	public int removeCategoryRolePermission(User oper,
 			CategoryRolePermission categoryRolePermission);
 
+	public int removeCategoryRolePermissions(User oper,
+			List<CategoryRolePermission> categoryRolePermissions);
+
 	public int deleteCategoryRolePermission(User oper,
 			CategoryRolePermission categoryRolePermission);
+
+	public int deleteCategoryRolePermissions(User oper,
+			List<CategoryRolePermission> categoryRolePermissions);
 
 	public boolean isCategoryRolePermissionExists(User oper,
 			CategoryRolePermission categoryRolePermission);

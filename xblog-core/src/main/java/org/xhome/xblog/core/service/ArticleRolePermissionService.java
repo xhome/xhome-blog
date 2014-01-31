@@ -32,8 +32,14 @@ public interface ArticleRolePermissionService {
 	public int removeArticleRolePermission(User oper,
 			ArticleRolePermission articleRolePermission);
 
+	public int removeArticleRolePermissions(User oper,
+			List<ArticleRolePermission> articleRolePermissions);
+
 	public int deleteArticleRolePermission(User oper,
 			ArticleRolePermission articleRolePermission);
+
+	public int deleteArticleRolePermissions(User oper,
+			List<ArticleRolePermission> articleRolePermissions);
 
 	public boolean isArticleRolePermissionExists(User oper,
 			ArticleRolePermission articleRolePermission);

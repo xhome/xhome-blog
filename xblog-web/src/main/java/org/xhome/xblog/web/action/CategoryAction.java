@@ -1,5 +1,7 @@
 package org.xhome.xblog.web.action;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,7 @@ import org.xhome.spring.mvc.extend.bind.annotation.RequestAttribute;
 import org.xhome.util.StringUtils;
 import org.xhome.web.action.AbstractAction;
 import org.xhome.web.response.CommonResult;
+import org.xhome.web.response.DataResult;
 import org.xhome.xauth.User;
 import org.xhome.xauth.web.util.AuthUtils;
 import org.xhome.xblog.Category;
@@ -143,47 +146,60 @@ public class CategoryAction extends AbstractAction {
 
 	@RequestMapping(value = RM_CATEGORY_REMOVE, method = RequestMethod.POST)
 	public Object removeCategory(
-			@Validated @RequestAttribute("category") Category category,
+			@Validated @RequestAttribute("categories") List<Category> categories,
 			HttpServletRequest request) {
 		short status = 0;
 		String msg = null;
 
 		User user = AuthUtils.getCurrentUser(request);
-		AuthUtils.setModifier(request, category);
-		status = (short) categoryService.removeCategory(user, category);
+		for (Category category : categories) {
+			AuthUtils.setModifier(request, category);
+		}
+		try {
+			status = (short) categoryService.removeCategories(user, categories);
+		} catch (RuntimeException e) {
+			status = Status.ERROR;
+		}
 		if (status == Status.SUCCESS) {
-			msg = "移除分类[" + category.getId() + "]" + category.getName() + "成功";
+			msg = "移除分类成功";
 		} else {
-			msg = "移除分类[" + category.getId() + "]" + category.getName() + "失败";
+			msg = "移除分类失败";
 		}
 
 		if (logger.isInfoEnabled()) {
 			logger.info("[{}] {} {}", status, user.getName(), msg);
 		}
 
-		return new CommonResult(status, msg, category);
+		return new CommonResult(status, msg, categories);
 	}
 
 	@RequestMapping(value = RM_CATEGORY_DELETE, method = RequestMethod.POST)
 	public Object deleteCategory(
-			@Validated @RequestAttribute("category") Category category,
+			@Validated @RequestAttribute("categories") List<Category> categories,
 			HttpServletRequest request) {
 		short status = 0;
 		String msg = null;
 
 		User user = AuthUtils.getCurrentUser(request);
-		status = (short) categoryService.deleteCategory(user, category);
+		for (Category category : categories) {
+			AuthUtils.setModifier(request, category);
+		}
+		try {
+			status = (short) categoryService.deleteCategories(user, categories);
+		} catch (RuntimeException e) {
+			status = Status.ERROR;
+		}
 		if (status == Status.SUCCESS) {
-			msg = "删除分类[" + category.getId() + "]" + category.getName() + "成功";
+			msg = "删除分类成功";
 		} else {
-			msg = "删除分类[" + category.getId() + "]" + category.getName() + "失败";
+			msg = "删除分类失败";
 		}
 
 		if (logger.isInfoEnabled()) {
 			logger.info("[{}] {} {}", status, user.getName(), msg);
 		}
 
-		return new CommonResult(status, msg, category);
+		return new CommonResult(status, msg, categories);
 	}
 
 	@RequestMapping(value = RM_CATEGORY_EXISTS, method = RequestMethod.GET)
@@ -362,7 +378,7 @@ public class CategoryAction extends AbstractAction {
 			logger.info("[{}] {} {}", status, uname, msg);
 		}
 
-		return new CommonResult(status, msg, query);
+		return new DataResult(status, msg, query);
 	}
 
 	@RequestMapping(value = RM_CATEGORY_COUNT, method = RequestMethod.GET)

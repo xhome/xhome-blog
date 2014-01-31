@@ -27,7 +27,11 @@ public interface CategoryService {
 
 	public int removeCategory(User oper, Category category);
 
+	public int removeCategories(User oper, List<Category> categories);
+
 	public int deleteCategory(User oper, Category category);
+
+	public int deleteCategories(User oper, List<Category> categories);
 
 	public boolean isCategoryExists(User oper, Category category);
 

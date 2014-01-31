@@ -27,7 +27,11 @@ public interface TagService {
 
 	public int removeTag(User oper, Tag tag);
 
+	public int removeTags(User oper, List<Tag> tags);
+
 	public int deleteTag(User oper, Tag tag);
+
+	public int deleteTags(User oper, List<Tag> tags);
 
 	public boolean isTagExists(User oper, Tag tag);
 

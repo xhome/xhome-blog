@@ -296,6 +296,20 @@ public class CategoryServiceImpl implements CategoryService {
 
 	@Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Throwable.class)
 	@Override
+	public int removeCategories(User oper, List<Category> categories) {
+		int r = Status.SUCCESS;
+		for (Category category : categories) {
+			r = this.removeCategory(oper, category);
+			if (r != Status.SUCCESS) {
+				throw new RuntimeException("fail to remove Category ["
+						+ category.getId() + "]");
+			}
+		}
+		return r;
+	}
+
+	@Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Throwable.class)
+	@Override
 	public int deleteCategory(User oper, Category category) {
 		String name = category.getName();
 		Long id = category.getId();
@@ -327,6 +341,20 @@ public class CategoryServiceImpl implements CategoryService {
 
 		this.logManage(name, Action.DELETE, id, r, oper);
 		this.afterCategoryManage(oper, Action.DELETE, r, category);
+		return r;
+	}
+
+	@Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Throwable.class)
+	@Override
+	public int deleteCategories(User oper, List<Category> categories) {
+		int r = Status.SUCCESS;
+		for (Category category : categories) {
+			r = this.deleteCategory(oper, category);
+			if (r != Status.SUCCESS) {
+				throw new RuntimeException("fail to delete Category ["
+						+ category.getId() + "]");
+			}
+		}
 		return r;
 	}
 

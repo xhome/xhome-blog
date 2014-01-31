@@ -1,5 +1,7 @@
 package org.xhome.xblog.web.action;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,7 @@ import org.xhome.db.query.QueryBase;
 import org.xhome.spring.mvc.extend.bind.annotation.RequestAttribute;
 import org.xhome.web.action.AbstractAction;
 import org.xhome.web.response.CommonResult;
+import org.xhome.web.response.DataResult;
 import org.xhome.xauth.User;
 import org.xhome.xauth.web.util.AuthUtils;
 import org.xhome.xblog.Tag;
@@ -177,65 +180,62 @@ public class TagUserPermissionAction extends AbstractAction {
 
 	@RequestMapping(value = RM_TAG_USER_PERMISSION_REMOVE, method = RequestMethod.POST)
 	public Object removeTagUserPermission(
-			@Validated @RequestAttribute("permission") TagUserPermission permission,
+			@Validated @RequestAttribute("permissions") List<TagUserPermission> permissions,
 			HttpServletRequest request) {
 		short status = 0;
 		String msg = null;
 
 		User user = AuthUtils.getCurrentUser(request);
-		AuthUtils.setModifier(request, permission);
-		status = (short) permissionService.removeTagUserPermission(user,
-				permission);
-		Tag tag = permission.getTag();
-		User puser = permission.getUser();
+		for (TagUserPermission permission : permissions) {
+			AuthUtils.setModifier(request, permission);
+		}
+		try {
+			status = (short) permissionService.removeTagUserPermissions(user,
+					permissions);
+		} catch (RuntimeException e) {
+			status = Status.ERROR;
+		}
 		if (status == Status.SUCCESS) {
-			msg = "用户为标签" + tag.getName() + "[" + tag.getId() + "]移除用户"
-					+ puser.getName() + "[" + puser.getId() + "]权限"
-					+ permission.getPermission() + "[" + permission.getId()
-					+ "]" + "成功";
+			msg = "用户为标签移除用户权限成功";
 		} else {
-			msg = "用户为标签" + tag.getName() + "[" + tag.getId() + "]移除用户"
-					+ puser.getName() + "[" + puser.getId() + "]权限"
-					+ permission.getPermission() + "[" + permission.getId()
-					+ "]" + "失败";
+			msg = "用户为标签移除用户权限失败";
 		}
 
 		if (logger.isInfoEnabled()) {
 			logger.info("[{}] {} {}", status, user.getName(), msg);
 		}
 
-		return new CommonResult(status, msg, permission);
+		return new CommonResult(status, msg, permissions);
 	}
 
 	@RequestMapping(value = RM_TAG_USER_PERMISSION_DELETE, method = RequestMethod.POST)
 	public Object deleteTagUserPermission(
-			@Validated @RequestAttribute("permission") TagUserPermission permission,
+			@Validated @RequestAttribute("permissions") List<TagUserPermission> permissions,
 			HttpServletRequest request) {
 		short status = 0;
 		String msg = null;
 
 		User user = AuthUtils.getCurrentUser(request);
-		status = (short) permissionService.deleteTagUserPermission(user,
-				permission);
-		Tag tag = permission.getTag();
-		User puser = permission.getUser();
+		for (TagUserPermission permission : permissions) {
+			AuthUtils.setModifier(request, permission);
+		}
+		try {
+			status = (short) permissionService.deleteTagUserPermissions(user,
+					permissions);
+		} catch (RuntimeException e) {
+			status = Status.ERROR;
+		}
 		if (status == Status.SUCCESS) {
-			msg = "用户为标签" + tag.getName() + "[" + tag.getId() + "]删除用户"
-					+ puser.getName() + "[" + puser.getId() + "]权限"
-					+ permission.getPermission() + "[" + permission.getId()
-					+ "]" + "成功";
+			msg = "用户为标签删除用户权限成功";
 		} else {
-			msg = "用户为标签" + tag.getName() + "[" + tag.getId() + "]删除用户"
-					+ puser.getName() + "[" + puser.getId() + "]权限"
-					+ permission.getPermission() + "[" + permission.getId()
-					+ "]" + "失败";
+			msg = "用户为标签删除用户权限失败";
 		}
 
 		if (logger.isInfoEnabled()) {
 			logger.info("[{}] {} {}", status, user.getName(), msg);
 		}
 
-		return new CommonResult(status, msg, permission);
+		return new CommonResult(status, msg, permissions);
 	}
 
 	@RequestMapping(value = RM_TAG_USER_PERMISSION_EXISTS, method = RequestMethod.GET)
@@ -448,7 +448,7 @@ public class TagUserPermissionAction extends AbstractAction {
 			logger.info("[{}] {} {}", status, uname, msg);
 		}
 
-		return new CommonResult(status, msg, query);
+		return new DataResult(status, msg, query);
 	}
 
 	@RequestMapping(value = RM_TAG_USER_PERMISSION_COUNT, method = RequestMethod.GET)

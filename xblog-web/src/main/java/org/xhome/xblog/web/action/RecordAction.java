@@ -11,6 +11,7 @@ import org.xhome.common.constant.Status;
 import org.xhome.db.query.QueryBase;
 import org.xhome.web.action.AbstractAction;
 import org.xhome.web.response.CommonResult;
+import org.xhome.web.response.DataResult;
 import org.xhome.xauth.User;
 import org.xhome.xauth.web.util.AuthUtils;
 import org.xhome.xblog.core.service.RecordService;
@@ -54,7 +55,7 @@ public class RecordAction extends AbstractAction {
 			logger.info("[" + status + "]" + uname + msg);
 		}
 
-		return new CommonResult(status, msg, query);
+		return new DataResult(status, msg, query);
 	}
 
 	@ResponseBody

@@ -370,6 +370,21 @@ public class TagUserPermissionServiceImpl implements TagUserPermissionService {
 
 	@Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Throwable.class)
 	@Override
+	public int removeTagUserPermissions(User oper,
+			List<TagUserPermission> tagUserPermissions) {
+		int r = Status.SUCCESS;
+		for (TagUserPermission tagUserPermission : tagUserPermissions) {
+			r = this.removeTagUserPermission(oper, tagUserPermission);
+			if (r != Status.SUCCESS) {
+				throw new RuntimeException("fail to remove TagUserPermission ["
+						+ tagUserPermission.getId() + "]");
+			}
+		}
+		return r;
+	}
+
+	@Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Throwable.class)
+	@Override
 	public int deleteTagUserPermission(User oper,
 			TagUserPermission tagUserPermission) {
 		long id = tagUserPermission.getId();
@@ -417,6 +432,21 @@ public class TagUserPermissionServiceImpl implements TagUserPermissionService {
 		this.logManage(mstr, Action.DELETE, id, r, oper);
 		this.afterTagUserPermissionManage(oper, Action.DELETE, r,
 				tagUserPermission);
+		return r;
+	}
+
+	@Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Throwable.class)
+	@Override
+	public int deleteTagUserPermissions(User oper,
+			List<TagUserPermission> tagUserPermissions) {
+		int r = Status.SUCCESS;
+		for (TagUserPermission tagUserPermission : tagUserPermissions) {
+			r = this.deleteTagUserPermission(oper, tagUserPermission);
+			if (r != Status.SUCCESS) {
+				throw new RuntimeException("fail to delete TagUserPermission ["
+						+ tagUserPermission.getId() + "]");
+			}
+		}
 		return r;
 	}
 

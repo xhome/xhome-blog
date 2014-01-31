@@ -291,6 +291,20 @@ public class CommentServiceImpl implements CommentService {
 
 	@Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Throwable.class)
 	@Override
+	public int removeComments(User oper, List<Comment> comments) {
+		int r = Status.SUCCESS;
+		for (Comment comment : comments) {
+			r = this.removeComment(oper, comment);
+			if (r != Status.SUCCESS) {
+				throw new RuntimeException("fail to remove Comment ["
+						+ comment.getId() + "]");
+			}
+		}
+		return r;
+	}
+
+	@Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Throwable.class)
+	@Override
 	public int deleteComment(User oper, Comment comment) {
 		Long id = comment.getId();
 		Article article = comment.getArticle();
@@ -326,6 +340,20 @@ public class CommentServiceImpl implements CommentService {
 
 		this.logManage(cstr, Action.DELETE, id, r, oper);
 		this.afterCommentManage(oper, Action.DELETE, r, comment);
+		return r;
+	}
+
+	@Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Throwable.class)
+	@Override
+	public int deleteComments(User oper, List<Comment> comments) {
+		int r = Status.SUCCESS;
+		for (Comment comment : comments) {
+			r = this.deleteComment(oper, comment);
+			if (r != Status.SUCCESS) {
+				throw new RuntimeException("fail to delete Comment ["
+						+ comment.getId() + "]");
+			}
+		}
 		return r;
 	}
 

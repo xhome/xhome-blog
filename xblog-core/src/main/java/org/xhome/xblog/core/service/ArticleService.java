@@ -29,7 +29,11 @@ public interface ArticleService {
 
 	public int removeArticle(User oper, Article article);
 
+	public int removeArticles(User oper, List<Article> articles);
+
 	public int deleteArticle(User oper, Article article);
+
+	public int deleteArticles(User oper, List<Article> articles);
 
 	public boolean isArticleUpdateable(User oper, Article article);
 

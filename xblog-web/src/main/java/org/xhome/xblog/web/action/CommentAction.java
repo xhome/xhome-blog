@@ -1,5 +1,7 @@
 package org.xhome.xblog.web.action;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,7 @@ import org.xhome.db.query.QueryBase;
 import org.xhome.spring.mvc.extend.bind.annotation.RequestAttribute;
 import org.xhome.web.action.AbstractAction;
 import org.xhome.web.response.CommonResult;
+import org.xhome.web.response.DataResult;
 import org.xhome.xauth.User;
 import org.xhome.xauth.web.util.AuthUtils;
 import org.xhome.xblog.Comment;
@@ -149,51 +152,62 @@ public class CommentAction extends AbstractAction {
 
 	@RequestMapping(value = RM_COMMENT_REMOVE, method = RequestMethod.POST)
 	public Object removeComment(
-			@Validated @RequestAttribute("comment") Comment comment,
+			@Validated @RequestAttribute("comments") List<Comment> comments,
 			HttpServletRequest request) {
 		short status = 0;
 		String msg = null;
 
 		User user = AuthUtils.getCurrentUser(request);
-		AuthUtils.setModifier(request, comment);
-		status = (short) commentService.removeComment(user, comment);
+		for (Comment comment : comments) {
+			AuthUtils.setModifier(request, comment);
+		}
+		try {
+			status = (short) commentService.removeComments(user, comments);
+		} catch (RuntimeException e) {
+			status = Status.ERROR;
+		}
+
 		if (status == Status.SUCCESS) {
-			msg = "为文章" + comment.getArticle().getId() + "移除评论["
-					+ comment.getId() + "]" + comment.getContent() + "成功";
+			msg = "为文章移除评论成功";
 		} else {
-			msg = "为文章" + comment.getArticle().getId() + "移除评论["
-					+ comment.getId() + "]" + comment.getContent() + "失败";
+			msg = "为文章移除评论失败";
 		}
 
 		if (logger.isInfoEnabled()) {
 			logger.info("[{}] {} {}", status, user.getName(), msg);
 		}
 
-		return new CommonResult(status, msg, comment);
+		return new CommonResult(status, msg, comments);
 	}
 
 	@RequestMapping(value = RM_COMMENT_DELETE, method = RequestMethod.POST)
 	public Object deleteComment(
-			@Validated @RequestAttribute("comment") Comment comment,
+			@Validated @RequestAttribute("comments") List<Comment> comments,
 			HttpServletRequest request) {
 		short status = 0;
 		String msg = null;
 
 		User user = AuthUtils.getCurrentUser(request);
-		status = (short) commentService.deleteComment(user, comment);
+		for (Comment comment : comments) {
+			AuthUtils.setModifier(request, comment);
+		}
+		try {
+			status = (short) commentService.deleteComments(user, comments);
+		} catch (RuntimeException e) {
+			status = Status.ERROR;
+		}
+
 		if (status == Status.SUCCESS) {
-			msg = "为文章" + comment.getArticle().getId() + "删除评论["
-					+ comment.getId() + "]" + comment.getContent() + "成功";
+			msg = "为文章删除评论成功";
 		} else {
-			msg = "为文章" + comment.getArticle().getId() + "删除评论["
-					+ comment.getId() + "]" + comment.getContent() + "失败";
+			msg = "为文章删除评论失败";
 		}
 
 		if (logger.isInfoEnabled()) {
 			logger.info("[{}] {} {}", status, user.getName(), msg);
 		}
 
-		return new CommonResult(status, msg, comment);
+		return new CommonResult(status, msg, comments);
 	}
 
 	@RequestMapping(value = RM_COMMENT_UPDATEABLE, method = RequestMethod.GET)
@@ -340,7 +354,7 @@ public class CommentAction extends AbstractAction {
 			logger.info("[{}] {} {}", status, uname, msg);
 		}
 
-		return new CommonResult(status, msg, query);
+		return new DataResult(status, msg, query);
 	}
 
 	@RequestMapping(value = RM_COMMENT_COUNT, method = RequestMethod.GET)

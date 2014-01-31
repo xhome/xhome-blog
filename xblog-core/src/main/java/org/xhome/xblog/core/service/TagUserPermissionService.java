@@ -32,8 +32,14 @@ public interface TagUserPermissionService {
 	public int removeTagUserPermission(User oper,
 			TagUserPermission tagUserPermission);
 
+	public int removeTagUserPermissions(User oper,
+			List<TagUserPermission> tagUserPermissions);
+
 	public int deleteTagUserPermission(User oper,
 			TagUserPermission tagUserPermission);
+
+	public int deleteTagUserPermissions(User oper,
+			List<TagUserPermission> tagUserPermissions);
 
 	public boolean isTagUserPermissionExists(User oper,
 			TagUserPermission tagUserPermission);

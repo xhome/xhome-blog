@@ -1,5 +1,7 @@
 package org.xhome.xblog.web.action;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,7 @@ import org.xhome.spring.mvc.extend.bind.annotation.RequestAttribute;
 import org.xhome.util.StringUtils;
 import org.xhome.web.action.AbstractAction;
 import org.xhome.web.response.CommonResult;
+import org.xhome.web.response.DataResult;
 import org.xhome.xauth.User;
 import org.xhome.xauth.web.util.AuthUtils;
 import org.xhome.xblog.Tag;
@@ -138,46 +141,61 @@ public class TagAction extends AbstractAction {
 	}
 
 	@RequestMapping(value = RM_TAG_REMOVE, method = RequestMethod.POST)
-	public Object removeTag(@Validated @RequestAttribute("tag") Tag tag,
+	public Object removeTag(
+			@Validated @RequestAttribute("tags") List<Tag> tags,
 			HttpServletRequest request) {
 		short status = 0;
 		String msg = null;
 
 		User user = AuthUtils.getCurrentUser(request);
-		AuthUtils.setModifier(request, tag);
-		status = (short) tagService.removeTag(user, tag);
+		for (Tag tag : tags) {
+			AuthUtils.setModifier(request, tag);
+		}
+		try {
+			status = (short) tagService.removeTags(user, tags);
+		} catch (RuntimeException e) {
+			status = Status.ERROR;
+		}
 		if (status == Status.SUCCESS) {
-			msg = "移除标签[" + tag.getId() + "]" + tag.getName() + "成功";
+			msg = "移除标签成功";
 		} else {
-			msg = "移除标签[" + tag.getId() + "]" + tag.getName() + "失败";
+			msg = "移除标签失败";
 		}
 
 		if (logger.isInfoEnabled()) {
 			logger.info("[{}] {} {}", status, user.getName(), msg);
 		}
 
-		return new CommonResult(status, msg, tag);
+		return new CommonResult(status, msg, tags);
 	}
 
 	@RequestMapping(value = RM_TAG_DELETE, method = RequestMethod.POST)
-	public Object deleteTag(@Validated @RequestAttribute("tag") Tag tag,
+	public Object deleteTag(
+			@Validated @RequestAttribute("tags") List<Tag> tags,
 			HttpServletRequest request) {
 		short status = 0;
 		String msg = null;
 
 		User user = AuthUtils.getCurrentUser(request);
-		status = (short) tagService.deleteTag(user, tag);
+		for (Tag tag : tags) {
+			AuthUtils.setModifier(request, tag);
+		}
+		try {
+			status = (short) tagService.deleteTags(user, tags);
+		} catch (RuntimeException e) {
+			status = Status.ERROR;
+		}
 		if (status == Status.SUCCESS) {
-			msg = "删除标签[" + tag.getId() + "]" + tag.getName() + "成功";
+			msg = "删除标签成功";
 		} else {
-			msg = "删除标签[" + tag.getId() + "]" + tag.getName() + "失败";
+			msg = "删除标签失败";
 		}
 
 		if (logger.isInfoEnabled()) {
 			logger.info("[{}] {} {}", status, user.getName(), msg);
 		}
 
-		return new CommonResult(status, msg, tag);
+		return new CommonResult(status, msg, tags);
 	}
 
 	@RequestMapping(value = RM_TAG_EXISTS, method = RequestMethod.GET)
@@ -341,7 +359,7 @@ public class TagAction extends AbstractAction {
 			logger.info("[{}] {} {}", status, uname, msg);
 		}
 
-		return new CommonResult(status, msg, query);
+		return new DataResult(status, msg, query);
 	}
 
 	@RequestMapping(value = RM_TAG_COUNT, method = RequestMethod.GET)

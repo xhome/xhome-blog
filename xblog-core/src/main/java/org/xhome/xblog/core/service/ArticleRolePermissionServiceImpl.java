@@ -383,6 +383,22 @@ public class ArticleRolePermissionServiceImpl implements
 
 	@Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Throwable.class)
 	@Override
+	public int removeArticleRolePermissions(User oper,
+			List<ArticleRolePermission> articleRolePermissions) {
+		int r = Status.SUCCESS;
+		for (ArticleRolePermission articleRolePermission : articleRolePermissions) {
+			r = this.removeArticleRolePermission(oper, articleRolePermission);
+			if (r != Status.SUCCESS) {
+				throw new RuntimeException(
+						"fail to remove ArticleRolePermission ["
+								+ articleRolePermission.getId() + "]");
+			}
+		}
+		return r;
+	}
+
+	@Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Throwable.class)
+	@Override
 	public int deleteArticleRolePermission(User oper,
 			ArticleRolePermission articleRolePermission) {
 		long id = articleRolePermission.getId();
@@ -433,6 +449,22 @@ public class ArticleRolePermissionServiceImpl implements
 		this.logManage(mstr, Action.DELETE, id, r, oper);
 		this.afterArticleRolePermissionManage(oper, Action.DELETE, r,
 				articleRolePermission);
+		return r;
+	}
+
+	@Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Throwable.class)
+	@Override
+	public int deleteArticleRolePermissions(User oper,
+			List<ArticleRolePermission> articleRolePermissions) {
+		int r = Status.SUCCESS;
+		for (ArticleRolePermission articleRolePermission : articleRolePermissions) {
+			r = this.deleteArticleRolePermission(oper, articleRolePermission);
+			if (r != Status.SUCCESS) {
+				throw new RuntimeException(
+						"fail to delete ArticleRolePermission ["
+								+ articleRolePermission.getId() + "]");
+			}
+		}
 		return r;
 	}
 

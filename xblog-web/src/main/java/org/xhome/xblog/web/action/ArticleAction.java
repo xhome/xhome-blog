@@ -17,6 +17,7 @@ import org.xhome.db.query.QueryBase;
 import org.xhome.spring.mvc.extend.bind.annotation.RequestAttribute;
 import org.xhome.web.action.AbstractAction;
 import org.xhome.web.response.CommonResult;
+import org.xhome.web.response.DataResult;
 import org.xhome.web.util.RequestUtils;
 import org.xhome.xauth.User;
 import org.xhome.xauth.web.util.AuthUtils;
@@ -95,7 +96,8 @@ public class ArticleAction extends AbstractAction {
 	}
 
 	@RequestMapping(value = RM_ARTICLE_UPDATE, method = RequestMethod.POST)
-	public Object updateArticle(@Validated Article article,
+	public Object updateArticle(
+			@Validated @RequestAttribute("article") Article article,
 			HttpServletRequest request) {
 		short status = 0;
 		String msg = null;
@@ -117,7 +119,8 @@ public class ArticleAction extends AbstractAction {
 	}
 
 	@RequestMapping(value = RM_ARTICLE_LOCK, method = RequestMethod.POST)
-	public Object lockArticle(@Validated Article article,
+	public Object lockArticle(
+			@Validated @RequestAttribute("article") Article article,
 			HttpServletRequest request) {
 		short status = 0;
 		String msg = null;
@@ -139,7 +142,8 @@ public class ArticleAction extends AbstractAction {
 	}
 
 	@RequestMapping(value = RM_ARTICLE_UNLOCK, method = RequestMethod.POST)
-	public Object unlockArticle(@Validated Article article,
+	public Object unlockArticle(
+			@Validated @RequestAttribute("article") Article article,
 			HttpServletRequest request) {
 		short status = 0;
 		String msg = null;
@@ -161,49 +165,68 @@ public class ArticleAction extends AbstractAction {
 	}
 
 	@RequestMapping(value = RM_ARTICLE_REMOVE, method = RequestMethod.POST)
-	public Object removeArticle(@Validated Article article,
+	public Object removeArticle(
+			@Validated @RequestAttribute("articles") List<Article> articles,
 			HttpServletRequest request) {
 		short status = 0;
 		String msg = null;
 
 		User user = AuthUtils.getCurrentUser(request);
-		AuthUtils.setModifier(request, article);
-		status = (short) articleService.removeArticle(user, article);
+		for (Article article : articles) {
+			AuthUtils.setModifier(request, article);
+		}
+		try {
+			status = (short) articleService.removeArticles(user, articles);
+		} catch (RuntimeException e) {
+			status = Status.ERROR;
+		}
 		if (status == Status.SUCCESS) {
-			msg = "移除文章[" + article.getId() + "]" + article.getTitle() + "成功";
+			msg = "移除文章成功";
 		} else {
-			msg = "移除文章[" + article.getId() + "]" + article.getTitle() + "失败";
+			msg = "移除文章失败";
 		}
 
 		if (logger.isInfoEnabled()) {
 			logger.info("[{}] {} {}", status, user.getName(), msg);
 		}
 
-		return new CommonResult(status, msg, article);
+		return new CommonResult(status, msg, articles);
 	}
 
 	@ResponseBody
 	@RequestMapping(value = RM_ARTICLE_DELETE, method = RequestMethod.POST)
-	public Object deleteArticle(@Validated Article article,
+	public Object deleteArticle(
+			@Validated @RequestAttribute("articles") List<Article> articles,
 			HttpServletRequest request) {
-		User user = AuthUtils.getCurrentUser(request);
-		short status = (short) articleService.deleteArticle(user, article);
+		short status = 0;
 		String msg = null;
+
+		User user = AuthUtils.getCurrentUser(request);
+		for (Article article : articles) {
+			AuthUtils.setModifier(request, article);
+		}
+		try {
+			status = (short) articleService.deleteArticles(user, articles);
+		} catch (RuntimeException e) {
+			status = Status.ERROR;
+		}
+
 		if (status == Status.SUCCESS) {
-			msg = "删除文章[" + article.getId() + "]" + article.getTitle() + "成功";
+			msg = "删除文章成功";
 		} else {
-			msg = "删除文章[" + article.getId() + "]" + article.getTitle() + "失败";
+			msg = "删除文章失败";
 		}
 
 		if (logger.isInfoEnabled()) {
 			logger.info("[{}] {} {}", status, user.getName(), msg);
 		}
 
-		return new CommonResult(status, msg, article);
+		return new CommonResult(status, msg, articles);
 	}
 
 	@RequestMapping(value = RM_ARTICLE_UPDATEABLE, method = RequestMethod.GET)
-	public Object isArticleUpdateable(@Validated Article article,
+	public Object isArticleUpdateable(
+			@Validated @RequestAttribute("article") Article article,
 			HttpServletRequest request) {
 		short status = Status.SUCCESS;
 		String msg = null;
@@ -227,7 +250,8 @@ public class ArticleAction extends AbstractAction {
 
 	@ResponseBody
 	@RequestMapping(value = RM_ARTICLE_LOCKED, method = RequestMethod.GET)
-	public Object isArticleLocked(@Validated Article article,
+	public Object isArticleLocked(
+			@Validated @RequestAttribute("article") Article article,
 			HttpServletRequest request) {
 		short status = Status.SUCCESS;
 		String msg = null;
@@ -250,7 +274,8 @@ public class ArticleAction extends AbstractAction {
 	}
 
 	@RequestMapping(value = RM_ARTICLE_REMOVEABLE, method = RequestMethod.GET)
-	public Object isArticleRemoveable(@Validated Article article,
+	public Object isArticleRemoveable(
+			@Validated @RequestAttribute("article") Article article,
 			BindingResult result, HttpServletRequest request) {
 		short status = Status.SUCCESS;
 		String msg = null;
@@ -273,7 +298,8 @@ public class ArticleAction extends AbstractAction {
 	}
 
 	@RequestMapping(value = RM_ARTICLE_DELETEABLE, method = RequestMethod.GET)
-	public Object isArticleDeleteable(@Validated Article article,
+	public Object isArticleDeleteable(
+			@Validated @RequestAttribute("article") Article article,
 			HttpServletRequest request) {
 		short status = Status.SUCCESS;
 		String msg = null;
@@ -347,7 +373,7 @@ public class ArticleAction extends AbstractAction {
 			logger.info("[{}] {} {}", status, uname, msg);
 		}
 
-		return new CommonResult(status, msg, query);
+		return new DataResult(status, msg, query);
 	}
 
 	@RequestMapping(value = RM_ARTICLE_COUNT, method = RequestMethod.GET)
@@ -375,7 +401,8 @@ public class ArticleAction extends AbstractAction {
 	}
 
 	@RequestMapping(value = RM_ARTICLE_TAG_ADD, method = RequestMethod.POST)
-	public Object addArticleTag(@Validated Article article,
+	public Object addArticleTag(
+			@Validated @RequestAttribute("article") Article article,
 			HttpServletRequest request) {
 		short status = 0;
 		String msg = null;
@@ -404,7 +431,8 @@ public class ArticleAction extends AbstractAction {
 	}
 
 	@RequestMapping(value = RM_ARTICLE_TAG_LOCK, method = RequestMethod.POST)
-	public Object lockArticleTag(@Validated Article article,
+	public Object lockArticleTag(
+			@Validated @RequestAttribute("article") Article article,
 			HttpServletRequest request) {
 		short status = 0;
 		String msg = null;
@@ -427,7 +455,8 @@ public class ArticleAction extends AbstractAction {
 	}
 
 	@RequestMapping(value = RM_ARTICLE_TAG_UNLOCK, method = RequestMethod.POST)
-	public Object unlockArticleTag(@Validated Article article,
+	public Object unlockArticleTag(
+			@Validated @RequestAttribute("article") Article article,
 			HttpServletRequest request) {
 		short status = 0;
 		String msg = null;
@@ -450,7 +479,8 @@ public class ArticleAction extends AbstractAction {
 	}
 
 	@RequestMapping(value = RM_ARTICLE_TAG_REMOVE, method = RequestMethod.POST)
-	public Object removeArticleTag(@Validated Article article,
+	public Object removeArticleTag(
+			@Validated @RequestAttribute("article") Article article,
 			HttpServletRequest request) {
 		short status = 0;
 		String msg = null;
@@ -473,7 +503,8 @@ public class ArticleAction extends AbstractAction {
 	}
 
 	@RequestMapping(value = RM_ARTICLE_TAG_DELETE, method = RequestMethod.POST)
-	public Object deleteArticleTag(@Validated Article article,
+	public Object deleteArticleTag(
+			@Validated @RequestAttribute("article") Article article,
 			HttpServletRequest request) {
 		short status = 0;
 		String msg = null;
@@ -495,7 +526,8 @@ public class ArticleAction extends AbstractAction {
 	}
 
 	@RequestMapping(value = RM_ARTICLE_TAG_EXISTS, method = RequestMethod.GET)
-	public Object isArticleTagExists(@Validated Article article,
+	public Object isArticleTagExists(
+			@Validated @RequestAttribute("article") Article article,
 			BindingResult result, HttpServletRequest request) {
 		short status = Status.SUCCESS;
 		String msg = null;
@@ -520,7 +552,8 @@ public class ArticleAction extends AbstractAction {
 	}
 
 	@RequestMapping(value = RM_ARTICLE_TAG_UPDATEABLE, method = RequestMethod.GET)
-	public Object isArticleTagUpdateable(@Validated Article article,
+	public Object isArticleTagUpdateable(
+			@Validated @RequestAttribute("article") Article article,
 			HttpServletRequest request) {
 		short status = Status.SUCCESS;
 		String msg = null;
@@ -546,7 +579,8 @@ public class ArticleAction extends AbstractAction {
 	}
 
 	@RequestMapping(value = RM_ARTICLE_TAG_LOCKED, method = RequestMethod.GET)
-	public Object isArticleTagLocked(@Validated Article article,
+	public Object isArticleTagLocked(
+			@Validated @RequestAttribute("article") Article article,
 			HttpServletRequest request) {
 		short status = Status.SUCCESS;
 		String msg = null;
@@ -571,7 +605,8 @@ public class ArticleAction extends AbstractAction {
 	}
 
 	@RequestMapping(value = RM_ARTICLE_TAG_REMOVEABLE, method = RequestMethod.GET)
-	public Object isArticleTagRemoveable(@Validated Article article,
+	public Object isArticleTagRemoveable(
+			@Validated @RequestAttribute("article") Article article,
 			HttpServletRequest request) {
 		short status = Status.SUCCESS;
 		String msg = null;
@@ -597,7 +632,8 @@ public class ArticleAction extends AbstractAction {
 	}
 
 	@RequestMapping(value = RM_ARTICLE_TAG_DELETEABLE, method = RequestMethod.GET)
-	public Object isArticleTagDeleteable(@Validated Article article,
+	public Object isArticleTagDeleteable(
+			@Validated @RequestAttribute("article") Article article,
 			HttpServletRequest request) {
 		short status = Status.SUCCESS;
 		String msg = null;

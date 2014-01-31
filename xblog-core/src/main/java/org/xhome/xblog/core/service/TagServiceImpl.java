@@ -281,6 +281,20 @@ public class TagServiceImpl implements TagService {
 
 	@Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Throwable.class)
 	@Override
+	public int removeTags(User oper, List<Tag> tags) {
+		int r = Status.SUCCESS;
+		for (Tag tag : tags) {
+			r = this.removeTag(oper, tag);
+			if (r != Status.SUCCESS) {
+				throw new RuntimeException("fail to remove tag [" + tag.getId()
+						+ "]" + tag.getName());
+			}
+		}
+		return r;
+	}
+
+	@Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Throwable.class)
+	@Override
 	public int deleteTag(User oper, Tag tag) {
 		String name = tag.getName();
 		Long id = tag.getId();
@@ -311,6 +325,20 @@ public class TagServiceImpl implements TagService {
 
 		this.logManage(name, Action.DELETE, id, r, oper);
 		this.afterTagManage(oper, Action.DELETE, r, tag);
+		return r;
+	}
+
+	@Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Throwable.class)
+	@Override
+	public int deleteTags(User oper, List<Tag> tags) {
+		int r = Status.SUCCESS;
+		for (Tag tag : tags) {
+			r = this.deleteTag(oper, tag);
+			if (r != Status.SUCCESS) {
+				throw new RuntimeException("fail to delete tag [" + tag.getId()
+						+ "]" + tag.getName());
+			}
+		}
 		return r;
 	}
 

@@ -27,7 +27,11 @@ public interface CommentService {
 
 	public int removeComment(User oper, Comment comment);
 
+	public int removeComments(User oper, List<Comment> comments);
+
 	public int deleteComment(User oper, Comment comment);
+
+	public int deleteComments(User oper, List<Comment> comments);
 
 	public boolean isCommentUpdateable(User oper, Comment comment);
 

@@ -378,6 +378,22 @@ public class CategoryUserPermissionServiceImpl implements
 
 	@Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Throwable.class)
 	@Override
+	public int removeCategoryUserPermissions(User oper,
+			List<CategoryUserPermission> categoryUserPermissions) {
+		int r = Status.SUCCESS;
+		for (CategoryUserPermission categoryUserPermission : categoryUserPermissions) {
+			r = this.removeCategoryUserPermission(oper, categoryUserPermission);
+			if (r != Status.SUCCESS) {
+				throw new RuntimeException(
+						"fail to remove CategoryUserPermission ["
+								+ categoryUserPermission.getId() + "]");
+			}
+		}
+		return r;
+	}
+
+	@Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Throwable.class)
+	@Override
 	public int deleteCategoryUserPermission(User oper,
 			CategoryUserPermission categoryUserPermission) {
 		long id = categoryUserPermission.getId();
@@ -427,6 +443,22 @@ public class CategoryUserPermissionServiceImpl implements
 		this.logManage(mstr, Action.DELETE, id, r, oper);
 		this.afterCategoryUserPermissionManage(oper, Action.DELETE, r,
 				categoryUserPermission);
+		return r;
+	}
+
+	@Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Throwable.class)
+	@Override
+	public int deleteCategoryUserPermissions(User oper,
+			List<CategoryUserPermission> categoryUserPermissions) {
+		int r = Status.SUCCESS;
+		for (CategoryUserPermission categoryUserPermission : categoryUserPermissions) {
+			r = this.deleteCategoryUserPermission(oper, categoryUserPermission);
+			if (r != Status.SUCCESS) {
+				throw new RuntimeException(
+						"fail to delete CategoryUserPermission ["
+								+ categoryUserPermission.getId() + "]");
+			}
+		}
 		return r;
 	}
 

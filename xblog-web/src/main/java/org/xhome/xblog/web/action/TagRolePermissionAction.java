@@ -1,5 +1,7 @@
 package org.xhome.xblog.web.action;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,7 @@ import org.xhome.db.query.QueryBase;
 import org.xhome.spring.mvc.extend.bind.annotation.RequestAttribute;
 import org.xhome.web.action.AbstractAction;
 import org.xhome.web.response.CommonResult;
+import org.xhome.web.response.DataResult;
 import org.xhome.xauth.Role;
 import org.xhome.xauth.User;
 import org.xhome.xauth.web.util.AuthUtils;
@@ -178,65 +181,62 @@ public class TagRolePermissionAction extends AbstractAction {
 
 	@RequestMapping(value = RM_TAG_ROLE_PERMISSION_REMOVE, method = RequestMethod.POST)
 	public Object removeTagRolePermission(
-			@Validated @RequestAttribute("permission") TagRolePermission permission,
+			@Validated @RequestAttribute("permissions") List<TagRolePermission> permissions,
 			HttpServletRequest request) {
 		short status = 0;
 		String msg = null;
 
 		User user = AuthUtils.getCurrentUser(request);
-		AuthUtils.setModifier(request, permission);
-		status = (short) permissionService.removeTagRolePermission(user,
-				permission);
-		Tag tag = permission.getTag();
-		Role role = permission.getRole();
+		for (TagRolePermission permission : permissions) {
+			AuthUtils.setModifier(request, permission);
+		}
+		try {
+			status = (short) permissionService.removeTagRolePermissions(user,
+					permissions);
+		} catch (RuntimeException e) {
+			status = Status.ERROR;
+		}
 		if (status == Status.SUCCESS) {
-			msg = "用户为标签" + tag.getName() + "[" + tag.getId() + "]移除角色"
-					+ role.getName() + "[" + role.getId() + "]权限"
-					+ permission.getPermission() + "[" + permission.getId()
-					+ "]" + "成功";
+			msg = "用户为标签移除角色权限成功";
 		} else {
-			msg = "用户为标签" + tag.getName() + "[" + tag.getId() + "]移除角色"
-					+ role.getName() + "[" + role.getId() + "]权限"
-					+ permission.getPermission() + "[" + permission.getId()
-					+ "]" + "失败";
+			msg = "用户为标签移除角色权限失败";
 		}
 
 		if (logger.isInfoEnabled()) {
 			logger.info("[{}] {} {}", status, user.getName(), msg);
 		}
 
-		return new CommonResult(status, msg, permission);
+		return new CommonResult(status, msg, permissions);
 	}
 
 	@RequestMapping(value = RM_TAG_ROLE_PERMISSION_DELETE, method = RequestMethod.POST)
 	public Object deleteTagRolePermission(
-			@Validated @RequestAttribute("permission") TagRolePermission permission,
+			@Validated @RequestAttribute("permissions") List<TagRolePermission> permissions,
 			HttpServletRequest request) {
 		short status = 0;
 		String msg = null;
 
 		User user = AuthUtils.getCurrentUser(request);
-		status = (short) permissionService.deleteTagRolePermission(user,
-				permission);
-		Tag tag = permission.getTag();
-		Role role = permission.getRole();
+		for (TagRolePermission permission : permissions) {
+			AuthUtils.setModifier(request, permission);
+		}
+		try {
+			status = (short) permissionService.deleteTagRolePermissions(user,
+					permissions);
+		} catch (RuntimeException e) {
+			status = Status.ERROR;
+		}
 		if (status == Status.SUCCESS) {
-			msg = "用户为标签" + tag.getName() + "[" + tag.getId() + "]删除角色"
-					+ role.getName() + "[" + role.getId() + "]权限"
-					+ permission.getPermission() + "[" + permission.getId()
-					+ "]" + "成功";
+			msg = "用户为标签删除角色权限成功";
 		} else {
-			msg = "用户为标签" + tag.getName() + "[" + tag.getId() + "]删除角色"
-					+ role.getName() + "[" + role.getId() + "]权限"
-					+ permission.getPermission() + "[" + permission.getId()
-					+ "]" + "失败";
+			msg = "用户为标签删除角色权限失败";
 		}
 
 		if (logger.isInfoEnabled()) {
 			logger.info("[{}] {} {}", status, user.getName(), msg);
 		}
 
-		return new CommonResult(status, msg, permission);
+		return new CommonResult(status, msg, permissions);
 	}
 
 	@RequestMapping(value = RM_TAG_ROLE_PERMISSION_EXISTS, method = RequestMethod.GET)
@@ -449,7 +449,7 @@ public class TagRolePermissionAction extends AbstractAction {
 			logger.info("[{}] {} {}", status, uname, msg);
 		}
 
-		return new CommonResult(status, msg, query);
+		return new DataResult(status, msg, query);
 	}
 
 	@RequestMapping(value = RM_TAG_ROLE_PERMISSION_COUNT, method = RequestMethod.GET)

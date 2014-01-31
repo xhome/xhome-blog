@@ -377,6 +377,22 @@ public class ArticleUserPermissionServiceImpl implements
 
 	@Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Throwable.class)
 	@Override
+	public int removeArticleUserPermissions(User oper,
+			List<ArticleUserPermission> articleUserPermissions) {
+		int r = Status.SUCCESS;
+		for (ArticleUserPermission articleUserPermission : articleUserPermissions) {
+			r = this.removeArticleUserPermission(oper, articleUserPermission);
+			if (r != Status.SUCCESS) {
+				throw new RuntimeException(
+						"fail to remove ArticleUserPermission ["
+								+ articleUserPermission.getId() + "]");
+			}
+		}
+		return r;
+	}
+
+	@Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Throwable.class)
+	@Override
 	public int deleteArticleUserPermission(User oper,
 			ArticleUserPermission articleUserPermission) {
 		long id = articleUserPermission.getId();
@@ -426,6 +442,22 @@ public class ArticleUserPermissionServiceImpl implements
 		this.logManage(mstr, Action.DELETE, id, r, oper);
 		this.afterArticleUserPermissionManage(oper, Action.DELETE, r,
 				articleUserPermission);
+		return r;
+	}
+
+	@Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Throwable.class)
+	@Override
+	public int deleteArticleUserPermissions(User oper,
+			List<ArticleUserPermission> articleUserPermissions) {
+		int r = Status.SUCCESS;
+		for (ArticleUserPermission articleUserPermission : articleUserPermissions) {
+			r = this.deleteArticleUserPermission(oper, articleUserPermission);
+			if (r != Status.SUCCESS) {
+				throw new RuntimeException(
+						"fail to delete ArticleUserPermission ["
+								+ articleUserPermission.getId() + "]");
+			}
+		}
 		return r;
 	}
 

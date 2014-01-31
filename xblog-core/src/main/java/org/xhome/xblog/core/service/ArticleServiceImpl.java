@@ -286,6 +286,20 @@ public class ArticleServiceImpl implements ArticleService {
 
 	@Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Throwable.class)
 	@Override
+	public int removeArticles(User oper, List<Article> articles) {
+		int r = Status.SUCCESS;
+		for (Article article : articles) {
+			r = this.removeArticle(oper, article);
+			if (r != Status.SUCCESS) {
+				throw new RuntimeException("fail to remove Article ["
+						+ article.getId() + "]");
+			}
+		}
+		return r;
+	}
+
+	@Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Throwable.class)
+	@Override
 	public int deleteArticle(User oper, Article article) {
 		String title = article.getTitle();
 		Long id = article.getId();
@@ -318,6 +332,20 @@ public class ArticleServiceImpl implements ArticleService {
 
 		this.logManageArticle(title, Action.DELETE, id, r, oper);
 		this.afterArticleManage(oper, Action.DELETE, r, article);
+		return r;
+	}
+
+	@Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Throwable.class)
+	@Override
+	public int deleteArticles(User oper, List<Article> articles) {
+		int r = Status.SUCCESS;
+		for (Article article : articles) {
+			r = this.deleteArticle(oper, article);
+			if (r != Status.SUCCESS) {
+				throw new RuntimeException("fail to delete Article ["
+						+ article.getId() + "]");
+			}
+		}
 		return r;
 	}
 
