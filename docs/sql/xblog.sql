@@ -150,7 +150,7 @@ CREATE TABLE xhome_xblog_record
    user                 BIGINT NOT NULL COMMENT '用户',
    address              VARCHAR(16) NOT NULL COMMENT '访问地址(IPv4/IPv6)',
    agent                TINYINT NOT NULL DEFAULT 0 COMMENT '0:Other,1:Chrome, 2:Firefox, 3:IE, 4:Android',
-   number               VARCHAR(100) NOT NULL COMMENT '设备编号',
+   number               VARCHAR(150) NOT NULL COMMENT '设备编号',
    created              TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '访问时间',
    status               TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '0:允许访问,1:文章不存在,2:用户不存在:3:权限不够',
    PRIMARY KEY (id)

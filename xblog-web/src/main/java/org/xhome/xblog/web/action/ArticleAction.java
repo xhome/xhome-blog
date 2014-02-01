@@ -43,6 +43,8 @@ public class ArticleAction extends AbstractAction {
 	@Autowired
 	private RecordService recordService;
 
+	public final static String RM_ARTICLE_NEW = "xblog/article/new";
+	public final static String RM_ARTICLE_EDIT = "xblog/article/edit";
 	public final static String RM_ARTICLE_ADD = "xblog/article/add";
 	public final static String RM_ARTICLE_UPDATE = "xblog/article/update";
 	public final static String RM_ARTICLE_LOCK = "xblog/article/lock";
@@ -71,6 +73,56 @@ public class ArticleAction extends AbstractAction {
 	public final static String RM_ARTICLE_TAG_REMOVEABLE = "xblog/article/tag/removeable";
 	public final static String RM_ARTICLE_TAG_DELETEABLE = "xblog/article/tag/deleteable";
 
+	/**
+	 * 写新文章页面请求
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = RM_ARTICLE_NEW, method = RequestMethod.GET)
+	public Object newArticle() {
+		return RM_ARTICLE_NEW;
+	}
+
+	/**
+	 * 编辑已有文章页面请求
+	 * 
+	 * @param id
+	 *            文章ID
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value = RM_ARTICLE_EDIT, method = RequestMethod.GET)
+	public Object editArticle(@RequestParam(value = "id") Long id,
+			HttpServletRequest request) {
+		User user = AuthUtils.getCurrentUser(request);
+		String uname = user.getName();
+		Article article = articleService.getArticle(user, id);
+
+		String msg = null;
+		short status = Status.SUCCESS;
+
+		if (article != null) {
+			msg = "文章[" + id + "]" + article.getTitle() + "查询成功";
+		} else {
+			status = Status.ERROR;
+			msg = "文章查询失败";
+		}
+
+		if (logger.isInfoEnabled()) {
+			logger.info("[{}] {} {}", status, uname, msg);
+		}
+
+		return new CommonResult(status, msg, article);
+	}
+
+	/**
+	 * 添加新文章
+	 * 
+	 * @param article
+	 *            文章内容
+	 * @param request
+	 * @return
+	 */
 	@RequestMapping(value = RM_ARTICLE_ADD, method = RequestMethod.POST)
 	public Object addArticle(
 			@Validated @RequestAttribute("article") Article article,
@@ -81,7 +133,12 @@ public class ArticleAction extends AbstractAction {
 		User user = AuthUtils.getCurrentUser(request);
 		AuthUtils.setOwner(request, article);
 		AuthUtils.setModifier(request, article);
-		status = (short) articleService.addArticle(user, article);
+		try {
+			status = (short) articleService.addArticle(user, article);
+		} catch (BlogException e) {
+			status = e.getStatus();
+			msg = e.getMessage();
+		}
 		if (status == Status.SUCCESS) {
 			msg = "添加文章" + article.getTitle() + "成功";
 		} else {
@@ -95,6 +152,14 @@ public class ArticleAction extends AbstractAction {
 		return new CommonResult(status, msg, article);
 	}
 
+	/**
+	 * 更新文章
+	 * 
+	 * @param article
+	 *            文章内容
+	 * @param request
+	 * @return
+	 */
 	@RequestMapping(value = RM_ARTICLE_UPDATE, method = RequestMethod.POST)
 	public Object updateArticle(
 			@Validated @RequestAttribute("article") Article article,
@@ -104,7 +169,12 @@ public class ArticleAction extends AbstractAction {
 
 		User user = AuthUtils.getCurrentUser(request);
 		AuthUtils.setModifier(request, article);
-		status = (short) articleService.updateArticle(user, article);
+		try {
+			status = (short) articleService.updateArticle(user, article);
+		} catch (BlogException e) {
+			status = e.getStatus();
+			msg = e.getMessage();
+		}
 		if (status == Status.SUCCESS) {
 			msg = "更新文章[" + article.getId() + "]" + article.getTitle() + "成功";
 		} else {

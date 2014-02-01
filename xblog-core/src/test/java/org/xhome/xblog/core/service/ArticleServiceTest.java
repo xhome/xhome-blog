@@ -43,7 +43,11 @@ public class ArticleServiceTest extends AbstractTest {
 		Article article = new Article("TestArticle");
 		article.setOwner(1L);
 		article.setModifier(1L);
-		articleService.addArticle(oper, article);
+		try {
+			articleService.addArticle(oper, article);
+		} catch (BlogException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Test
@@ -102,8 +106,12 @@ public class ArticleServiceTest extends AbstractTest {
 		Article article = articleService.getArticle(oper, id);
 		article.setId(100L);
 		// article.setVersion(11);
-		int r = articleService.updateArticle(oper, article);
-		logger.info("result:" + r);
+		try {
+			int r = articleService.updateArticle(oper, article);
+			logger.info("result:" + r);
+		} catch (BlogException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Test

@@ -27,11 +27,11 @@
 	
 	<!-- 自动适配Mapper -->
 	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-  		<property name="basePackage" value="org.xhome.xblog.core.dao"/>
+  		<property name="basePackage" value="org.xhome"/>
 	</bean>
 
     <!-- 自动扫描组建 -->
-	<context:component-scan base-package="org.xhome.xblog.core.service"/>
+	<context:component-scan base-package="org.xhome"/>
     
 </beans>
 

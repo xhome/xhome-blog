@@ -56,7 +56,7 @@ public class ArticleServiceImpl implements ArticleService {
 
 	@Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Throwable.class)
 	@Override
-	public int addArticle(User oper, Article article) {
+	public int addArticle(User oper, Article article) throws BlogException {
 		String title = article.getTitle();
 
 		if (!this.beforeArticleManage(oper, Action.ADD, article)) {
@@ -78,6 +78,12 @@ public class ArticleServiceImpl implements ArticleService {
 		short r = articleDAO.addArticle(article) == 1 ? Status.SUCCESS
 				: Status.ERROR;
 
+		// 文章添加成功后添加文章标签
+		if (r == Status.SUCCESS) {
+			List<Tag> tags = article.getTags();
+			this.addArticleTag(oper, article, tags);
+		}
+
 		if (logger.isDebugEnabled()) {
 			if (r == Status.SUCCESS) {
 				logger.debug("success to add article {}", title);
@@ -93,7 +99,7 @@ public class ArticleServiceImpl implements ArticleService {
 
 	@Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Throwable.class)
 	@Override
-	public int updateArticle(User oper, Article article) {
+	public int updateArticle(User oper, Article article) throws BlogException {
 		String title = article.getTitle();
 		Long id = article.getId();
 
@@ -163,6 +169,38 @@ public class ArticleServiceImpl implements ArticleService {
 				: Status.ERROR;
 		if (r == Status.SUCCESS) {
 			article.incrementVersion();
+		}
+
+		if (r == Status.SUCCESS) {
+			// 更新文章标签信息
+			List<Tag> oldTags = old.getTags();
+			List<Tag> newTags = article.getTags();
+			// 为文章添加新标签
+			for (Tag tag : newTags) {
+				boolean has = false;
+				for (Tag oldTag : oldTags) {
+					if (oldTag.getId().equals(tag.getId())) {
+						has = true;
+						break;
+					}
+				}
+				if (!has) {
+					this.addArticleTag(oper, article, tag);
+				}
+			}
+			// 删除文章已有标签
+			for (Tag tag : oldTags) {
+				boolean has = false;
+				for (Tag newTag : newTags) {
+					if (tag.getId().equals(newTag.getId())) {
+						has = true;
+						break;
+					}
+				}
+				if (!has) {
+					this.deleteArticleTag(oper, article, tag);
+				}
+			}
 		}
 
 		if (logger.isDebugEnabled()) {
@@ -586,7 +624,9 @@ public class ArticleServiceImpl implements ArticleService {
 		return c;
 	}
 
-	private int doAddRole(User oper, Article article, Tag tag)
+	@Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Throwable.class)
+	@Override
+	public int addArticleTag(User oper, Article article, Tag tag)
 			throws BlogException {
 		Long articleId = article.getId(), tagId = tag.getId();
 		String title = article.getTitle(), tagName = tag.getName();
@@ -649,13 +689,6 @@ public class ArticleServiceImpl implements ArticleService {
 
 	@Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Throwable.class)
 	@Override
-	public int addArticleTag(User oper, Article article, Tag tag)
-			throws BlogException {
-		return this.doAddRole(oper, article, tag);
-	}
-
-	@Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Throwable.class)
-	@Override
 	public int addArticleTag(User oper, Article article, List<Tag> tags)
 			throws BlogException {
 		if (logger.isDebugEnabled()) {
@@ -666,7 +699,7 @@ public class ArticleServiceImpl implements ArticleService {
 		if (tags != null) {
 			int r = Status.ERROR;
 			for (Tag tag : tags) {
-				r = this.doAddRole(oper, article, tag);
+				r = this.addArticleTag(oper, article, tag);
 				if (r != Status.SUCCESS)
 					return r;
 			}

@@ -19,9 +19,9 @@ import org.xhome.xblog.Tag;
 @Service
 public interface ArticleService {
 
-	public int addArticle(User oper, Article article);
+	public int addArticle(User oper, Article article) throws BlogException;
 
-	public int updateArticle(User oper, Article article);
+	public int updateArticle(User oper, Article article) throws BlogException;
 
 	public int lockArticle(User oper, Article article);
 
