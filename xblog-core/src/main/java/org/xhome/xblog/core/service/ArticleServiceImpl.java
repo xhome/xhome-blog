@@ -198,7 +198,7 @@ public class ArticleServiceImpl implements ArticleService {
 					}
 				}
 				if (!has) {
-					this.deleteArticleTag(oper, article, tag);
+					this.removeArticleTag(oper, article, tag);
 				}
 			}
 		}

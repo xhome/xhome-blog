@@ -236,8 +236,8 @@
 		GROUP BY a.id
 	</sql>
 	
-	<select id="queryArticles" resultMap="articleLittleResultMap" parameterType="org.xhome.db.query.QueryBase">
-		<include refid="selectArticleLittle"/>
+	<select id="queryArticles" resultMap="articleResultMap" parameterType="org.xhome.db.query.QueryBase">
+		<include refid="selectArticle"/>
 		<include refid="fromArticle"/>
 		WHERE a.id IN (
 			<include refid="queryArticleId"/>

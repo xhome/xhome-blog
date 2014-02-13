@@ -1,6 +1,8 @@
 package org.xhome.xblog.web.action;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -26,7 +28,9 @@ import org.xhome.xblog.BlogException;
 import org.xhome.xblog.Record;
 import org.xhome.xblog.Tag;
 import org.xhome.xblog.core.service.ArticleService;
+import org.xhome.xblog.core.service.CategoryService;
 import org.xhome.xblog.core.service.RecordService;
+import org.xhome.xblog.core.service.TagService;
 
 /**
  * @project xblog-web
@@ -42,8 +46,12 @@ public class ArticleAction extends AbstractAction {
 	private ArticleService articleService;
 	@Autowired
 	private RecordService recordService;
+	@Autowired
+	private CategoryService categoryService;
+	@Autowired
+	private TagService tagService;
 
-	public final static String RM_ARTICLE_NEW = "xblog/article/new";
+	public final static String RM_ARTICLE_INDEX = "xblog/article/index";
 	public final static String RM_ARTICLE_EDIT = "xblog/article/edit";
 	public final static String RM_ARTICLE_ADD = "xblog/article/add";
 	public final static String RM_ARTICLE_UPDATE = "xblog/article/update";
@@ -74,26 +82,63 @@ public class ArticleAction extends AbstractAction {
 	public final static String RM_ARTICLE_TAG_DELETEABLE = "xblog/article/tag/deleteable";
 
 	/**
-	 * 写新文章页面请求
+	 * 博客首页
 	 * 
 	 * @return
 	 */
-	@RequestMapping(value = RM_ARTICLE_NEW, method = RequestMethod.GET)
-	public Object newArticle() {
-		return RM_ARTICLE_NEW;
+	@RequestMapping(value = RM_ARTICLE_INDEX, method = RequestMethod.GET)
+	public Object articleIndex(HttpServletRequest request,
+			@RequestParam(value = "cid", required = false) Long cid,
+			@RequestParam(value = "tid", required = false) Long tid,
+			@RequestParam(value = "page", required = false) Long page,
+			@RequestParam(value = "limit", required = false) Long limit) {
+		User user = AuthUtils.getCurrentUser(request);
+		Map<String, Object> data = new HashMap<String, Object>();
+
+		QueryBase categories = new QueryBase();
+		categoryService.getCategorys(user, categories);
+		data.put("categories", categories);
+
+		QueryBase tags = new QueryBase();
+		tagService.getTags(user, tags);
+		data.put("tags", tags);
+
+		QueryBase articles = new QueryBase();
+		if (cid != null && cid > 0) {
+			articles.addParameter("category_id", cid);
+		}
+		if (tid != null && tid > 0) {
+			articles.addParameter("tag_id", tid);
+		}
+		if (page != null && page > 0) {
+			articles.setPage(page);
+		}
+		if (limit == null || limit <= 0) {
+			limit = 5L;
+		}
+		articles.setLimit(limit);
+
+		articleService.getArticles(user, articles);
+		data.put("articles", articles);
+
+		return new CommonResult(Status.SUCCESS, "", data);
 	}
 
 	/**
-	 * 编辑已有文章页面请求
+	 * 编辑文章页面请求
 	 * 
 	 * @param id
-	 *            文章ID
+	 *            文章ID，如果为空则为新建文章
 	 * @param request
 	 * @return
 	 */
 	@RequestMapping(value = RM_ARTICLE_EDIT, method = RequestMethod.GET)
-	public Object editArticle(@RequestParam(value = "id") Long id,
+	public Object editArticle(
+			@RequestParam(value = "id", required = false) Long id,
 			HttpServletRequest request) {
+		if (id == null) {
+			return RM_ARTICLE_EDIT;
+		}
 		User user = AuthUtils.getCurrentUser(request);
 		String uname = user.getName();
 		Article article = articleService.getArticle(user, id);
@@ -742,6 +787,36 @@ public class ArticleAction extends AbstractAction {
 
 	public RecordService getRecordService() {
 		return recordService;
+	}
+
+	/**
+	 * @return the categoryService
+	 */
+	public CategoryService getCategoryService() {
+		return categoryService;
+	}
+
+	/**
+	 * @param categoryService
+	 *            the categoryService to set
+	 */
+	public void setCategoryService(CategoryService categoryService) {
+		this.categoryService = categoryService;
+	}
+
+	/**
+	 * @return the tagService
+	 */
+	public TagService getTagService() {
+		return tagService;
+	}
+
+	/**
+	 * @param tagService
+	 *            the tagService to set
+	 */
+	public void setTagService(TagService tagService) {
+		this.tagService = tagService;
 	}
 
 }

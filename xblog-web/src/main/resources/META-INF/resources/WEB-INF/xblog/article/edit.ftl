@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <#import "/xauth/xauth.ftl" as xauth />
 <html lang="zh_CN">
-<@xauth.head title="写文章" description="XAuth" keywords="XHome, XBlog, 博客">
+<@xauth.head title="写文章" description="XBlog" keywords="XHome, XBlog, 博客">
 <link href="xlibs/ext/resources/css/ext-all.css" rel="stylesheet" type="text/css"/>
 </@xauth.head>
 <body>
@@ -19,7 +19,8 @@ Ext.onReady(function() {
     Ext.QuickTips.init();
 
     // 生成界面
-    Ext.create('Ext.form.Panel', {
+    var form = Ext.create('Ext.form.Panel', {
+        id: 'form',
         url: '${xauth.base_url}xblog/article/add.json',
         renderTo: Ext.getBody(),
         layout: 'anchor',
@@ -50,6 +51,7 @@ Ext.onReady(function() {
             itemId: 'article.category.name',
         }, {
             xtype: 'container',
+            itemId: 'container',
             layout: {
                 type: 'hbox', 
                 align: 'middle', 
@@ -85,6 +87,8 @@ Ext.onReady(function() {
             }, {
                 flex: 1,
                 xtype: 'combo',
+                itemId: 'article.tags',
+                fieldLabel: '分类',
                 fieldLabel: '标签',
                 labelWidth: 30, 
                 valueField: 'id',
@@ -109,7 +113,7 @@ Ext.onReady(function() {
 
                         // 删除已有的标签
                         for (field in values) {
-                            if (field.indexOf('article.tags') == 0) {
+                            if (field.indexOf('article.tags[') == 0) {
                                 comp = form.getComponent(field);
                                 form.remove(comp, true);
                             }
@@ -138,10 +142,20 @@ Ext.onReady(function() {
         buttons: [{
             text: '提交',
             handler: function() {
-                var form = this.up('form').getForm();
+                var formPanel = this.up('form'),
+                    form = formPanel.getForm();
                 if (form.isValid()) {
                     form.submit({
                         success: function(form, action) {
+                            var article = action.result.data;
+                            var status = formPanel.getComponent('article.status'),
+                                version = formPanel.getComponent('article.version');
+                            if (status) {
+                                status.setValue(article.status); 
+                            }
+                            if (version) {
+                                version.setValue(article.version); 
+                            }
                             XHome.Msg.info(action.result.message); 
                         },
                         failure: function(form, action) {
@@ -152,6 +166,50 @@ Ext.onReady(function() {
             },
         }],
     });
+
+    <#if commonResult?? && commonResult.status?? && commonResult.status == 0>
+        form.add({
+            xtype: 'hidden',
+            name: 'article.id',
+            itemId: 'article.id',
+            value: ${commonResult.data.id},
+        }); 
+        form.add({
+            xtype: 'hidden',
+            name: 'article.status',
+            itemId: 'article.status',
+            value: ${commonResult.data.status},
+        }); 
+        form.add({
+            xtype: 'hidden',
+            name: 'article.version',
+            itemId: 'article.version',
+            value: ${commonResult.data.version},
+        }); 
+        form.getComponent('article.title').setValue('${commonResult.data.title}'); 
+        form.getComponent('article.content').setValue('${commonResult.data.content}');
+        var container = form.getComponent('container');
+        container.getComponent('article.category.id').select(${commonResult.data.category.id}); 
+        form.getComponent('article.category.name').setValue('${commonResult.data.category.name}'); 
+        var tags = []; 
+        <#list commonResult.data.tags as tag>
+            tags.push(${tag.id});
+            form.add({
+                xtype: 'hidden',
+                name: 'article.tags[${tag_index}].id',
+                itemId: 'article.tags[${tag_index}].id',
+                value: ${tag.id},
+            }); 
+            form.add({
+                xtype: 'hidden',
+                name: 'article.tags[${tag_index}].name',
+                itemId: 'article.tags[${tag_index}].name',
+                value: '${tag.name}',
+            }); 
+        </#list>
+        container.getComponent('article.tags').select(tags); 
+        form.getForm().url = '${xauth.base_url}xblog/article/update.json';
+    </#if>
 
 });
 </script>
