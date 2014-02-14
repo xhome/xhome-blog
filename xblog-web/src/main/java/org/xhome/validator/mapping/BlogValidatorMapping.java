@@ -30,6 +30,9 @@ import org.xhome.xblog.web.validator.CategoryPermissionUserValidator;
 import org.xhome.xblog.web.validator.CommentArticleValidator;
 import org.xhome.xblog.web.validator.CommentContentValidator;
 import org.xhome.xblog.web.validator.CommentTargetValidator;
+import org.xhome.xblog.web.validator.CommentUserEmailValidator;
+import org.xhome.xblog.web.validator.CommentUserNameValidator;
+import org.xhome.xblog.web.validator.CommentUserWebsiteValidator;
 import org.xhome.xblog.web.validator.TagNameValidator;
 import org.xhome.xblog.web.validator.TagPermissionRoleValidator;
 import org.xhome.xblog.web.validator.TagPermissionTagValidator;
@@ -135,7 +138,10 @@ public class BlogValidatorMapping implements Mapping {
 				.getName(), commentACTValidator = commentArticleValidator + ","
 				+ commentContentValidator + "," + commentTargetValidator, commentAVersionValidator = idValidator
 				+ "," + commentArticleValidator + "," + versionValidator;
-		mappings.put(CommentAction.RM_COMMENT_ADD, commentACTValidator);
+		mappings.put(CommentAction.RM_COMMENT_ADD, commentACTValidator + ","
+				+ CommentUserNameValidator.class.getName() + ","
+				+ CommentUserEmailValidator.class.getName() + ","
+				+ CommentUserWebsiteValidator.class.getName());
 		mappings.put(CommentAction.RM_COMMENT_UPDATE, baseValidator + ","
 				+ commentACTValidator);
 		mappings.put(CommentAction.RM_COMMENT_LOCK, commentAVersionValidator);

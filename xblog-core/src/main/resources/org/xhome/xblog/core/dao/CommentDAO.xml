@@ -43,6 +43,9 @@
 	<resultMap id="commentResultMap" type="org.xhome.xblog.Comment">
 		<id property="id" column="id"/>
 		<result property="type" column="type"/>
+		<result property="userName" column="user_name"/>
+		<result property="userEmail" column="user_email"/>
+		<result property="userWebsite" column="user_website"/>
 		<result property="content" column="content"/>
 		<result property="owner" column="owner"/>
 		<result property="modifier" column="modifier"/>
@@ -65,7 +68,7 @@
 	</resultMap>
 	
 	<insert id="addComment" parameterType="org.xhome.xblog.Comment" useGeneratedKeys="true" keyProperty="id">
-		INSERT INTO xhome_xblog_comment (article, type, target, content, owner, modifier, created, modified, version, status)
+		INSERT INTO xhome_xblog_comment (article, type, target, user_name, user_email, user_website, content, owner, modifier, created, modified, version, status)
 		VALUES(#{article.id}, #{type},
 		<if test="target == null">
 			#{article.id},
@@ -73,7 +76,7 @@
 		<if test="target != null">
 			#{target.id},
 		</if>
-			#{content}, #{owner}, #{modifier}, #{created}, #{modified}, #{version}, #{status})
+			#{userName}, #{userEmail}, #{userWebsite}, #{content}, #{owner}, #{modifier}, #{created}, #{modified}, #{version}, #{status})
 	</insert>
 	
 	<update id="updateComment" parameterType="org.xhome.xblog.Comment">
@@ -140,6 +143,42 @@
 		<trim prefix="WHERE" prefixOverrides="AND">
 			<if test="parameters.article_id != null and parameters.article_id != ''">
 				AND article = #{parameters.article_id}
+			</if>
+			<if test="parameters.user_name != null and parameters.user_name != ''">
+				AND user_name LIKE CONCAT('%',#{parameters.user_name},'%')
+			</if>
+			<if test="parameters.user_name_llike != null and parameters.user_name_llike != ''">
+				AND user_name LIKE CONCAT('%',#{parameters.user_name_llike})
+			</if>
+			<if test="parameters.user_name_rlike != null and parameters.user_name_rlike != ''">
+				AND user_name LIKE CONCAT(#{parameters.user_name_rlike},'%')
+			</if>
+			<if test="parameters.user_name_equal != null and parameters.user_name_equal != ''">
+				AND user_name = #{parameters.user_name_equal}
+			</if>
+			<if test="parameters.user_email != null and parameters.user_email != ''">
+				AND user_email LIKE CONCAT('%',#{parameters.user_email},'%')
+			</if>
+			<if test="parameters.user_email_llike != null and parameters.user_email_llike != ''">
+				AND user_email LIKE CONCAT('%',#{parameters.user_email_llike})
+			</if>
+			<if test="parameters.user_email_rlike != null and parameters.user_email_rlike != ''">
+				AND user_email LIKE CONCAT(#{parameters.user_email_rlike},'%')
+			</if>
+			<if test="parameters.user_email_equal != null and parameters.user_email_equal != ''">
+				AND user_email = #{parameters.user_email_equal}
+			</if>
+			<if test="parameters.user_website != null and parameters.user_website != ''">
+				AND user_website LIKE CONCAT('%',#{parameters.user_website},'%')
+			</if>
+			<if test="parameters.user_website_llike != null and parameters.user_website_llike != ''">
+				AND user_website LIKE CONCAT('%',#{parameters.user_website_llike})
+			</if>
+			<if test="parameters.user_website_rlike != null and parameters.user_website_rlike != ''">
+				AND user_website LIKE CONCAT(#{parameters.user_website_rlike},'%')
+			</if>
+			<if test="parameters.user_website_equal != null and parameters.user_website_equal != ''">
+				AND user_website = #{parameters.user_website_equal}
 			</if>
 			<if test="parameters.content != null and parameters.content != ''">
 				AND content LIKE CONCAT('%',#{parameters.content},'%')

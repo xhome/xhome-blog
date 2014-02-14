@@ -52,6 +52,7 @@ public class ArticleAction extends AbstractAction {
 	private TagService tagService;
 
 	public final static String RM_ARTICLE_INDEX = "xblog/article/index";
+	public final static String RM_ARTICLE_READ = "xblog/article/read";
 	public final static String RM_ARTICLE_EDIT = "xblog/article/edit";
 	public final static String RM_ARTICLE_ADD = "xblog/article/add";
 	public final static String RM_ARTICLE_UPDATE = "xblog/article/update";
@@ -84,10 +85,18 @@ public class ArticleAction extends AbstractAction {
 	/**
 	 * 博客首页
 	 * 
+	 * @param cid
+	 *            分类ID
+	 * @param tid
+	 *            标签ID
+	 * @param page
+	 *            指定显示页
+	 * @param limit
+	 *            指定每页显示文章条数，默认为5
 	 * @return
 	 */
 	@RequestMapping(value = RM_ARTICLE_INDEX, method = RequestMethod.GET)
-	public Object articleIndex(HttpServletRequest request,
+	public Object indexArticle(HttpServletRequest request,
 			@RequestParam(value = "cid", required = false) Long cid,
 			@RequestParam(value = "tid", required = false) Long tid,
 			@RequestParam(value = "page", required = false) Long page,
@@ -120,6 +129,34 @@ public class ArticleAction extends AbstractAction {
 
 		articleService.getArticles(user, articles);
 		data.put("articles", articles);
+
+		return new CommonResult(Status.SUCCESS, "", data);
+	}
+
+	/**
+	 * 阅读指定ID的文章
+	 * 
+	 * @param id
+	 *            文章ID
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value = RM_ARTICLE_READ, method = RequestMethod.GET)
+	public Object readArticle(HttpServletRequest request,
+			@RequestParam(value = "id") Long id) {
+		User user = AuthUtils.getCurrentUser(request);
+		Map<String, Object> data = new HashMap<String, Object>();
+
+		QueryBase categories = new QueryBase();
+		categoryService.getCategorys(user, categories);
+		data.put("categories", categories);
+
+		QueryBase tags = new QueryBase();
+		tagService.getTags(user, tags);
+		data.put("tags", tags);
+
+		Article article = articleService.getArticle(user, id);
+		data.put("article", article);
 
 		return new CommonResult(Status.SUCCESS, "", data);
 	}
