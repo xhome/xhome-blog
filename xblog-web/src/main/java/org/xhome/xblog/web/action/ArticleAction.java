@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.xhome.common.constant.Status;
 import org.xhome.db.query.QueryBase;
 import org.xhome.spring.mvc.extend.bind.annotation.RequestAttribute;
+import org.xhome.util.StringUtils;
 import org.xhome.web.action.AbstractAction;
 import org.xhome.web.response.CommonResult;
 import org.xhome.web.response.DataResult;
@@ -85,6 +86,8 @@ public class ArticleAction extends AbstractAction {
 	/**
 	 * 博客首页
 	 * 
+	 * @param searchWord
+	 *            搜索关键字
 	 * @param cid
 	 *            分类ID
 	 * @param tid
@@ -97,6 +100,7 @@ public class ArticleAction extends AbstractAction {
 	 */
 	@RequestMapping(value = RM_ARTICLE_INDEX, method = RequestMethod.GET)
 	public Object indexArticle(HttpServletRequest request,
+			@RequestParam(value = "sw", required = false) String searchWord,
 			@RequestParam(value = "cid", required = false) Long cid,
 			@RequestParam(value = "tid", required = false) Long tid,
 			@RequestParam(value = "page", required = false) Long page,
@@ -113,6 +117,10 @@ public class ArticleAction extends AbstractAction {
 		data.put("tags", tags);
 
 		QueryBase articles = new QueryBase();
+		if (StringUtils.isNotEmpty(searchWord)) {
+			data.put("search_word", searchWord);
+			articles.addParameter("search_word", searchWord);
+		}
 		if (cid != null && cid > 0) {
 			articles.addParameter("category_id", cid);
 		}

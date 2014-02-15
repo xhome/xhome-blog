@@ -125,6 +125,10 @@
 		SELECT a.id
 		<include refid="fromArticle"/>
 		<trim prefix="WHERE" prefixOverrides="AND">
+			<if test="parameters.search_word != null and parameters.search_word != ''">
+				AND (a.title LIKE CONCAT('%',#{parameters.search_word},'%')
+					OR a.content LIKE CONCAT('%',#{parameters.search_word},'%'))
+			</if>
 			<if test="parameters.title != null and parameters.title != ''">
 				AND a.title LIKE CONCAT('%',#{parameters.title},'%')
 			</if>

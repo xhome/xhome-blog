@@ -30,7 +30,7 @@
 	<context:component-scan base-package="org.xhome.xauth; org.xhome.xblog;"/>
 	 -->
 	 
-	<bean class="org.xhome.web.action.DashboardAction"/>
+	<bean class="org.xhome.web.action.CommonAction" />
     
     <tx:annotation-driven />
 	<mvc:annotation-driven>

@@ -5,6 +5,9 @@
 <link href="xlibs/ext/resources/css/ext-all.css" rel="stylesheet" type="text/css"/>
 </@xblog.head>
 <body>
+<#if commonResult?? && commonResult.data?? && commonResult.data.search_word??>
+    <#assign search_word = commonResult.data.search_word />
+</#if>
 <#-- 导航菜单 开始 -->
 <#assign nav_active = "index" />
 <@include file = "header.ftl" />
