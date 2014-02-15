@@ -35,20 +35,6 @@
 			<result property="version" column="version"/>
 			<result property="status" column="status"/>
 		</collection>
-		<collection property="comments" ofType="org.xhome.xblog.Comment" columnPrefix="comment_">
-			<id property="id" column="id"/>
-			<result property="type" column="type"/>
-			<result property="userName" column="user_name"/>
-			<result property="userEmail" column="user_email"/>
-			<result property="userWebsite" column="user_website"/>
-			<result property="content" column="content"/>
-			<result property="owner" column="owner"/>
-			<result property="modifier" column="modifier"/>
-			<result property="created" column="created"/>
-			<result property="modified" column="modified"/>
-			<result property="version" column="version"/>
-			<result property="status" column="status"/>
-		</collection>
 	</resultMap>
 	
 	<resultMap id="articleResultMap" type="org.xhome.xblog.Article" extends="articleLittleResultMap">
@@ -130,12 +116,8 @@
 	</sql>
 	
 	<select id="queryArticle" resultMap="articleResultMap" parameterType="long">
-		<include refid="selectArticle"/>, cm.id AS comment_id, cm.type AS comment_type, cm.user_name AS comment_user_name,
-		cm.user_email AS comment_user_email, cm.user_website AS comment_user_website, cm.content AS comment_content,
-		cm.owner AS comment_owner, cm.modifier AS comment_modifier, cm.created AS comment_created, cm.modified AS comment_modified,
-		cm.version AS comment_version, cm.status AS comment_status
+		<include refid="selectArticle"/>
 		<include refid="fromArticle"/>
-		LEFT JOIN xhome_xblog_comment as cm ON cm.article = a.id AND cm.status != 0
 		WHERE a.id = #{id}
 	</select>
 	

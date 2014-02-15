@@ -20,6 +20,7 @@
   <bean id="articleService" class="org.xhome.xblog.core.service.ArticleServiceImpl" scope="singleton">
   	<property name="articleDAO" ref="articleDAO"/>
   	<property name="tagDAO" ref="tagDAO"/>
+  	<property name="commentDAO" ref="commentDAO"/>
   	<property name="manageLogService" ref="manageLogService"/>
   </bean>
   

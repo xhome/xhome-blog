@@ -20,9 +20,11 @@ import org.xhome.xauth.User;
 import org.xhome.xauth.core.service.ManageLogService;
 import org.xhome.xblog.Article;
 import org.xhome.xblog.BlogException;
+import org.xhome.xblog.Comment;
 import org.xhome.xblog.ManageLogType;
 import org.xhome.xblog.Tag;
 import org.xhome.xblog.core.dao.ArticleDAO;
+import org.xhome.xblog.core.dao.CommentDAO;
 import org.xhome.xblog.core.dao.TagDAO;
 import org.xhome.xblog.core.listener.ArticleManageListener;
 import org.xhome.xblog.core.listener.ArticleTagManageListener;
@@ -41,6 +43,8 @@ public class ArticleServiceImpl implements ArticleService {
 	private ArticleDAO articleDAO;
 	@Autowired
 	private TagDAO tagDAO;
+	@Autowired
+	private CommentDAO commentDAO;
 	@Autowired
 	private ManageLogService manageLogService;
 	@Autowired(required = false)
@@ -544,6 +548,15 @@ public class ArticleServiceImpl implements ArticleService {
 		}
 
 		Article article = articleDAO.queryArticle(id);
+
+		// 查询文章评论
+		if (article != null) {
+			QueryBase query = new QueryBase();
+			query.setLimit(Long.MAX_VALUE);
+			query.addParameter("article_id", article.getId());
+			List<Comment> comments = commentDAO.queryComments(query);
+			article.setComments(comments);
+		}
 
 		String title = null;
 		if (logger.isDebugEnabled()) {
@@ -1266,6 +1279,21 @@ public class ArticleServiceImpl implements ArticleService {
 
 	public TagDAO getTagDAO() {
 		return this.tagDAO;
+	}
+
+	/**
+	 * @return the commentDAO
+	 */
+	public CommentDAO getCommentDAO() {
+		return commentDAO;
+	}
+
+	/**
+	 * @param commentDAO
+	 *            the commentDAO to set
+	 */
+	public void setCommentDAO(CommentDAO commentDAO) {
+		this.commentDAO = commentDAO;
 	}
 
 	public void setManageLogService(ManageLogService manageLogService) {

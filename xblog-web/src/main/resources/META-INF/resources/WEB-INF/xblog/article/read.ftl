@@ -27,12 +27,12 @@
             <div id="article_comments">
                 <#if article.comments?? && (article.comments?size > 0)>
                     <#--
-                    <button class="btn btn-primary" onclick="$(window).scrollTop($('#comment_form').offset().top);">发表评论</button>
+                    <button class="btn btn-primary" onclick="$(window).scrollTop($('#article_comment_form').offset().top);">发表评论</button>
                     -->
                     <#list article.comments as comment>
                         <div id="article_comment_${comment.id}" class="panel panel-default">
                             <div class="panel-heading">
-                                <h1 class="panel-title">${comment.userName} 发表于 ${comment.created?string("yyyy-MM-dd HH:mm")}</h1> 
+                                <h1 class="panel-title">${comment.userName} 发表于 ${comment.created?string("yyyy-MM-dd HH:mm:ss")}</h1> 
                             </div>
                             <div class="panel-body">${comment.content}</div> 
                         </div>
@@ -43,8 +43,8 @@
             
             <#-- 发表文章评论 开始 -->
             <div class="well">
-                <form id="comment_form" class="form-horizontal" role="form" action="${xblog.comment_add_url}" method="POST">
-                    <div id="comment_error_msg" class="alert alert-danger" style="display: none;"></div>
+                <form id="article_comment_form" class="form-horizontal" role="form" action="${xblog.comment_base_url}/add.json" method="POST">
+                    <div id="article_comment_error_msg" class="alert alert-danger" style="display: none;"></div>
                     <input type="hidden" id="comment.article.id" name="comment.article.id" value="${article.id}" />
                     <input type="hidden" id="comment.target.id" name="comment.target.id" value="${article.id}" />
                     <input type="hidden" id="comment.article.title" name="comment.article.title" value="${article.title}" />
@@ -84,6 +84,7 @@
 
 <script type="text/javascript" src="xlibs/js/jquery-validate.js"></script>
 <script type="text/javascript" src="xlibs/js/jquery-xvalidate.js"></script>
+<script type="text/javascript" src="xblog/js/article/validate.js"></script>
 <script type="text/javascript" src="xblog/js/article/read.js"></script>
 </body>
 </html>

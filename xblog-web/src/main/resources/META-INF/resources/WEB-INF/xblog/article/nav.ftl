@@ -31,6 +31,8 @@
     <#-- 标签导航菜单 结束 -->
 
     <#-- 登录按钮 开始 -->
-    <a class="btn btn-primary btn-lg btn-block" href="${xblog.xauth.user_login_url}">登&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;录</a> 
+    <#if !xblog.xauth.user??> 
+        <a class="btn btn-primary btn-lg btn-block" href="${xblog.xauth.user_login_url}">登&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;录</a> 
+    </#if>
     <#-- 登录按钮 结束 --> 
 </div>

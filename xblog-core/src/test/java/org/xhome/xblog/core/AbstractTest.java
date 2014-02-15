@@ -30,7 +30,7 @@ import org.xhome.xblog.TagUserPermission;
  * @describe
  */
 public abstract class AbstractTest {
-
+ 
 	protected ApplicationContext context = null;
 	protected Logger logger = LoggerFactory.getLogger(this.getClass());
 	protected User oper;

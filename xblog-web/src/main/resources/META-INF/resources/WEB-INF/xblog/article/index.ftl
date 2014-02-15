@@ -112,5 +112,8 @@
 <#-- 版权信息 开始 -->
 <@include file = "footer.ftl" />
 <#-- 版权信息 结束 -->
+
+<script type="text/javascript" src="xlibs/js/jquery-validate.js"></script>
+<script type="text/javascript" src="xlibs/js/jquery-xvalidate.js"></script>
 </body>
 </html>
