@@ -1,13 +1,13 @@
 <!DOCTYPE html>
-<#import "/xauth/xauth.ftl" as xauth />
+<#import "/xblog/xblog.ftl" as xblog />
 <html lang="zh_CN">
-<@xauth.head title="写文章" description="XBlog" keywords="XHome, XBlog, 博客">
-<link href="xlibs/ext/resources/css/ext-all.css" rel="stylesheet" type="text/css"/>
-</@xauth.head>
+<@xblog.head title="写文章" description="XBlog" keywords="XHome, XBlog, 博客">
+<link href="${xblog.base_url}/xlibs/ext/resources/css/ext-all.css" rel="stylesheet" type="text/css"/>
+</@xblog.head>
 <body>
-<script type="text/javascript" src="xlibs/ext/ext-all.js"></script>
-<script type="text/javascript" src="xlibs/js/dashboard.js"></script>
-<script type="text/javascript" src="xlibs/ext/lang/zh_CN.js"></script>
+<script type="text/javascript" src="${xblog.base_url}/xlibs/ext/ext-all.js"></script>
+<script type="text/javascript" src="${xblog.base_url}/xlibs/js/dashboard.js"></script>
+<script type="text/javascript" src="${xblog.base_url}/xlibs/ext/lang/zh_CN.js"></script>
 <script type="text/javascript">
 Ext.onReady(function() {
     // 不支持IE 8及其以下版本
@@ -21,7 +21,7 @@ Ext.onReady(function() {
     // 生成界面
     var form = Ext.create('Ext.form.Panel', {
         id: 'form',
-        url: '${xauth.base_url}xblog/article/add.json',
+        url: '${xblog.base_url}/xblog/article/add.json',
         renderTo: Ext.getBody(),
         layout: 'anchor',
         defaults: {
@@ -69,7 +69,7 @@ Ext.onReady(function() {
                 store: Ext.create('XHome.data.JsonStore', {
                     wrapperBeforeload: false,
                     wrapperLoad: false,
-                    url: '${xauth.base_url}xblog/category/query.json',
+                    url: '${xblog.base_url}/xblog/category/query.json',
                     fields: ['id', 'name'],
                 }),
                 pageSize: 20,
@@ -98,7 +98,7 @@ Ext.onReady(function() {
                 store: Ext.create('XHome.data.JsonStore', {
                     wrapperBeforeload: false,
                     wrapperLoad: false,
-                    url: '${xauth.base_url}xblog/tag/query.json',
+                    url: '${xblog.base_url}/xblog/tag/query.json',
                     fields: ['id', 'name'],
                 }),
                 pageSize: 20,
@@ -208,7 +208,7 @@ Ext.onReady(function() {
             }); 
         </#list>
         container.getComponent('article.tags').select(tags); 
-        form.getForm().url = '${xauth.base_url}xblog/article/update.json';
+        form.getForm().url = '${xblog.base_url}/xblog/article/update.json';
     </#if>
 
 });

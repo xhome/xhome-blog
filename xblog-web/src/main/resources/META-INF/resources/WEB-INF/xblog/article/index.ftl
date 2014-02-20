@@ -2,7 +2,7 @@
 <#import "../xblog.ftl" as xblog />
 <html lang="zh_CN">
 <@xblog.head title="博客" description="XBlog" keywords="XHome, XBlog, 博客">
-<link href="xlibs/ext/resources/css/ext-all.css" rel="stylesheet" type="text/css"/>
+<link href="${xblog.base_url}/xlibs/ext/resources/css/ext-all.css" rel="stylesheet" type="text/css"/>
 </@xblog.head>
 <body>
 <#if commonResult?? && commonResult.data?? && commonResult.data.search_word??>
@@ -116,7 +116,7 @@
 <@include file = "footer.ftl" />
 <#-- 版权信息 结束 -->
 
-<script type="text/javascript" src="xlibs/js/jquery-validate.js"></script>
-<script type="text/javascript" src="xlibs/js/jquery-xvalidate.js"></script>
+<script type="text/javascript" src="${xblog.base_url}/xlibs/js/jquery-validate.js"></script>
+<script type="text/javascript" src="${xblog.base_url}/xlibs/js/jquery-xvalidate.js"></script>
 </body>
 </html>

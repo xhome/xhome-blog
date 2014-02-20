@@ -8,13 +8,13 @@
         <div class="col-lg-7">
         <ul class="nav navbar-nav navbar-left">
             <li <#if nav_active == 'index'>class="active"</#if>><a href="${xblog.article_index_url}">博客</a></li>
-            <li <#if nav_active == 'about'>class="active"</#if>><a href="${xblog.base_url}about.htm">关于</a></li>
+            <li <#if nav_active == 'about'>class="active"</#if>><a href="${xblog.base_url}/about.htm">关于</a></li>
             <#if xblog.xauth.user??>
                 <li class="dropdown">
                     <a data-toggle="dropdown">管理<b class="caret"></b></a>
                     <ul class="dropdown-menu" role="menu">
                         <li><a role="button" data-toggle="modal" data-target="#change_password_modal">修改密码</a></li>
-                        <li><a href="${xblog.base_url}dashboard.htm">后台管理</a></li>
+                        <li><a href="${xblog.base_url}/dashboard.htm">后台管理</a></li>
                         <li><a href="${xblog.xauth.user_logout_url}">退出登录</a></li>
                     </ul>
                 </li> 
@@ -72,7 +72,7 @@
 		</div>
 	</div>
 </div>
-<script type="text/javascript" src="xauth/js/user/validate.js"></script>
-<script type="text/javascript" src="xblog/js/header.js"></script>
+<script type="text/javascript" src="${xblog.base_url}/xauth/js/user/validate.js"></script>
+<script type="text/javascript" src="${xblog.base_url}/xblog/js/header.js"></script>
 </#if>
 <#-- 修改密码弹窗 结束 -->

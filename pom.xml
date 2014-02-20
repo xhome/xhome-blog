@@ -101,4 +101,10 @@
             </plugins>
         </pluginManagement>
     </build>
+    <distributionManagement>
+        <repository>
+            <id>nexus_xhome</id>
+            <url>http://nexus.xhomestudio.org/content/repositories/releases/</url>
+        </repository>
+    </distributionManagement>
 </project>

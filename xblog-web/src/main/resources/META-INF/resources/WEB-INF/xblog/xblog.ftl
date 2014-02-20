@@ -2,7 +2,7 @@
 <#assign head = xauth.head />
 
 <#assign base_url = xauth.base_url />
-<#assign xblog_base_url = base_url + "xblog">
+<#assign xblog_base_url = base_url + "/xblog" />
 
 <#assign article_base_url = xblog_base_url + "/article" />
 <#assign article_index_url = article_base_url + "/index.htm" />
