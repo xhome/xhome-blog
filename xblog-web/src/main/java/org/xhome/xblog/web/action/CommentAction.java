@@ -75,7 +75,7 @@ public class CommentAction extends AbstractAction {
 		return new CommonResult(status, msg, comment);
 	}
 
-	@RequestMapping(value = RM_COMMENT_UPDATE, method = RequestMethod.POST)
+	// @RequestMapping(value = RM_COMMENT_UPDATE, method = RequestMethod.POST)
 	public Object updateComment(
 			@Validated @RequestAttribute("comment") Comment comment,
 			HttpServletRequest request) {
@@ -100,7 +100,7 @@ public class CommentAction extends AbstractAction {
 		return new CommonResult(status, msg, comment);
 	}
 
-	@RequestMapping(value = RM_COMMENT_LOCK, method = RequestMethod.POST)
+	// @RequestMapping(value = RM_COMMENT_LOCK, method = RequestMethod.POST)
 	public Object lockComment(
 			@Validated @RequestAttribute("comment") Comment comment,
 			HttpServletRequest request) {
@@ -125,7 +125,7 @@ public class CommentAction extends AbstractAction {
 		return new CommonResult(status, msg, comment);
 	}
 
-	@RequestMapping(value = RM_COMMENT_UNLOCK, method = RequestMethod.POST)
+	// @RequestMapping(value = RM_COMMENT_UNLOCK, method = RequestMethod.POST)
 	public Object unlockComment(
 			@Validated @RequestAttribute("comment") Comment comment,
 			HttpServletRequest request) {
@@ -180,7 +180,7 @@ public class CommentAction extends AbstractAction {
 		return new CommonResult(status, msg, comments);
 	}
 
-	@RequestMapping(value = RM_COMMENT_DELETE, method = RequestMethod.POST)
+	// @RequestMapping(value = RM_COMMENT_DELETE, method = RequestMethod.POST)
 	public Object deleteComment(
 			@Validated @RequestAttribute("comments") List<Comment> comments,
 			HttpServletRequest request) {
@@ -210,7 +210,8 @@ public class CommentAction extends AbstractAction {
 		return new CommonResult(status, msg, comments);
 	}
 
-	@RequestMapping(value = RM_COMMENT_UPDATEABLE, method = RequestMethod.GET)
+	// @RequestMapping(value = RM_COMMENT_UPDATEABLE, method =
+	// RequestMethod.GET)
 	public Object isCommentUpdateable(
 			@Validated @RequestAttribute("comment") Comment comment,
 			HttpServletRequest request) {
@@ -234,7 +235,7 @@ public class CommentAction extends AbstractAction {
 		return new CommonResult(status, msg, updateable);
 	}
 
-	@RequestMapping(value = RM_COMMENT_LOCKED, method = RequestMethod.GET)
+	// @RequestMapping(value = RM_COMMENT_LOCKED, method = RequestMethod.GET)
 	public Object isCommentLocked(
 			@Validated @RequestAttribute("comment") Comment comment,
 			HttpServletRequest request) {
@@ -258,7 +259,8 @@ public class CommentAction extends AbstractAction {
 		return new CommonResult(status, msg, locked);
 	}
 
-	@RequestMapping(value = RM_COMMENT_REMOVEABLE, method = RequestMethod.GET)
+	// @RequestMapping(value = RM_COMMENT_REMOVEABLE, method =
+	// RequestMethod.GET)
 	public Object isCommentRemoveable(
 			@Validated @RequestAttribute("comment") Comment comment,
 			HttpServletRequest request) {
@@ -282,7 +284,8 @@ public class CommentAction extends AbstractAction {
 		return new CommonResult(status, msg, removeable);
 	}
 
-	@RequestMapping(value = RM_COMMENT_DELETEABLE, method = RequestMethod.GET)
+	// @RequestMapping(value = RM_COMMENT_DELETEABLE, method =
+	// RequestMethod.GET)
 	public Object isCommentDeleteable(
 			@Validated @RequestAttribute("comment") Comment comment,
 			HttpServletRequest request) {
@@ -306,7 +309,7 @@ public class CommentAction extends AbstractAction {
 		return new CommonResult(status, msg, deleteable);
 	}
 
-	@RequestMapping(value = RM_COMMENT_GET, method = RequestMethod.GET)
+	// @RequestMapping(value = RM_COMMENT_GET, method = RequestMethod.GET)
 	public Object getComment(@RequestParam(value = "id") Long id,
 			HttpServletRequest request) {
 		User user = AuthUtils.getCurrentUser(request);
@@ -357,7 +360,7 @@ public class CommentAction extends AbstractAction {
 		return new DataResult(status, msg, query);
 	}
 
-	@RequestMapping(value = RM_COMMENT_COUNT, method = RequestMethod.GET)
+	// @RequestMapping(value = RM_COMMENT_COUNT, method = RequestMethod.GET)
 	public Object countComments(QueryBase query, HttpServletRequest request) {
 		User user = AuthUtils.getCurrentUser(request);
 		String uname = user.getName();

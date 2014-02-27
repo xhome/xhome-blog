@@ -96,7 +96,7 @@ public class TagAction extends AbstractAction {
 		return new CommonResult(status, msg, tag);
 	}
 
-	@RequestMapping(value = RM_TAG_LOCK, method = RequestMethod.POST)
+	// @RequestMapping(value = RM_TAG_LOCK, method = RequestMethod.POST)
 	public Object lockTag(@Validated @RequestAttribute("tag") Tag tag,
 			HttpServletRequest request) {
 		short status = 0;
@@ -118,7 +118,7 @@ public class TagAction extends AbstractAction {
 		return new CommonResult(status, msg, tag);
 	}
 
-	@RequestMapping(value = RM_TAG_UNLOCK, method = RequestMethod.POST)
+	// @RequestMapping(value = RM_TAG_UNLOCK, method = RequestMethod.POST)
 	public Object unlockTag(@Validated @RequestAttribute("tag") Tag tag,
 			HttpServletRequest request) {
 		short status = 0;
@@ -140,7 +140,7 @@ public class TagAction extends AbstractAction {
 		return new CommonResult(status, msg, tag);
 	}
 
-	@RequestMapping(value = RM_TAG_REMOVE, method = RequestMethod.POST)
+	// @RequestMapping(value = RM_TAG_REMOVE, method = RequestMethod.POST)
 	public Object removeTag(
 			@Validated @RequestAttribute("tags") List<Tag> tags,
 			HttpServletRequest request) {
@@ -169,7 +169,7 @@ public class TagAction extends AbstractAction {
 		return new CommonResult(status, msg, tags);
 	}
 
-	@RequestMapping(value = RM_TAG_DELETE, method = RequestMethod.POST)
+	// @RequestMapping(value = RM_TAG_DELETE, method = RequestMethod.POST)
 	public Object deleteTag(
 			@Validated @RequestAttribute("tags") List<Tag> tags,
 			HttpServletRequest request) {
@@ -198,7 +198,7 @@ public class TagAction extends AbstractAction {
 		return new CommonResult(status, msg, tags);
 	}
 
-	@RequestMapping(value = RM_TAG_EXISTS, method = RequestMethod.GET)
+	// @RequestMapping(value = RM_TAG_EXISTS, method = RequestMethod.GET)
 	public Object isTagExists(@Validated @RequestAttribute("tag") Tag tag,
 			HttpServletRequest request) {
 		short status = Status.SUCCESS;
@@ -219,7 +219,7 @@ public class TagAction extends AbstractAction {
 		return new CommonResult(status, msg, exists);
 	}
 
-	@RequestMapping(value = RM_TAG_UPDATEABLE, method = RequestMethod.GET)
+	// @RequestMapping(value = RM_TAG_UPDATEABLE, method = RequestMethod.GET)
 	public Object isTagUpdateable(@Validated @RequestAttribute("tag") Tag tag,
 			HttpServletRequest request) {
 		short status = Status.SUCCESS;
@@ -240,7 +240,7 @@ public class TagAction extends AbstractAction {
 		return new CommonResult(status, msg, updateable);
 	}
 
-	@RequestMapping(value = RM_TAG_LOCKED, method = RequestMethod.GET)
+	// @RequestMapping(value = RM_TAG_LOCKED, method = RequestMethod.GET)
 	public Object isTagLocked(@Validated @RequestAttribute("tag") Tag tag,
 			HttpServletRequest request) {
 		short status = Status.SUCCESS;
@@ -261,7 +261,7 @@ public class TagAction extends AbstractAction {
 		return new CommonResult(status, msg, locked);
 	}
 
-	@RequestMapping(value = RM_TAG_REMOVEABLE, method = RequestMethod.GET)
+	// @RequestMapping(value = RM_TAG_REMOVEABLE, method = RequestMethod.GET)
 	public Object isTagRemoveable(@Validated @RequestAttribute("tag") Tag tag,
 			HttpServletRequest request) {
 		short status = Status.SUCCESS;
@@ -282,7 +282,7 @@ public class TagAction extends AbstractAction {
 		return new CommonResult(status, msg, removeable);
 	}
 
-	@RequestMapping(value = RM_TAG_DELETEABLE, method = RequestMethod.GET)
+	// @RequestMapping(value = RM_TAG_DELETEABLE, method = RequestMethod.GET)
 	public Object isTagDeleteable(@Validated @RequestAttribute("tag") Tag tag,
 			HttpServletRequest request) {
 		short status = Status.SUCCESS;
@@ -303,7 +303,7 @@ public class TagAction extends AbstractAction {
 		return new CommonResult(status, msg, deleteable);
 	}
 
-	@RequestMapping(value = RM_TAG_GET, method = RequestMethod.GET)
+	// @RequestMapping(value = RM_TAG_GET, method = RequestMethod.GET)
 	public Object getTag(@RequestParam(value = "id", required = false) Long id,
 			@RequestParam(value = "name", required = false) String name,
 			HttpServletRequest request) {
@@ -362,7 +362,7 @@ public class TagAction extends AbstractAction {
 		return new DataResult(status, msg, query);
 	}
 
-	@RequestMapping(value = RM_TAG_COUNT, method = RequestMethod.GET)
+	// @RequestMapping(value = RM_TAG_COUNT, method = RequestMethod.GET)
 	public Object countTags(QueryBase query, HttpServletRequest request) {
 		User user = AuthUtils.getCurrentUser(request);
 		String uname = user.getName();

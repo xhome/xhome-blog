@@ -98,7 +98,7 @@ public class CategoryAction extends AbstractAction {
 		return new CommonResult(status, msg, category);
 	}
 
-	@RequestMapping(value = RM_CATEGORY_LOCK, method = RequestMethod.POST)
+	// @RequestMapping(value = RM_CATEGORY_LOCK, method = RequestMethod.POST)
 	public Object lockCategory(
 			@Validated @RequestAttribute("category") Category category,
 			HttpServletRequest request) {
@@ -121,7 +121,7 @@ public class CategoryAction extends AbstractAction {
 		return new CommonResult(status, msg, category);
 	}
 
-	@RequestMapping(value = RM_CATEGORY_UNLOCK, method = RequestMethod.POST)
+	// @RequestMapping(value = RM_CATEGORY_UNLOCK, method = RequestMethod.POST)
 	public Object unlockCategory(
 			@Validated @RequestAttribute("category") Category category,
 			HttpServletRequest request) {
@@ -173,7 +173,7 @@ public class CategoryAction extends AbstractAction {
 		return new CommonResult(status, msg, categories);
 	}
 
-	@RequestMapping(value = RM_CATEGORY_DELETE, method = RequestMethod.POST)
+	// @RequestMapping(value = RM_CATEGORY_DELETE, method = RequestMethod.POST)
 	public Object deleteCategory(
 			@Validated @RequestAttribute("categories") List<Category> categories,
 			HttpServletRequest request) {
@@ -202,7 +202,7 @@ public class CategoryAction extends AbstractAction {
 		return new CommonResult(status, msg, categories);
 	}
 
-	@RequestMapping(value = RM_CATEGORY_EXISTS, method = RequestMethod.GET)
+	// @RequestMapping(value = RM_CATEGORY_EXISTS, method = RequestMethod.GET)
 	public Object isCategoryExists(
 			@Validated @RequestAttribute("category") Category category,
 			HttpServletRequest request) {
@@ -224,7 +224,8 @@ public class CategoryAction extends AbstractAction {
 		return new CommonResult(status, msg, exists);
 	}
 
-	@RequestMapping(value = RM_CATEGORY_UPDATEABLE, method = RequestMethod.GET)
+	// @RequestMapping(value = RM_CATEGORY_UPDATEABLE, method =
+	// RequestMethod.GET)
 	public Object isCategoryUpdateable(
 			@Validated @RequestAttribute("category") Category category,
 			HttpServletRequest request) {
@@ -249,7 +250,7 @@ public class CategoryAction extends AbstractAction {
 		return new CommonResult(status, msg, updateable);
 	}
 
-	@RequestMapping(value = RM_CATEGORY_LOCKED, method = RequestMethod.GET)
+	// @RequestMapping(value = RM_CATEGORY_LOCKED, method = RequestMethod.GET)
 	public Object isCategoryLocked(
 			@Validated @RequestAttribute("category") Category category,
 			HttpServletRequest request) {
@@ -273,7 +274,8 @@ public class CategoryAction extends AbstractAction {
 		return new CommonResult(status, msg, locked);
 	}
 
-	@RequestMapping(value = RM_CATEGORY_REMOVEABLE, method = RequestMethod.GET)
+	// @RequestMapping(value = RM_CATEGORY_REMOVEABLE, method =
+	// RequestMethod.GET)
 	public Object isCategoryRemoveable(
 			@Validated @RequestAttribute("category") Category category,
 			HttpServletRequest request) {
@@ -298,7 +300,8 @@ public class CategoryAction extends AbstractAction {
 		return new CommonResult(status, msg, removeable);
 	}
 
-	@RequestMapping(value = RM_CATEGORY_DELETEABLE, method = RequestMethod.GET)
+	// @RequestMapping(value = RM_CATEGORY_DELETEABLE, method =
+	// RequestMethod.GET)
 	public Object isCategoryDeleteable(
 			@Validated @RequestAttribute("category") Category category,
 			HttpServletRequest request) {
@@ -323,7 +326,7 @@ public class CategoryAction extends AbstractAction {
 		return new CommonResult(status, msg, deleteable);
 	}
 
-	@RequestMapping(value = RM_CATEGORY_GET, method = RequestMethod.GET)
+	// @RequestMapping(value = RM_CATEGORY_GET, method = RequestMethod.GET)
 	public Object getCategory(
 			@RequestParam(value = "id", required = false) Long id,
 			@RequestParam(value = "name", required = false) String name,
@@ -381,7 +384,7 @@ public class CategoryAction extends AbstractAction {
 		return new DataResult(status, msg, query);
 	}
 
-	@RequestMapping(value = RM_CATEGORY_COUNT, method = RequestMethod.GET)
+	// @RequestMapping(value = RM_CATEGORY_COUNT, method = RequestMethod.GET)
 	public Object countCategorys(QueryBase query, HttpServletRequest request) {
 		User user = AuthUtils.getCurrentUser(request);
 		String uname = user.getName();

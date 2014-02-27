@@ -59,7 +59,7 @@ public class RecordAction extends AbstractAction {
 	}
 
 	@ResponseBody
-	@RequestMapping(value = RM_RECORD_COUNT, method = RequestMethod.GET)
+	// @RequestMapping(value = RM_RECORD_COUNT, method = RequestMethod.GET)
 	public Object countRecords(QueryBase query, HttpServletRequest request) {
 		User user = AuthUtils.getCurrentUser(request);
 		String uname = user.getName();

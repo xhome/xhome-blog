@@ -187,7 +187,7 @@ Ext.onReady(function() {
             value: ${commonResult.data.version},
         }); 
         form.getComponent('article.title').setValue('${commonResult.data.title}'); 
-        form.getComponent('article.content').setValue('${commonResult.data.content}');
+        form.getComponent('article.content').setValue('${commonResult.data.content?replace('\'', '"')}');
         var container = form.getComponent('container');
         container.getComponent('article.category.id').select(${commonResult.data.category.id}); 
         form.getComponent('article.category.name').setValue('${commonResult.data.category.name}'); 

@@ -30,6 +30,7 @@
   	<property name="recordService" ref="recordService"/>
   </bean>
   
+  <!-- 
   <bean id="categoryRolePermissionAction" class="org.xhome.xblog.web.action.CategoryRolePermissionAction" scope="singleton">
   	<property name="categoryRolePermissionService" ref="categoryRolePermissionService"/>
   </bean>
@@ -53,5 +54,6 @@
   <bean id="articleUserPermissionAction" class="org.xhome.xblog.web.action.ArticleUserPermissionAction" scope="singleton">
   	<property name="articleUserPermissionService" ref="articleUserPermissionService"/>
   </bean>
+   -->
   
 </beans>

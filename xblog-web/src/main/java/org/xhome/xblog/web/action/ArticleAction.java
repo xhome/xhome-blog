@@ -288,7 +288,7 @@ public class ArticleAction extends AbstractAction {
 		return new CommonResult(status, msg, article);
 	}
 
-	@RequestMapping(value = RM_ARTICLE_LOCK, method = RequestMethod.POST)
+	// @RequestMapping(value = RM_ARTICLE_LOCK, method = RequestMethod.POST)
 	public Object lockArticle(
 			@Validated @RequestAttribute("article") Article article,
 			HttpServletRequest request) {
@@ -311,7 +311,7 @@ public class ArticleAction extends AbstractAction {
 		return new CommonResult(status, msg, article);
 	}
 
-	@RequestMapping(value = RM_ARTICLE_UNLOCK, method = RequestMethod.POST)
+	// @RequestMapping(value = RM_ARTICLE_UNLOCK, method = RequestMethod.POST)
 	public Object unlockArticle(
 			@Validated @RequestAttribute("article") Article article,
 			HttpServletRequest request) {
@@ -364,7 +364,7 @@ public class ArticleAction extends AbstractAction {
 	}
 
 	@ResponseBody
-	@RequestMapping(value = RM_ARTICLE_DELETE, method = RequestMethod.POST)
+	// @RequestMapping(value = RM_ARTICLE_DELETE, method = RequestMethod.POST)
 	public Object deleteArticle(
 			@Validated @RequestAttribute("articles") List<Article> articles,
 			HttpServletRequest request) {
@@ -394,7 +394,8 @@ public class ArticleAction extends AbstractAction {
 		return new CommonResult(status, msg, articles);
 	}
 
-	@RequestMapping(value = RM_ARTICLE_UPDATEABLE, method = RequestMethod.GET)
+	// @RequestMapping(value = RM_ARTICLE_UPDATEABLE, method =
+	// RequestMethod.GET)
 	public Object isArticleUpdateable(
 			@Validated @RequestAttribute("article") Article article,
 			HttpServletRequest request) {
@@ -419,7 +420,7 @@ public class ArticleAction extends AbstractAction {
 	}
 
 	@ResponseBody
-	@RequestMapping(value = RM_ARTICLE_LOCKED, method = RequestMethod.GET)
+	// @RequestMapping(value = RM_ARTICLE_LOCKED, method = RequestMethod.GET)
 	public Object isArticleLocked(
 			@Validated @RequestAttribute("article") Article article,
 			HttpServletRequest request) {
@@ -443,7 +444,8 @@ public class ArticleAction extends AbstractAction {
 		return new CommonResult(status, msg, locked);
 	}
 
-	@RequestMapping(value = RM_ARTICLE_REMOVEABLE, method = RequestMethod.GET)
+	// @RequestMapping(value = RM_ARTICLE_REMOVEABLE, method =
+	// RequestMethod.GET)
 	public Object isArticleRemoveable(
 			@Validated @RequestAttribute("article") Article article,
 			BindingResult result, HttpServletRequest request) {
@@ -467,7 +469,8 @@ public class ArticleAction extends AbstractAction {
 		return new CommonResult(status, msg, removeable);
 	}
 
-	@RequestMapping(value = RM_ARTICLE_DELETEABLE, method = RequestMethod.GET)
+	// @RequestMapping(value = RM_ARTICLE_DELETEABLE, method =
+	// RequestMethod.GET)
 	public Object isArticleDeleteable(
 			@Validated @RequestAttribute("article") Article article,
 			HttpServletRequest request) {
@@ -491,7 +494,7 @@ public class ArticleAction extends AbstractAction {
 		return new CommonResult(status, msg, deleteable);
 	}
 
-	@RequestMapping(value = RM_ARTICLE_GET, method = RequestMethod.GET)
+	// @RequestMapping(value = RM_ARTICLE_GET, method = RequestMethod.GET)
 	public Object getArticle(@RequestParam(value = "id") Long id,
 			HttpServletRequest request) {
 		User user = AuthUtils.getCurrentUser(request);
@@ -548,7 +551,7 @@ public class ArticleAction extends AbstractAction {
 		return new DataResult(status, msg, query);
 	}
 
-	@RequestMapping(value = RM_ARTICLE_COUNT, method = RequestMethod.GET)
+	// @RequestMapping(value = RM_ARTICLE_COUNT, method = RequestMethod.GET)
 	public Object countArticles(QueryBase query, HttpServletRequest request) {
 		User user = AuthUtils.getCurrentUser(request);
 		String uname = user.getName();
@@ -572,7 +575,7 @@ public class ArticleAction extends AbstractAction {
 		return new CommonResult(status, msg, count);
 	}
 
-	@RequestMapping(value = RM_ARTICLE_TAG_ADD, method = RequestMethod.POST)
+	// @RequestMapping(value = RM_ARTICLE_TAG_ADD, method = RequestMethod.POST)
 	public Object addArticleTag(
 			@Validated @RequestAttribute("article") Article article,
 			HttpServletRequest request) {
@@ -602,7 +605,7 @@ public class ArticleAction extends AbstractAction {
 		return new CommonResult(status, msg, article);
 	}
 
-	@RequestMapping(value = RM_ARTICLE_TAG_LOCK, method = RequestMethod.POST)
+	// @RequestMapping(value = RM_ARTICLE_TAG_LOCK, method = RequestMethod.POST)
 	public Object lockArticleTag(
 			@Validated @RequestAttribute("article") Article article,
 			HttpServletRequest request) {
@@ -626,7 +629,8 @@ public class ArticleAction extends AbstractAction {
 		return new CommonResult(status, msg, article);
 	}
 
-	@RequestMapping(value = RM_ARTICLE_TAG_UNLOCK, method = RequestMethod.POST)
+	// @RequestMapping(value = RM_ARTICLE_TAG_UNLOCK, method =
+	// RequestMethod.POST)
 	public Object unlockArticleTag(
 			@Validated @RequestAttribute("article") Article article,
 			HttpServletRequest request) {
@@ -650,7 +654,8 @@ public class ArticleAction extends AbstractAction {
 		return new CommonResult(status, msg, article);
 	}
 
-	@RequestMapping(value = RM_ARTICLE_TAG_REMOVE, method = RequestMethod.POST)
+	// @RequestMapping(value = RM_ARTICLE_TAG_REMOVE, method =
+	// RequestMethod.POST)
 	public Object removeArticleTag(
 			@Validated @RequestAttribute("article") Article article,
 			HttpServletRequest request) {
@@ -674,7 +679,8 @@ public class ArticleAction extends AbstractAction {
 		return new CommonResult(status, msg, article);
 	}
 
-	@RequestMapping(value = RM_ARTICLE_TAG_DELETE, method = RequestMethod.POST)
+	// @RequestMapping(value = RM_ARTICLE_TAG_DELETE, method =
+	// RequestMethod.POST)
 	public Object deleteArticleTag(
 			@Validated @RequestAttribute("article") Article article,
 			HttpServletRequest request) {
@@ -697,7 +703,8 @@ public class ArticleAction extends AbstractAction {
 		return new CommonResult(status, msg, article);
 	}
 
-	@RequestMapping(value = RM_ARTICLE_TAG_EXISTS, method = RequestMethod.GET)
+	// @RequestMapping(value = RM_ARTICLE_TAG_EXISTS, method =
+	// RequestMethod.GET)
 	public Object isArticleTagExists(
 			@Validated @RequestAttribute("article") Article article,
 			BindingResult result, HttpServletRequest request) {
@@ -723,7 +730,8 @@ public class ArticleAction extends AbstractAction {
 		return new CommonResult(status, msg, has);
 	}
 
-	@RequestMapping(value = RM_ARTICLE_TAG_UPDATEABLE, method = RequestMethod.GET)
+	// @RequestMapping(value = RM_ARTICLE_TAG_UPDATEABLE, method =
+	// RequestMethod.GET)
 	public Object isArticleTagUpdateable(
 			@Validated @RequestAttribute("article") Article article,
 			HttpServletRequest request) {
@@ -750,7 +758,8 @@ public class ArticleAction extends AbstractAction {
 		return new CommonResult(status, msg, updateable);
 	}
 
-	@RequestMapping(value = RM_ARTICLE_TAG_LOCKED, method = RequestMethod.GET)
+	// @RequestMapping(value = RM_ARTICLE_TAG_LOCKED, method =
+	// RequestMethod.GET)
 	public Object isArticleTagLocked(
 			@Validated @RequestAttribute("article") Article article,
 			HttpServletRequest request) {
@@ -776,7 +785,8 @@ public class ArticleAction extends AbstractAction {
 		return new CommonResult(status, msg, locked);
 	}
 
-	@RequestMapping(value = RM_ARTICLE_TAG_REMOVEABLE, method = RequestMethod.GET)
+	// @RequestMapping(value = RM_ARTICLE_TAG_REMOVEABLE, method =
+	// RequestMethod.GET)
 	public Object isArticleTagRemoveable(
 			@Validated @RequestAttribute("article") Article article,
 			HttpServletRequest request) {
@@ -803,7 +813,8 @@ public class ArticleAction extends AbstractAction {
 		return new CommonResult(status, msg, removeable);
 	}
 
-	@RequestMapping(value = RM_ARTICLE_TAG_DELETEABLE, method = RequestMethod.GET)
+	// @RequestMapping(value = RM_ARTICLE_TAG_DELETEABLE, method =
+	// RequestMethod.GET)
 	public Object isArticleTagDeleteable(
 			@Validated @RequestAttribute("article") Article article,
 			HttpServletRequest request) {
