@@ -27,6 +27,7 @@
   <bean id="commentService" class="org.xhome.xblog.core.service.CommentServiceImpl" scope="singleton">
   	<property name="commentDAO" ref="commentDAO"/>
   	<property name="articleDAO" ref="articleDAO"/>
+  	<property name="blogConfigService" ref="blogConfigService"/>
   	<property name="manageLogService" ref="manageLogService"/>
   </bean>
   
@@ -62,6 +63,11 @@
   
   <bean id="articleUserPermissionService" class="org.xhome.xblog.core.service.ArticleUserPermissionServiceImpl" scope="singleton">
   	<property name="articleUserPermissionDAO" ref="articleUserPermissionDAO"/>
+  	<property name="manageLogService" ref="manageLogService"/>
+  </bean>
+  
+  <bean id="blogConfigService" class="org.xhome.xblog.core.service.BlogConfigServiceImpl" scope="singleton">
+  	<property name="configDAO" ref="configDAO"/>
   	<property name="manageLogService" ref="manageLogService"/>
   </bean>
   

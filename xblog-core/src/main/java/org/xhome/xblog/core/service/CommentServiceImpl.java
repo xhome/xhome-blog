@@ -38,6 +38,8 @@ public class CommentServiceImpl implements CommentService {
 	@Autowired
 	private ArticleDAO articleDAO;
 	@Autowired
+	private BlogConfigService blogConfigService;
+	@Autowired
 	private ManageLogService manageLogService;
 	@Autowired(required = false)
 	private List<CommentManageListener> commentManageListeners;
@@ -68,18 +70,21 @@ public class CommentServiceImpl implements CommentService {
 			return Status.BLOCKED;
 		}
 
-		comment.setStatus(Status.OK);
-		comment.setVersion((short) 0);
-		Timestamp t = new Timestamp(System.currentTimeMillis());
-		comment.setCreated(t);
-		comment.setModified(t);
+		short r = Status.BLOCKED;
+		if (blogConfigService.allowArticleComment()) {
+			comment.setStatus(Status.OK);
+			comment.setVersion((short) 0);
+			Timestamp t = new Timestamp(System.currentTimeMillis());
+			comment.setCreated(t);
+			comment.setModified(t);
 
-		short r = commentDAO.addComment(comment) == 1 ? Status.SUCCESS
-				: Status.ERROR;
+			r = commentDAO.addComment(comment) == 1 ? Status.SUCCESS
+					: Status.ERROR;
 
-		// 评论成功后添加文章评论总数
-		if (r == Status.SUCCESS) {
-			articleDAO.increaseComment(article);
+			// 评论成功后添加文章评论总数
+			if (r == Status.SUCCESS) {
+				articleDAO.increaseComment(article);
+			}
 		}
 
 		if (logger.isDebugEnabled()) {
@@ -658,6 +663,21 @@ public class CommentServiceImpl implements CommentService {
 
 	public ArticleDAO getArticleDAO() {
 		return this.articleDAO;
+	}
+
+	/**
+	 * @return the blogConfigService
+	 */
+	public BlogConfigService getBlogConfigService() {
+		return blogConfigService;
+	}
+
+	/**
+	 * @param blogConfigService
+	 *            the blogConfigService to set
+	 */
+	public void setBlogConfigService(BlogConfigService blogConfigService) {
+		this.blogConfigService = blogConfigService;
 	}
 
 	public void setManageLogService(ManageLogService manageLogService) {

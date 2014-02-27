@@ -14,9 +14,11 @@
 		<result property="status" column="status"/>
 		<association property="user" javaType="org.xhome.xauth.User">
 			<result property="id" column="user"/>
+			<result property="name" column="user_name"/>
 		</association>
 		<association property="article" javaType="org.xhome.xblog.Article">
 			<result property="id" column="article"/>
+			<result property="title" column="article_title"/>
 		</association>
 	</resultMap>
 	
@@ -28,38 +30,46 @@
 	<sql id="restriction_records">
 		<trim prefix="WHERE" prefixOverrides="AND">
 			<if test="parameters.article != null and parameters.article != ''">
-				AND article = #{parameters.article}
+				AND a.title LIKE CONCAT('%', #{parameters.article}, '%')
 			</if>
 			<if test="parameters.user != null and parameters.user != ''">
-				AND user = #{parameters.user}
+				AND u.name LIKE CONCAT('%', #{parameters.user}, '%')
 			</if>
 			<if test="parameters.address != null and parameters.address != ''">
-				AND address LIKE CONCAT(#{parameters.address}, '%')
+				AND r.address LIKE CONCAT(#{parameters.address}, '%')
 			</if>
 			<if test="parameters.agent != null and parameters.agent != ''">
-				AND agent = #{parameters.agent}
+				AND r.agent = #{parameters.agent}
 			</if>
 			<if test="parameters.number != null and parameters.number != ''">
-				AND number LIKE CONCAT('%', #{parameters.number},'%')
+				AND r.number LIKE CONCAT('%', #{parameters.number}, '%')
 			</if>
 			<if test="parameters.created != null and parameters.created != ''">
-				AND created LIKE CONCAT(#{parameters.created},'%')
+				AND r.created LIKE CONCAT(#{parameters.created}, '%')
 			</if>
 			<if test="parameters.status != null and parameters.status != ''">
-				AND status = #{parameters.status}
+				AND r.status = #{parameters.status}
 			</if>
 		</trim>
 	</sql>
 	
+	<sql id="from_record">
+		FROM xhome_xblog_record AS r
+		LEFT JOIN xhome_xauth_user AS u ON r.user = u.id
+		LEFT JOIN xhome_xblog_article AS a ON r.article = a.id
+	</sql>
+	
 	<select id="queryRecords" resultMap="recordResultMap" parameterType="org.xhome.db.query.QueryBase">
-		SELECT * FROM xhome_xblog_record
+		SELECT r.*, u.name AS user_name, a.title AS article_title
+		<include refid="from_record"/>
 		<include refid="restriction_records"/>
-		ORDER BY created DESC
+		ORDER BY r.created DESC
 		LIMIT #{start}, #{limit}
 	</select>
 	
 	<select id="countRecords" resultType="long" parameterType="org.xhome.db.query.QueryBase">
-		SELECT COUNT(*) FROM xhome_xblog_record
+		SELECT COUNT(*)
+		<include refid="from_record"/>
 		<include refid="restriction_records"/>
 	</select>
 	

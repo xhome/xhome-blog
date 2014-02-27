@@ -42,7 +42,8 @@ var validateCommentForm = function(submitHandler, showErrors, form) {
                     form.reset();
                 } else {
                     // 评论出错 
-                    $('#article_comment_error_msg').html(data.message).show(); 
+                    var message = data.status == 11 ? '该文章禁止评论' : data.message;
+                    $('#article_comment_error_msg').html(message).show(); 
                 } 
             }); 
             return false; 

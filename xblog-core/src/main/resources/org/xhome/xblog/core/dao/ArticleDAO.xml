@@ -240,6 +240,7 @@
 			</if>
 		</trim>
 		GROUP BY a.id
+		ORDER BY a.modified DESC
 	</sql>
 	
 	<select id="queryArticles" resultMap="articleResultMap" parameterType="org.xhome.db.query.QueryBase">
