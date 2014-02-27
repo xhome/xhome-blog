@@ -30,7 +30,7 @@ import org.xhome.xblog.TagUserPermission;
  * @describe
  */
 public abstract class AbstractTest {
- 
+
 	protected ApplicationContext context = null;
 	protected Logger logger = LoggerFactory.getLogger(this.getClass());
 	protected User oper;
@@ -54,7 +54,8 @@ public abstract class AbstractTest {
 			return;
 		}
 		logger.debug("Id:" + tag.getId() + "\tName:" + tag.getName()
-				+ "\tStatus:" + tag.getStatus());
+				+ "\tArticleTotal:" + tag.getArticleTotal() + "\tStatus:"
+				+ tag.getStatus());
 	}
 
 	protected void printCategory(List<Category> categorys) {
@@ -70,12 +71,15 @@ public abstract class AbstractTest {
 			return;
 		}
 		logger.debug("Id:" + category.getId() + "\tName:" + category.getName()
-				+ "\tStatus:" + category.getStatus());
+				+ "\tArticleTotal:" + category.getArticleTotal() + "\tStatus:"
+				+ category.getStatus());
 
 		Category parent = category.getParent();
 		if (parent != null) {
 			logger.debug("\tParent:\tId:" + category.getId() + "\tName:"
-					+ category.getName() + "\tStatus:" + category.getStatus());
+					+ category.getName() + "\tArticleTotal:"
+					+ category.getArticleTotal() + "\tStatus:"
+					+ category.getStatus());
 		}
 	}
 

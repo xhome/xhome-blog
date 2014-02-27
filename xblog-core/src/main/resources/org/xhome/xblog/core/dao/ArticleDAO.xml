@@ -242,12 +242,12 @@
 	
 	<select id="queryArticles" resultMap="articleResultMap" parameterType="org.xhome.db.query.QueryBase">
 		<include refid="selectArticle"/>
-		<include refid="fromArticle"/>
-		WHERE a.id IN (
-			<include refid="queryArticleId"/>
-		)
-		ORDER BY modified DESC
-		LIMIT #{start}, #{limit}
+		FROM xhome_xblog_article AS a
+		RIGHT JOIN (<include refid="queryArticleId"/> LIMIT #{start}, #{limit}) AS aid USING(id)
+		LEFT JOIN xhome_xblog_category AS c ON a.category = c.id AND c.status != 0
+		LEFT JOIN xhome_xblog_article_tag AS at ON at.article = a.id AND at.status != 0
+		LEFT JOIN xhome_xblog_tag AS t ON at.tag = t.id AND t.status != 0
+		ORDER BY a.modified DESC
 	</select>
 	
 	<select id="countArticles" resultType="long" parameterType="org.xhome.db.query.QueryBase">

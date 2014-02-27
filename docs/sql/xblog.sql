@@ -24,6 +24,7 @@ CREATE TABLE xhome_xblog_category
 (
    id                   INTEGER NOT NULL AUTO_INCREMENT COMMENT '分类ID',
    name                 VARCHAR(30) NOT NULL COMMENT '分类名称',
+   articleTotal         BIGINT NOT NULL DEFAULT 0 COMMENT '分类文章总数',
    parent               INTEGER DEFAULT NULL COMMENT 'NULL表示顶级分类',
    owner                BIGINT NOT NULL COMMENT '创建者',
    modifier             BIGINT NOT NULL COMMENT '修改者',
@@ -74,6 +75,7 @@ CREATE TABLE xhome_xblog_tag
 (
    id                   INTEGER NOT NULL AUTO_INCREMENT COMMENT '标签ID',
    name                 VARCHAR(30) NOT NULL COMMENT '标签名称',
+   articleTotal         BIGINT NOT NULL DEFAULT 0 COMMENT '标签文章总数',
    owner                BIGINT NOT NULL COMMENT '创建者',
    modifier             BIGINT NOT NULL COMMENT '修改者',
    created              TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',

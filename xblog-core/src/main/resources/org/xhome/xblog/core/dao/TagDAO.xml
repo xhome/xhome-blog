@@ -129,4 +129,26 @@
 		<include refid="restriction_tags"/>
 	</select>
 	
+	<update id="increaseTagArticle" parameterType="org.xhome.xblog.Tag">
+		UPDATE xhome_xblog_tag SET articleTotal = articleTotal + 1 WHERE id = #{id}
+	</update>
+	
+	<update id="decreaseTagArticle" parameterType="org.xhome.xblog.Tag">
+		UPDATE xhome_xblog_tag SET articleTotal = articleTotal - 1 WHERE id = #{id}
+	</update>
+	
+	<update id="increaseArticle" parameterType="org.xhome.xblog.Article">
+		UPDATE xhome_xblog_tag AS t
+		JOIN xhome_xblog_article_tag AS at ON at.article = #{id} AND at.tag = t.id
+		SET t.articleTotal = t.articleTotal + 1
+		WHERE t.status != 0 AND at.status != 0
+	</update>
+	
+	<update id="decreaseArticle" parameterType="org.xhome.xblog.Article">
+		UPDATE xhome_xblog_tag AS t
+		JOIN xhome_xblog_article_tag AS at ON at.article = #{id} AND at.tag = t.id
+		SET t.articleTotal = t.articleTotal - 1
+		WHERE t.status != 0 AND at.status != 0
+	</update>
+	
 </mapper>

@@ -20,10 +20,12 @@ import org.xhome.xauth.User;
 import org.xhome.xauth.core.service.ManageLogService;
 import org.xhome.xblog.Article;
 import org.xhome.xblog.BlogException;
+import org.xhome.xblog.Category;
 import org.xhome.xblog.Comment;
 import org.xhome.xblog.ManageLogType;
 import org.xhome.xblog.Tag;
 import org.xhome.xblog.core.dao.ArticleDAO;
+import org.xhome.xblog.core.dao.CategoryDAO;
 import org.xhome.xblog.core.dao.CommentDAO;
 import org.xhome.xblog.core.dao.TagDAO;
 import org.xhome.xblog.core.listener.ArticleManageListener;
@@ -41,6 +43,8 @@ public class ArticleServiceImpl implements ArticleService {
 
 	@Autowired
 	private ArticleDAO articleDAO;
+	@Autowired
+	private CategoryDAO categoryDAO;
 	@Autowired
 	private TagDAO tagDAO;
 	@Autowired
@@ -82,10 +86,12 @@ public class ArticleServiceImpl implements ArticleService {
 		short r = articleDAO.addArticle(article) == 1 ? Status.SUCCESS
 				: Status.ERROR;
 
-		// 文章添加成功后添加文章标签
 		if (r == Status.SUCCESS) {
-			List<Tag> tags = article.getTags();
-			this.addArticleTag(oper, article, tags);
+			// 文章添加成功后更新对应分类文章总数
+			categoryDAO.increaseCategoryArticle(article.getCategory());
+
+			// 文章添加成功后添加文章标签
+			this.addArticleTag(oper, article, article.getTags());
 		}
 
 		if (logger.isDebugEnabled()) {
@@ -176,6 +182,14 @@ public class ArticleServiceImpl implements ArticleService {
 		}
 
 		if (r == Status.SUCCESS) {
+			// 更新文章分类信息
+			Category oldCategory = old.getCategory();
+			Category category = article.getCategory();
+			if (!oldCategory.getId().equals(category.getId())) {
+				categoryDAO.increaseCategoryArticle(category);
+				categoryDAO.decreaseCategoryArticle(oldCategory);
+			}
+
 			// 更新文章标签信息
 			List<Tag> oldTags = old.getTags();
 			List<Tag> newTags = article.getTags();
@@ -314,6 +328,12 @@ public class ArticleServiceImpl implements ArticleService {
 				logger.debug("remove article {}[{}]", title, id);
 			}
 			articleDAO.removeArticle(article);
+
+			// 移除文章后更新分类文章总数
+			categoryDAO.decreaseArticle(article);
+
+			// 移除文章后更新标签文章总数
+			tagDAO.decreaseArticle(article);
 		} else {
 			if (logger.isDebugEnabled()) {
 				logger.debug("article {}[{}] isn't removeable", title, id);
@@ -365,6 +385,12 @@ public class ArticleServiceImpl implements ArticleService {
 				logger.debug("delete article {}[{}]", title, id);
 			}
 			articleDAO.deleteArticle(article);
+
+			// 删除文章后更新分类文章总数
+			categoryDAO.decreaseArticle(article);
+
+			// 删除文章后更新标签文章总数
+			tagDAO.decreaseArticle(article);
 		} else {
 			if (logger.isDebugEnabled()) {
 				logger.debug("article {}[{}] isn't deleteable", title, id);
@@ -684,6 +710,11 @@ public class ArticleServiceImpl implements ArticleService {
 		short r = articleDAO.addArticleTag(articleTag) == 1 ? Status.SUCCESS
 				: Status.ERROR;
 
+		if (r == Status.SUCCESS) {
+			// 更新对应标签文章总数
+			tagDAO.increaseTagArticle(tag);
+		}
+
 		if (logger.isDebugEnabled()) {
 			if (r == Status.SUCCESS) {
 				logger.debug("success to add tag {}[{}] for article {}[{}]",
@@ -881,6 +912,8 @@ public class ArticleServiceImpl implements ArticleService {
 			articleTag.put("modifier",
 					oper != null ? oper.getId() : article.getModifier());
 			articleDAO.removeArticleTag(articleTag);
+			// 更新对应标签文章总数
+			tagDAO.decreaseTagArticle(tag);
 			if (logger.isDebugEnabled()) {
 				logger.debug("remove tag {}[{}] from article {}[{}]", tagName,
 						tagId, title, articleId);
@@ -946,6 +979,8 @@ public class ArticleServiceImpl implements ArticleService {
 		short r = Status.SUCCESS;
 		if (articleDAO.isArticleTagDeleteable(articleTag)) {
 			articleDAO.deleteArticleTag(articleTag);
+			// 更新对应标签文章总数
+			tagDAO.decreaseTagArticle(tag);
 			if (logger.isDebugEnabled()) {
 				logger.debug("delete tag {}[{}] from article {}[{}]", tagName,
 						tagId, title, articleId);
@@ -1271,6 +1306,14 @@ public class ArticleServiceImpl implements ArticleService {
 
 	public ArticleDAO getArticleDAO() {
 		return this.articleDAO;
+	}
+
+	public void setCategoryDAO(CategoryDAO categoryDAO) {
+		this.categoryDAO = categoryDAO;
+	}
+
+	public CategoryDAO getCategoryDAO() {
+		return this.categoryDAO;
 	}
 
 	public void setTagDAO(TagDAO tagDAO) {

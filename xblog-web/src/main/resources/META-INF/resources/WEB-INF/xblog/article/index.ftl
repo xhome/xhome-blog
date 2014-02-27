@@ -12,7 +12,6 @@
 <#assign nav_active = "index" />
 <@include file = "header.ftl" />
 <#-- 导航菜单 结束 -->
-
 <div id="wrapper" class="container">
     <#-- 导航菜单 开始 --> 
     <@include file = "nav.ftl" /> 
@@ -30,11 +29,20 @@
             <#-- 文章分页 开始 -->
             <#assign totalPage = commonResult.data.articles.totalPage />
             <#if (totalPage > 1)>
+                <#-- URL原始参数 --> 
+                <#assign url_parameters = "" /> 
+                <#if RequestParameters??>
+                    <#list RequestParameters?keys as key>
+                        <#if key != 'page'>
+                            <#assign url_parameters = url_parameters + '&' + key + '=' + RequestParameters[key] />
+                        </#if>
+                    </#list>
+                </#if>
                 <#assign cpage = commonResult.data.articles.page />
                 <ul class="pagination" style="margin-top: 0px; margin-bottom: 0px;">
                     <#-- 当前页大于1时显示上一页按钮 --> 
                     <#if (cpage > 1)>
-                        <li><a href="${xblog.article_index_url}?page=${cpage - 1}">&laquo;</a></li>
+                        <li><a href="${xblog.article_index_url}?page=${cpage - 1}${url_parameters}">&laquo;</a></li>
                     </#if>
                
                     <#-- 分页条总共显示19个分页按钮，当总页数大于19时需要特殊处理 -->
@@ -49,7 +57,7 @@
                                 <#if (npage > 0)> 
                                     <#list 1..npage as tpage>
                                         <#assign page = tpage * 10 /> 
-                                        <li><a href="${xblog.article_index_url}?page=${page}">${page}</a></li>
+                                        <li><a href="${xblog.article_index_url}?page=${page}${url_parameters}">${page}</a></li>
                                     </#list>
                                     <li class="disabled"><a>...</a></li> 
                                 </#if>
@@ -57,12 +65,12 @@
                         </#if>
                         <#if (spage > 0)>
                             <#list spage..(cpage - 1) as page>
-                                <li><a href="${xblog.article_index_url}?page=${page}">${page}</a></li>
+                                <li><a href="${xblog.article_index_url}?page=${page}${url_parameters}">${page}</a></li>
                             </#list>
                         </#if>
                     
                         <#-- 当前分页按钮 -->
-                        <li class="active"><a href="${xblog.article_index_url}?page=${cpage}">${cpage}</a></li>
+                        <li class="active"><a href="${xblog.article_index_url}?page=${cpage}${url_parameters}">${cpage}</a></li>
                    
                         <#-- 当前分页按钮右边最多显示4个按钮 -->
                         <#assign epage = cpage + 4 />
@@ -71,7 +79,7 @@
                         </#if>
                         <#if (cpage < totalPage)> 
                             <#list (cpage + 1)..epage as page>
-                                <li><a href="${xblog.article_index_url}?page=${page}">${page}</a></li>
+                                <li><a href="${xblog.article_index_url}?page=${page}${url_parameters}">${page}</a></li>
                             </#list>
                         </#if>
                     
@@ -84,7 +92,7 @@
                                 <#assign epage = (totalPage / 10)?int />
                                 <#list spage..epage as tpage>
                                     <#assign page = tpage * 10 />
-                                    <li><a href="${xblog.article_index_url}?page=${page}">${page}</a></li>
+                                    <li><a href="${xblog.article_index_url}?page=${page}${url_parameters}">${page}</a></li>
                                 </#list>
                                 <#if ((epage * 10) < totalPage)>
                                     <li class="disabled"><a>...</a></li>
@@ -93,12 +101,12 @@
                         </#if>
                     <#else> 
                         <#list 1..totalPage as page>
-                            <li <#if page == cpage>class="active"</#if>><a href="${xblog.article_index_url}?page=${page}">${page}</a></li>
+                            <li <#if page == cpage>class="active"</#if>><a href="${xblog.article_index_url}?page=${page}${url_parameters}">${page}</a></li>
                         </#list>
                     </#if>
                 
                     <#if cpage < totalPage> 
-                        <li><a href="${xblog.article_index_url}?page=${cpage + 1}">&raquo;</a></li>
+                        <li><a href="${xblog.article_index_url}?page=${cpage + 1}${url_parameters}">&raquo;</a></li>
                     </#if>
                 </ul>
             </#if>

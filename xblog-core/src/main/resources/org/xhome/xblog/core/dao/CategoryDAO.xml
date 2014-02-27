@@ -135,4 +135,26 @@
 		<include refid="restriction_categorys"/>
 	</select>
 	
+	<update id="increaseCategoryArticle" parameterType="org.xhome.xblog.Category">
+		UPDATE xhome_xblog_category SET articleTotal = articleTotal + 1 WHERE id = #{id}
+	</update>
+	
+	<update id="decreaseCategoryArticle" parameterType="org.xhome.xblog.Category">
+		UPDATE xhome_xblog_category SET articleTotal = articleTotal - 1 WHERE id = #{id}
+	</update>
+	
+	<update id="increaseArticle" parameterType="org.xhome.xblog.Article">
+		UPDATE xhome_xblog_category AS c
+		JOIN xhome_xblog_article AS a ON a.id = #{id} AND a.category = c.id
+		SET c.articleTotal = c.articleTotal + 1
+		WHERE c.status != 0 AND a.status != 0
+	</update>
+	
+	<update id="decreaseArticle" parameterType="org.xhome.xblog.Article">
+		UPDATE xhome_xblog_category AS c
+		JOIN xhome_xblog_article AS a ON a.id = #{id} AND a.category = c.id
+		SET c.articleTotal = c.articleTotal - 1
+		WHERE c.status != 0 AND a.status != 0
+	</update>
+	
 </mapper>

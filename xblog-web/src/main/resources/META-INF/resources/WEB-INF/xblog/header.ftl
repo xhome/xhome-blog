@@ -50,12 +50,12 @@
                 <form id="user_change_password_form" class="form-horizontal" role="form" action="${xblog.xauth.user_base_url}/chpasswd.json" method="POST">
                     <div id="user_change_password_error_msg" class="alert alert-danger" style="display: none;"></div>
                     <div class="input-group">
-                        <span class="input-group-btn input-group-addon"> 旧密码 </span>
+                        <span class="input-group-btn input-group-addon">旧&nbsp;&nbsp;密&nbsp;&nbsp;码</span>
                         <input type="password" class="form-control" id="password_old" name="password_old" placeholder="请输入旧密码" maxlength="20"> 
                     </div>
                     <br />
                     <div class="input-group">
-                        <span class="input-group-btn input-group-addon"> 新密码 </span>
+                        <span class="input-group-btn input-group-addon">新&nbsp;&nbsp;密&nbsp;&nbsp;码</span>
                         <input type="password" class="form-control" id="password_new" name="password_new" placeholder="请输入新密码" maxlength="20"> 
                     </div>
                     <br />
