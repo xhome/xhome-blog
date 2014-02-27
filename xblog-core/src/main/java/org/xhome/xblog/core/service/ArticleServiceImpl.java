@@ -1236,6 +1236,30 @@ public class ArticleServiceImpl implements ArticleService {
 		return e;
 	}
 
+	/**
+	 * @see org.xhome.xblog.core.service.ArticleService#increaseRead(org.xhome.xauth.User,
+	 *      org.xhome.xblog.Article)
+	 */
+	@Override
+	public int increaseRead(User oper, Article article) {
+		short r = articleDAO.increaseRead(article) == 1 ? Status.SUCCESS
+				: Status.ERROR;
+
+		if (logger.isDebugEnabled()) {
+			Long articleId = article.getId();
+			String title = article.getTitle();
+			if (r == Status.SUCCESS) {
+				logger.debug("success to increase article {}[{}] read count",
+						title, articleId);
+			} else {
+				logger.debug("fail to increase article {}[{}] read count",
+						title, articleId);
+			}
+		}
+
+		return r;
+	}
+
 	private void logManageArticle(String content, Short action, Long obj,
 			Short status, User oper) {
 		this.logManage(content, action, ManageLogType.ARTICLE, obj, status,

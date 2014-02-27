@@ -9,6 +9,8 @@
 		<id property="id" column="id"/>
 		<result property="title" column="title"/>
 		<result property="attribute" column="attribute"/>
+		<result property="readCount" column="readCount"/>
+		<result property="commentCount" column="commentCount"/>
 		<result property="owner" column="owner"/>
 		<result property="modifier" column="modifier"/>
 		<result property="created" column="created"/>
@@ -101,7 +103,7 @@
 	</sql>
 	
 	<sql id="selectArticleLittle">
-		SELECT a.id, a.title, a.attribute, a.category,
+		SELECT a.id, a.title, a.attribute, a.category, a.readCount, a.commentCount,
 			a.owner, a.modifier, a.created, a.modified, a.version, a.status,
 			c.id AS category_id, c.name AS category_name, c.owner AS category_owner,
 			c.modifier AS category_modifier, c.created AS category_created, c.modified AS category_modified,
@@ -302,5 +304,17 @@
 	<select id="isArticleTagDeleteable" resultType="boolean" parameterType="Map">
 		SELECT COUNT(*) FROM xhome_xblog_article_tag WHERE status != 0 AND article = #{article.id} AND tag = #{tag.id} AND status != 3 AND status != 4
 	</select>
+	
+	<update id="increaseRead" parameterType="org.xhome.xblog.Article">
+		UPDATE xhome_xblog_article SET readCount = readCount + 1 WHERE id = #{id}
+	</update>
+	
+	<update id="increaseComment" parameterType="org.xhome.xblog.Article">
+		UPDATE xhome_xblog_article SET commentCount = commentCount + 1 WHERE id = #{id}
+	</update>
+	
+	<update id="decreaseComment" parameterType="org.xhome.xblog.Article">
+		UPDATE xhome_xblog_article SET commentCount = commentCount - 1 WHERE id = #{id}
+	</update>
 	
 </mapper>

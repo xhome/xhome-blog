@@ -166,6 +166,16 @@ public class ArticleAction extends AbstractAction {
 		Article article = articleService.getArticle(user, id);
 		data.put("article", article);
 
+		if (article != null) {
+			articleService.increaseRead(user, article);
+
+			Record record = new Record(article, user,
+					RequestUtils.getRequestAddress(request),
+					RequestUtils.getRequestAgent(request),
+					request.getHeader("User-Agent"));
+			recordService.logRecord(record);
+		}
+
 		return new CommonResult(Status.SUCCESS, "", data);
 	}
 
@@ -502,11 +512,13 @@ public class ArticleAction extends AbstractAction {
 			logger.info("[{}] {} {}", status, uname, msg);
 		}
 
-		Record record = new Record(article, user,
-				RequestUtils.getRequestAddress(request),
-				RequestUtils.getRequestAgent(request),
-				request.getHeader("User-Agent"));
-		recordService.logRecord(record);
+		if (article != null) {
+			Record record = new Record(article, user,
+					RequestUtils.getRequestAddress(request),
+					RequestUtils.getRequestAgent(request),
+					request.getHeader("User-Agent"));
+			recordService.logRecord(record);
+		}
 
 		return new CommonResult(status, msg, article);
 	}

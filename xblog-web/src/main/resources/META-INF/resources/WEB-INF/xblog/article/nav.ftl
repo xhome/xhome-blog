@@ -7,7 +7,7 @@
                 <h4 class="list-group-item-heading">分类</h4>
             </a>
             <#list commonResult.data.categories.results as category>
-                <a class="list-group-item" href="${xblog.article_index_url}?cid=${category.id}">${category.name}<span class="badge">${category.articleTotal}</span></a>
+                <a class="list-group-item" href="${xblog.article_index_url}?cid=${category.id}">${category.name}<span class="badge">${category.articleCount}</span></a>
             </#list>
         </div>
     <#else>
@@ -24,7 +24,7 @@
                 <h4 class="list-group-item-heading">标签</h4>
             </a>
             <#list commonResult.data.tags.results as tag>
-                <a class="list-group-item" href="${xblog.article_index_url}?tid=${tag.id}">${tag.name}<span class="badge">${tag.articleTotal}</span></a>
+                <a class="list-group-item" href="${xblog.article_index_url}?tid=${tag.id}">${tag.name}<span class="badge">${tag.articleCount}</span></a>
             </#list>
         </div>
     </#if>

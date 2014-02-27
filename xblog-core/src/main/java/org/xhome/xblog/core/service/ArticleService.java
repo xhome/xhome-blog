@@ -81,4 +81,12 @@ public interface ArticleService {
 
 	public boolean isArticleTagDeleteable(User oper, Article article, Tag tag);
 
+	/**
+	 * 文章增加阅读数
+	 * 
+	 * @param article
+	 * @return
+	 */
+	public int increaseRead(User oper, Article article);
+
 }

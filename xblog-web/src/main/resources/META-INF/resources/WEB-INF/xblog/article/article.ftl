@@ -10,9 +10,17 @@
         </#if>
         <h1 class="panel-title"><a href="${xblog.article_read_url}?id=${article.id}">${article_title}</a></h1> 
     </div>
-    <#if article.content??>
-        <div class="panel-body">${article_content}</div>
-    </#if>
+        <div class="well" style="padding: 2px; margin: 0px; border-radius: 0px;">
+            <span class="glyphicon glyphicon-calendar"></span> ${article.modifiedStr}
+            <div style="float: right">
+                <span>${article.readCount}次阅读</span>
+                &nbsp;&nbsp;
+                <span>${article.commentCount}条评论</span> 
+            </div>
+        </div>
+    <div class="panel-body">
+        ${article_content}
+    </div>
     <div class="panel-footer">
         <span class="glyphicon glyphicon-folder-open"></span>
         <a href="${xblog.article_index_url}?cid=${article.category.id}">${article.category.name}</a>

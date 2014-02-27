@@ -19,6 +19,7 @@ import org.xhome.xauth.core.service.ManageLogService;
 import org.xhome.xblog.Article;
 import org.xhome.xblog.Comment;
 import org.xhome.xblog.ManageLogType;
+import org.xhome.xblog.core.dao.ArticleDAO;
 import org.xhome.xblog.core.dao.CommentDAO;
 import org.xhome.xblog.core.listener.CommentManageListener;
 
@@ -34,6 +35,8 @@ public class CommentServiceImpl implements CommentService {
 
 	@Autowired
 	private CommentDAO commentDAO;
+	@Autowired
+	private ArticleDAO articleDAO;
 	@Autowired
 	private ManageLogService manageLogService;
 	@Autowired(required = false)
@@ -73,6 +76,11 @@ public class CommentServiceImpl implements CommentService {
 
 		short r = commentDAO.addComment(comment) == 1 ? Status.SUCCESS
 				: Status.ERROR;
+
+		// 评论成功后添加文章评论总数
+		if (r == Status.SUCCESS) {
+			articleDAO.increaseComment(article);
+		}
 
 		if (logger.isDebugEnabled()) {
 			if (r == Status.SUCCESS) {
@@ -277,6 +285,9 @@ public class CommentServiceImpl implements CommentService {
 				logger.debug("remove comment {}[{}]", content, id);
 			}
 			commentDAO.removeComment(comment);
+
+			// 移除文章后减少文章评论数
+			articleDAO.decreaseComment(article);
 		} else {
 			if (logger.isDebugEnabled()) {
 				logger.debug("comment {}[{}] isn't removeable", content, id);
@@ -330,6 +341,8 @@ public class CommentServiceImpl implements CommentService {
 				logger.debug("delete comment {}[{}]", content, comment.getId());
 			}
 			commentDAO.deleteComment(comment);
+			// 删除文章后减少文章评论数
+			articleDAO.decreaseComment(article);
 		} else {
 			if (logger.isDebugEnabled()) {
 				logger.debug("comment {}[{}] isn't deleteable", content,
@@ -637,6 +650,14 @@ public class CommentServiceImpl implements CommentService {
 
 	public CommentDAO getCommentDAO() {
 		return this.commentDAO;
+	}
+
+	public void setArticleDAO(ArticleDAO articleDAO) {
+		this.articleDAO = articleDAO;
+	}
+
+	public ArticleDAO getArticleDAO() {
+		return this.articleDAO;
 	}
 
 	public void setManageLogService(ManageLogService manageLogService) {

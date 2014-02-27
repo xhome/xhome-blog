@@ -14,7 +14,7 @@ public class Tag extends Base {
 	private static final long serialVersionUID = -6819243943286518474L;
 
 	private String name; // 标签名称
-	private Long articleTotal; // 标签文章总数
+	private Long articleCount; // 标签文章总数
 
 	public Tag() {
 	}
@@ -32,18 +32,18 @@ public class Tag extends Base {
 	}
 
 	/**
-	 * @return the articleTotal
+	 * @return the articleCount
 	 */
-	public Long getArticleTotal() {
-		return articleTotal;
+	public Long getArticleCount() {
+		return articleCount;
 	}
 
 	/**
-	 * @param articleTotal
-	 *            the articleTotal to set
+	 * @param articleCount
+	 *            the articleCount to set
 	 */
-	public void setArticleTotal(Long articleTotal) {
-		this.articleTotal = articleTotal;
+	public void setArticleCount(Long articleCount) {
+		this.articleCount = articleCount;
 	}
 
 }
