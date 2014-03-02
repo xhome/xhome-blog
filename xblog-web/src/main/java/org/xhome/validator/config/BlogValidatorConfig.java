@@ -117,9 +117,9 @@ public class BlogValidatorConfig implements Config {
 				"((([A-Za-z]{3,9}:(?://)?)(?:[-;:&=\\+\\$,\\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\\+\\$,\\w]+@)[A-Za-z0-9.-]+)((?:/[\\+~%/.\\w-_]*)?\\??(?:[-\\+=&;%@.\\w_]*)#?(?:[\\w]*))?)");
 		configs.put(COMMENT_USER_WEBSITE_PATTERN_MESSAGE, "评论用户个人主页格式不正确");
 		configs.put(COMMENT_CONTENT_EMPTY_MESSAGE, "评论内容不能为空");
-		configs.put(COMMENT_CONTENT_SIZE_MIN, "0");
+		configs.put(COMMENT_CONTENT_SIZE_MIN, "1");
 		configs.put(COMMENT_CONTENT_SIZE_MAX, "60000");
-		configs.put(COMMENT_CONTENT_SIZE_MESSAGE, "评论内容不能超过60000个字符");
+		configs.put(COMMENT_CONTENT_SIZE_MESSAGE, "评论内容必须为1~60000个字符");
 		configs.put(COMMENT_ARTICLE_EMPTY_MESSAGE, "评论文章不能为空");
 		configs.put(COMMENT_TARGET_EMPTY_MESSAGE, "评论目标不能为空");
 

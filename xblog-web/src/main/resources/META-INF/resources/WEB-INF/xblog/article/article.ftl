@@ -1,12 +1,11 @@
 <#-- 显示文章内容 -->
 <div class="panel panel-primary">
     <div class="panel-heading">
+        <#assign article_detail = article.detail />
         <#if search_word??>
             <#assign article_title = article.title?replace(search_word, '<font color="red">' + search_word + '</font>')>
-            <#assign article_detail = article.detail?replace(search_word, '<font color="red">' + search_word + '</font>')>
         <#else>
             <#assign article_title = article.title />
-            <#assign article_detail = article.detail />
         </#if>
         <h1 class="panel-title"><a href="${xblog.article_read_url}?id=${article.id}">${article_title}</a></h1> 
     </div>
