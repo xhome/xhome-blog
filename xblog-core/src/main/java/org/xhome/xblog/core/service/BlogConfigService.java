@@ -13,6 +13,7 @@ import org.xhome.xauth.core.service.ConfigService;
 public interface BlogConfigService extends ConfigService {
 
 	String ITEM_ALLOW_ARTICLE_COMMENT = "xblog_allow_article_comment"; // 评论开关
+	String ITEM_ARTICLE_CONTENT_LENGTH = "xblog_article_content_length"; // 文章概要内容长度
 
 	/**
 	 * 查询是否允许文章评论
@@ -20,5 +21,12 @@ public interface BlogConfigService extends ConfigService {
 	 * @return
 	 */
 	public boolean allowArticleComment();
+
+	/**
+	 * 获取文章概要内容长度
+	 * 
+	 * @return
+	 */
+	public long getArticleContentLength();
 
 }

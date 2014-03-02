@@ -42,8 +42,8 @@ Ext.onReady(function() {
             maxLengthText: '文章标题不能超过50个字符',
         }, {
             xtype: 'htmleditor',
-            name: 'article.content',
-            itemId: 'article.content',
+            name: 'article.detail',
+            itemId: 'article.detail',
             height: 400, 
         }, {
             xtype: 'hidden',
@@ -187,7 +187,7 @@ Ext.onReady(function() {
             value: ${commonResult.data.version},
         }); 
         form.getComponent('article.title').setValue('${commonResult.data.title}'); 
-        form.getComponent('article.content').setValue('${commonResult.data.content?replace('\'', '"')}');
+        form.getComponent('article.detail').setValue('${commonResult.data.detail?replace('\'', '"')}');
         var container = form.getComponent('container');
         container.getComponent('article.category.id').select(${commonResult.data.category.id}); 
         form.getComponent('article.category.name').setValue('${commonResult.data.category.name}'); 

@@ -17,6 +17,7 @@
         <xhome-db.version>1.0</xhome-db.version>
         <xhome-common.version>1.0</xhome-common.version>
         <spring-mvc-extend.version>1.0</spring-mvc-extend.version>
+        <jsoup.version>1.7.2</jsoup.version> 
         <freemarker.version>2.3.20</freemarker.version>
         <spring.version>3.2.4.RELEASE</spring.version>
         <slf4j-api.version>1.7.5</slf4j-api.version>
@@ -83,6 +84,12 @@
             <scope>provided</scope>
         </dependency>
 
+        <dependency>
+            <groupId>org.jsoup</groupId>
+            <artifactId>jsoup</artifactId>
+            <version>${jsoup.version}</version>
+            <scope>provided</scope>
+        </dependency>
         <dependency>
             <groupId>org.freemarker</groupId>
             <artifactId>freemarker</artifactId>

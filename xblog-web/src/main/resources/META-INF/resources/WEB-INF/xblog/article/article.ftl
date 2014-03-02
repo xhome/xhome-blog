@@ -3,10 +3,10 @@
     <div class="panel-heading">
         <#if search_word??>
             <#assign article_title = article.title?replace(search_word, '<font color="red">' + search_word + '</font>')>
-            <#assign article_content = article.content?replace(search_word, '<font color="red">' + search_word + '</font>')>
+            <#assign article_detail = article.detail?replace(search_word, '<font color="red">' + search_word + '</font>')>
         <#else>
             <#assign article_title = article.title />
-            <#assign article_content = article.content />
+            <#assign article_detail = article.detail />
         </#if>
         <h1 class="panel-title"><a href="${xblog.article_read_url}?id=${article.id}">${article_title}</a></h1> 
     </div>
@@ -19,7 +19,7 @@
             </div>
         </div>
     <div class="panel-body">
-        ${article_content}
+        ${article_detail}
     </div>
     <div class="panel-footer">
         <span class="glyphicon glyphicon-folder-open"></span>

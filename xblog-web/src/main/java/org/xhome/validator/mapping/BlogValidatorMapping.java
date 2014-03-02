@@ -17,7 +17,7 @@ import org.xhome.xblog.web.action.TagAction;
 import org.xhome.xblog.web.action.TagRolePermissionAction;
 import org.xhome.xblog.web.action.TagUserPermissionAction;
 import org.xhome.xblog.web.validator.ArticleCategoryValidator;
-import org.xhome.xblog.web.validator.ArticleContentValidator;
+import org.xhome.xblog.web.validator.ArticleDetailValidator;
 import org.xhome.xblog.web.validator.ArticlePermissionArticleValidator;
 import org.xhome.xblog.web.validator.ArticlePermissionRoleValidator;
 import org.xhome.xblog.web.validator.ArticlePermissionUserValidator;
@@ -92,12 +92,12 @@ public class BlogValidatorMapping implements Mapping {
 		mappings.put(CategoryAction.RM_CATEGORY_DELETEABLE,
 				categoryIdNameValidator);
 
-		String articleTitleValidator = ArticleTitleValidator.class.getName(), articleContentValidator = ArticleContentValidator.class
+		String articleTitleValidator = ArticleTitleValidator.class.getName(), articleDetailValidator = ArticleDetailValidator.class
 				.getName(), articleCategoryValidator = ArticleCategoryValidator.class
 				.getName(), articleTagsValidator = ArticleTagsValidator.class
 				.getName(), articleAUValidator = articleTitleValidator + ","
-				+ articleContentValidator + "," + articleCategoryValidator
-				+ "," + articleTagsValidator, articleIdTitleValidator = idValidator
+				+ articleDetailValidator + "," + articleCategoryValidator + ","
+				+ articleTagsValidator, articleIdTitleValidator = idValidator
 				+ "," + articleTitleValidator, articleVersionValidator = articleIdTitleValidator
 				+ "," + versionValidator, articleTagValidator = articleIdTitleValidator
 				+ "," + tagIdNameValidator;
@@ -382,8 +382,8 @@ public class BlogValidatorMapping implements Mapping {
 
 		codes.put(ArticleTitleValidator.CODE_TITLE_EMPTY, (short) 105);
 		codes.put(ArticleTitleValidator.CODE_TITLE_SIZE, (short) 106);
-		codes.put(ArticleContentValidator.CODE_CONTENT_EMPTY, (short) 107);
-		codes.put(ArticleContentValidator.CODE_CONTENT_SIZE, (short) 108);
+		codes.put(ArticleDetailValidator.CODE_DETAIL_EMPTY, (short) 107);
+		codes.put(ArticleDetailValidator.CODE_DETAIL_SIZE, (short) 108);
 		codes.put(ArticleCategoryValidator.CODE_CATEGORY_EMPTY, (short) 109);
 
 		codes.put(CommentArticleValidator.CODE_ARTICLE_EMPTY, (short) 110);

@@ -1,11 +1,15 @@
 package org.xhome.xblog.web.action;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -29,6 +33,7 @@ import org.xhome.xblog.BlogException;
 import org.xhome.xblog.Record;
 import org.xhome.xblog.Tag;
 import org.xhome.xblog.core.service.ArticleService;
+import org.xhome.xblog.core.service.BlogConfigService;
 import org.xhome.xblog.core.service.CategoryService;
 import org.xhome.xblog.core.service.RecordService;
 import org.xhome.xblog.core.service.TagService;
@@ -51,6 +56,8 @@ public class ArticleAction extends AbstractAction {
 	private CategoryService categoryService;
 	@Autowired
 	private TagService tagService;
+	@Autowired
+	private BlogConfigService blogConfigService;
 
 	public final static String RM_ARTICLE_INDEX = "xblog/article/index";
 	public final static String RM_ARTICLE_READ = "xblog/article/read";
@@ -216,6 +223,34 @@ public class ArticleAction extends AbstractAction {
 	}
 
 	/**
+	 * 截取文章概要内容
+	 * 
+	 * @param article
+	 */
+	private void extractArticleContent(Article article) {
+		Document doc = Jsoup.parse(article.getDetail());
+		Element body = doc.body();
+
+		long maxLen = blogConfigService.getArticleContentLength();
+		long textLen = 0;
+		StringBuffer content = new StringBuffer();
+
+		Iterator<Element> elements = body.children().iterator();
+		while (elements.hasNext()) {
+			Element element = elements.next();
+			textLen += element.text().length();
+
+			if (textLen < maxLen) {
+				content.append(element.outerHtml());
+			} else {
+				break;
+			}
+
+		}
+		article.setContent(content.toString());
+	}
+
+	/**
 	 * 添加新文章
 	 * 
 	 * @param article
@@ -233,6 +268,10 @@ public class ArticleAction extends AbstractAction {
 		User user = AuthUtils.getCurrentUser(request);
 		AuthUtils.setOwner(request, article);
 		AuthUtils.setModifier(request, article);
+
+		// 截取文章概要内容
+		this.extractArticleContent(article);
+
 		try {
 			status = (short) articleService.addArticle(user, article);
 		} catch (BlogException e) {
@@ -269,6 +308,10 @@ public class ArticleAction extends AbstractAction {
 
 		User user = AuthUtils.getCurrentUser(request);
 		AuthUtils.setModifier(request, article);
+
+		// 截取文章概要内容
+		this.extractArticleContent(article);
+
 		try {
 			status = (short) articleService.updateArticle(user, article);
 		} catch (BlogException e) {
@@ -885,6 +928,21 @@ public class ArticleAction extends AbstractAction {
 	 */
 	public void setTagService(TagService tagService) {
 		this.tagService = tagService;
+	}
+
+	/**
+	 * @return the blogConfigService
+	 */
+	public BlogConfigService getBlogConfigService() {
+		return blogConfigService;
+	}
+
+	/**
+	 * @param blogConfigService
+	 *            the blogConfigService to set
+	 */
+	public void setBlogConfigService(BlogConfigService blogConfigService) {
+		this.blogConfigService = blogConfigService;
 	}
 
 }

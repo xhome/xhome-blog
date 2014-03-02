@@ -20,6 +20,7 @@
   	<property name="recordService" ref="recordService"/>
   	<property name="categoryService" ref="categoryService"/>
   	<property name="tagService" ref="tagService"/>
+  	<property name="blogConfigService" ref="blogConfigService"/>
   </bean>
   
   <bean id="commentAction" class="org.xhome.xblog.web.action.CommentAction" scope="singleton">

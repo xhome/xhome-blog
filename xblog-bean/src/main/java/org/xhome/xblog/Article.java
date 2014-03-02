@@ -17,7 +17,8 @@ public class Article extends Base {
 
 	private String title; // 文章标题
 	private int attribute = PERMISSION_OPEN; // 文章属性
-	private String content; // 文章内容
+	private String content; // 文章概要内容
+	private String detail; // 文章详细内容
 	private Category category; // 所属分类
 	private List<Tag> tags; // 文章标签
 	private List<Comment> comments; // 文章评论
@@ -60,6 +61,24 @@ public class Article extends Base {
 
 	public void setContent(String content) {
 		this.content = content;
+		if (this.detail == null) {
+			this.setDetail(content);
+		}
+	}
+
+	/**
+	 * @return the detail
+	 */
+	public String getDetail() {
+		return detail;
+	}
+
+	/**
+	 * @param detail
+	 *            the detail to set
+	 */
+	public void setDetail(String detail) {
+		this.detail = detail;
 	}
 
 	public Category getCategory() {
@@ -94,7 +113,8 @@ public class Article extends Base {
 	}
 
 	/**
-	 * @param readCount the readCount to set
+	 * @param readCount
+	 *            the readCount to set
 	 */
 	public void setReadCount(Long readCount) {
 		this.readCount = readCount;
@@ -108,7 +128,8 @@ public class Article extends Base {
 	}
 
 	/**
-	 * @param commentCount the commentCount to set
+	 * @param commentCount
+	 *            the commentCount to set
 	 */
 	public void setCommentCount(Long commentCount) {
 		this.commentCount = commentCount;

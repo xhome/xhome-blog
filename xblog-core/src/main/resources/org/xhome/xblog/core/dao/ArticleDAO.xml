@@ -5,10 +5,12 @@
 	
 	<cache/>
 	
-	<resultMap id="articleLittleResultMap" type="org.xhome.xblog.Article">
+	<resultMap id="articleResultMap" type="org.xhome.xblog.Article">
 		<id property="id" column="id"/>
 		<result property="title" column="title"/>
 		<result property="attribute" column="attribute"/>
+		<result property="content" column="content"/>
+		<result property="detail" column="detail"/>
 		<result property="readCount" column="readCount"/>
 		<result property="commentCount" column="commentCount"/>
 		<result property="owner" column="owner"/>
@@ -39,20 +41,16 @@
 		</collection>
 	</resultMap>
 	
-	<resultMap id="articleResultMap" type="org.xhome.xblog.Article" extends="articleLittleResultMap">
-		<result property="content" column="content"/>
-	</resultMap>
-	
 	<insert id="addArticle" parameterType="org.xhome.xblog.Article" useGeneratedKeys="true" keyProperty="id">
-		INSERT INTO xhome_xblog_article (title, attribute, content, category,
+		INSERT INTO xhome_xblog_article (title, attribute, content, detail, category,
 			owner, modifier, created, modified, version, status)
-		VALUES(#{title}, #{attribute}, #{content}, #{category.id},
+		VALUES(#{title}, #{attribute}, #{content}, #{detail}, #{category.id},
 			#{owner}, #{modifier}, #{created}, #{modified}, #{version}, #{status})
 	</insert>
 	
 	<update id="updateArticle" parameterType="org.xhome.xblog.Article">
 		UPDATE xhome_xblog_article
-		SET title = #{title}, attribute = #{attribute}, content = #{content}, category = #{category.id},
+		SET title = #{title}, attribute = #{attribute}, content = #{content}, detail = #{detail}, category = #{category.id},
 			modifier = #{modifier}, modified = NOW(), version = version + 1, status = #{status}
 		WHERE id = #{id}
 	</update>
@@ -103,7 +101,7 @@
 	</sql>
 	
 	<sql id="selectArticleLittle">
-		SELECT a.id, a.title, a.attribute, a.category, a.readCount, a.commentCount,
+		SELECT a.id, a.title, a.attribute, a.content, a.category, a.readCount, a.commentCount,
 			a.owner, a.modifier, a.created, a.modified, a.version, a.status,
 			c.id AS category_id, c.name AS category_name, c.owner AS category_owner,
 			c.modifier AS category_modifier, c.created AS category_created, c.modified AS category_modified,
@@ -114,7 +112,7 @@
 	</sql>
 	
 	<sql id="selectArticle">
-		<include refid="selectArticleLittle"/>, a.content
+		<include refid="selectArticleLittle"/>, a.detail
 	</sql>
 	
 	<select id="queryArticle" resultMap="articleResultMap" parameterType="long">
@@ -148,8 +146,8 @@
 				OR ((a.attribute &amp; 2) != 0 AND a.owner = #{parameters.user})
 			</if>
 			)
-			<if test="parameters.content != null and parameters.content != ''">
-				AND a.content LIKE CONCAT('%',#{parameters.content},'%')
+			<if test="parameters.detail != null and parameters.detail != ''">
+				OR fn_xhome_xblog_strip_html_tags(a.detail) LIKE CONCAT('%',#{parameters.detail},'%')
 			</if>
 			<if test="parameters.status != null and parameters.status != ''">
 				AND a.status = #{parameters.status}
@@ -244,7 +242,7 @@
 	</sql>
 	
 	<select id="queryArticles" resultMap="articleResultMap" parameterType="org.xhome.db.query.QueryBase">
-		<include refid="selectArticle"/>
+		<include refid="selectArticleLittle"/>
 		FROM xhome_xblog_article AS a
 		RIGHT JOIN (<include refid="queryArticleId"/> LIMIT #{start}, #{limit}) AS aid USING(id)
 		LEFT JOIN xhome_xblog_category AS c ON a.category = c.id AND c.status != 0

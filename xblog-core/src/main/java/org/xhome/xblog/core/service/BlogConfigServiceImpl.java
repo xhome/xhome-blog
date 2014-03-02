@@ -23,4 +23,14 @@ public class BlogConfigServiceImpl extends ConfigServiceImpl implements
 		return config != null ? !"0".equals(config.getValue()) : false;
 	}
 
+	/**
+	 * @see org.xhome.xblog.core.service.BlogConfigService#getArticleContentLength()
+	 */
+	@Override
+	public long getArticleContentLength() {
+		Config config = configDAO
+				.queryConfigByItem(ITEM_ARTICLE_CONTENT_LENGTH);
+		return Long.parseLong(config.getValue());
+	}
+
 }
