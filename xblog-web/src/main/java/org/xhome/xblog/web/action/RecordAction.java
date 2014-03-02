@@ -37,14 +37,12 @@ public class RecordAction extends AbstractAction {
 		User user = AuthUtils.getCurrentUser(request);
 		String uname = user.getName();
 
+		if (query == null) {
+			query = new QueryBase();
+		}
 		if (logger.isInfoEnabled()) {
-			if (query != null) {
-				logger.info("用户" + uname + "按条件" + query.getParameters()
-						+ "查询文章访问日志");
-			} else {
-				query = new QueryBase();
-				logger.info("用户" + uname + "查询文章访问日志");
-			}
+			logger.info("用户" + uname + "按条件" + query.getParameters()
+					+ "查询文章访问日志");
 		}
 		recordService.getRecords(user, query);
 
@@ -64,13 +62,12 @@ public class RecordAction extends AbstractAction {
 		User user = AuthUtils.getCurrentUser(request);
 		String uname = user.getName();
 
+		if (query == null) {
+			query = new QueryBase();
+		}
 		if (logger.isInfoEnabled()) {
-			if (query != null) {
-				logger.info("用户" + uname + "按条件" + query.getParameters()
-						+ "统计文章访问日志");
-			} else {
-				logger.info("用户" + uname + "统计文章访问日志");
-			}
+			logger.info("用户" + uname + "按条件" + query.getParameters()
+					+ "统计文章访问日志");
 		}
 		long count = recordService.countRecords(user, query);
 

@@ -430,13 +430,11 @@ public class TagUserPermissionAction extends AbstractAction {
 		User user = AuthUtils.getCurrentUser(request);
 		String uname = user.getName();
 
+		if (query == null) {
+			query = new QueryBase();
+		}
 		if (logger.isInfoEnabled()) {
-			if (query != null) {
-				logger.info("用户{}按条件{}查询标签用户权限信息", uname, query.getParameters());
-			} else {
-				query = new QueryBase();
-				logger.info("用户{}查询标签用户权限信息", uname);
-			}
+			logger.info("用户{}按条件{}查询标签用户权限信息", uname, query.getParameters());
 		}
 		permissionService.getTagUserPermissions(user, query);
 
@@ -444,7 +442,6 @@ public class TagUserPermissionAction extends AbstractAction {
 		short status = Status.SUCCESS;
 
 		if (logger.isInfoEnabled()) {
-
 			logger.info("[{}] {} {}", status, uname, msg);
 		}
 
@@ -457,12 +454,11 @@ public class TagUserPermissionAction extends AbstractAction {
 		User user = AuthUtils.getCurrentUser(request);
 		String uname = user.getName();
 
+		if (query == null) {
+			query = new QueryBase();
+		}
 		if (logger.isInfoEnabled()) {
-			if (query != null) {
-				logger.info("用户{}按条件{}统计标签用户权限信息", uname, query.getParameters());
-			} else {
-				logger.info("用户{}统计标签用户权限信息", uname);
-			}
+			logger.info("用户{}按条件{}统计标签用户权限信息", uname, query.getParameters());
 		}
 		long count = permissionService.countTagUserPermissions(user, query);
 

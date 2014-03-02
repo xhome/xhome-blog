@@ -431,13 +431,11 @@ public class ArticleUserPermissionAction extends AbstractAction {
 		User user = AuthUtils.getCurrentUser(request);
 		String uname = user.getName();
 
+		if (query == null) {
+			query = new QueryBase();
+		}
 		if (logger.isInfoEnabled()) {
-			if (query != null) {
-				logger.info("用户{}按条件{}查询文章用户权限信息", uname, query.getParameters());
-			} else {
-				query = new QueryBase();
-				logger.info("用户{}查询文章用户权限信息", uname);
-			}
+			logger.info("用户{}按条件{}查询文章用户权限信息", uname, query.getParameters());
 		}
 		permissionService.getArticleUserPermissions(user, query);
 
@@ -458,12 +456,11 @@ public class ArticleUserPermissionAction extends AbstractAction {
 		User user = AuthUtils.getCurrentUser(request);
 		String uname = user.getName();
 
+		if (query == null) {
+			query = new QueryBase();
+		}
 		if (logger.isInfoEnabled()) {
-			if (query != null) {
-				logger.info("用户{}按条件{}统计文章用户权限信息", uname, query.getParameters());
-			} else {
-				logger.info("用户{}统计文章用户权限信息", uname);
-			}
+			logger.info("用户{}按条件{}统计文章用户权限信息", uname, query.getParameters());
 		}
 		long count = permissionService.countArticleUserPermissions(user, query);
 

@@ -127,7 +127,7 @@
 		<trim prefix="WHERE" prefixOverrides="AND">
 			<if test="parameters.search_word != null and parameters.search_word != ''">
 				AND (a.title LIKE CONCAT('%',#{parameters.search_word},'%')
-					OR a.content LIKE CONCAT('%',#{parameters.search_word},'%'))
+					OR fn_xhome_xblog_strip_html_tags(a.detail) LIKE CONCAT('%',#{parameters.search_word},'%'))
 			</if>
 			<if test="parameters.title != null and parameters.title != ''">
 				AND a.title LIKE CONCAT('%',#{parameters.title},'%')
@@ -147,7 +147,7 @@
 			</if>
 			)
 			<if test="parameters.detail != null and parameters.detail != ''">
-				OR fn_xhome_xblog_strip_html_tags(a.detail) LIKE CONCAT('%',#{parameters.detail},'%')
+				AND fn_xhome_xblog_strip_html_tags(a.detail) LIKE CONCAT('%',#{parameters.detail},'%')
 			</if>
 			<if test="parameters.status != null and parameters.status != ''">
 				AND a.status = #{parameters.status}

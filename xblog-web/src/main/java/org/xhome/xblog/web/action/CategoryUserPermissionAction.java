@@ -430,13 +430,11 @@ public class CategoryUserPermissionAction extends AbstractAction {
 		User user = AuthUtils.getCurrentUser(request);
 		String uname = user.getName();
 
+		if (query == null) {
+			query = new QueryBase();
+		}
 		if (logger.isInfoEnabled()) {
-			if (query != null) {
-				logger.info("用户{}按条件{}查询分类用户权限信息", uname, query.getParameters());
-			} else {
-				query = new QueryBase();
-				logger.info("用户{}查询分类用户权限信息", uname);
-			}
+			logger.info("用户{}按条件{}查询分类用户权限信息", uname, query.getParameters());
 		}
 		permissionService.getCategoryUserPermissions(user, query);
 
@@ -457,12 +455,11 @@ public class CategoryUserPermissionAction extends AbstractAction {
 		User user = AuthUtils.getCurrentUser(request);
 		String uname = user.getName();
 
+		if (query == null) {
+			query = new QueryBase();
+		}
 		if (logger.isInfoEnabled()) {
-			if (query != null) {
-				logger.info("用户{}按条件{}统计分类用户权限信息", uname, query.getParameters());
-			} else {
-				logger.info("用户{}统计分类用户权限信息", uname);
-			}
+			logger.info("用户{}按条件{}统计分类用户权限信息", uname, query.getParameters());
 		}
 		long count = permissionService
 				.countCategoryUserPermissions(user, query);

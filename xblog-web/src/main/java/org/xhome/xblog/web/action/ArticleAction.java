@@ -128,6 +128,8 @@ public class ArticleAction extends AbstractAction {
 			data.put("search_word", searchWord);
 			articles.addParameter("search_word", searchWord);
 		}
+		articles.addParameter("user", user.getId());
+
 		if (cid != null && cid > 0) {
 			articles.addParameter("category_id", cid);
 		}
@@ -574,14 +576,14 @@ public class ArticleAction extends AbstractAction {
 		User user = AuthUtils.getCurrentUser(request);
 		String uname = user.getName();
 
-		if (logger.isInfoEnabled()) {
-			if (query != null) {
-				logger.info("文章{}按条件{}查询文章信息", uname, query.getParameters());
-			} else {
-				query = new QueryBase();
-				logger.info("文章{}查询文章信息", uname);
-			}
+		if (query == null) {
+			query = new QueryBase();
 		}
+		if (logger.isInfoEnabled()) {
+			logger.info("文章{}按条件{}查询文章信息", uname, query.getParameters());
+		}
+
+		query.addParameter("user", user.getId());
 		articleService.getArticles(user, query);
 
 		String msg = "条件查询文章信息";
@@ -599,13 +601,14 @@ public class ArticleAction extends AbstractAction {
 		User user = AuthUtils.getCurrentUser(request);
 		String uname = user.getName();
 
-		if (logger.isInfoEnabled()) {
-			if (query != null) {
-				logger.info("文章{}按条件{}统计文章信息", uname, query.getParameters());
-			} else {
-				logger.info("文章{}统计文章信息", uname);
-			}
+		if (query == null) {
+			query = new QueryBase();
 		}
+		if (logger.isInfoEnabled()) {
+			logger.info("文章{}按条件{}统计文章信息", uname, query.getParameters());
+		}
+
+		query.addParameter("user", user.getId());
 		long count = articleService.countArticles(user, query);
 
 		String msg = "条件统计文章信息，共" + count;

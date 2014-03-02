@@ -21,6 +21,7 @@
     <div class="col-lg-10">
         <#if commonResult?? && commonResult.status?? && commonResult.status == 0 && commonResult.data?? && commonResult.data.articles??>
             <#-- 文章列表 开始 -->
+            <#assign is_article_list = true /> 
             <#list commonResult.data.articles.results as article>
                 <@include file = "article.ftl" /> 
             </#list>

@@ -364,13 +364,11 @@ public class CategoryAction extends AbstractAction {
 		User user = AuthUtils.getCurrentUser(request);
 		String uname = user.getName();
 
+		if (query == null) {
+			query = new QueryBase();
+		}
 		if (logger.isInfoEnabled()) {
-			if (query != null) {
-				logger.info("用户{}按条件{}查询分类信息", uname, query.getParameters());
-			} else {
-				query = new QueryBase();
-				logger.info("用户{}查询分类信息", uname);
-			}
+			logger.info("用户{}按条件{}查询分类信息", uname, query.getParameters());
 		}
 		categoryService.getCategorys(user, query);
 
@@ -389,12 +387,11 @@ public class CategoryAction extends AbstractAction {
 		User user = AuthUtils.getCurrentUser(request);
 		String uname = user.getName();
 
+		if (query == null) {
+			query = new QueryBase();
+		}
 		if (logger.isInfoEnabled()) {
-			if (query != null) {
-				logger.info("用户{}按条件{}统计分类信息", uname, query.getParameters());
-			} else {
-				logger.info("用户{}统计分类信息", uname);
-			}
+			logger.info("用户{}按条件{}统计分类信息", uname, query.getParameters());
 		}
 		long count = categoryService.countCategorys(user, query);
 

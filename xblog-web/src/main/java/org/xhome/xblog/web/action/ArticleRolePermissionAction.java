@@ -431,14 +431,13 @@ public class ArticleRolePermissionAction extends AbstractAction {
 		User user = AuthUtils.getCurrentUser(request);
 		String uname = user.getName();
 
-		if (logger.isInfoEnabled()) {
-			if (query != null) {
-				logger.info("用户{}按条件{}查询文章角色权限信息", uname, query.getParameters());
-			} else {
-				query = new QueryBase();
-				logger.info("用户{}查询文章角色权限信息", uname);
-			}
+		if (query == null) {
+			query = new QueryBase();
 		}
+		if (logger.isInfoEnabled()) {
+			logger.info("用户{}按条件{}查询文章角色权限信息", uname, query.getParameters());
+		}
+
 		permissionService.getArticleRolePermissions(user, query);
 
 		String msg = "条件查询文章角色权限信息";
@@ -458,12 +457,11 @@ public class ArticleRolePermissionAction extends AbstractAction {
 		User user = AuthUtils.getCurrentUser(request);
 		String uname = user.getName();
 
+		if (query == null) {
+			query = new QueryBase();
+		}
 		if (logger.isInfoEnabled()) {
-			if (query != null) {
-				logger.info("用户{}按条件{}统计文章角色权限信息", uname, query.getParameters());
-			} else {
-				logger.info("用户{}统计文章角色权限信息", uname);
-			}
+			logger.info("用户{}按条件{}统计文章角色权限信息", uname, query.getParameters());
 		}
 		long count = permissionService.countArticleRolePermissions(user, query);
 

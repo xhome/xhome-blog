@@ -341,13 +341,11 @@ public class TagAction extends AbstractAction {
 		User user = AuthUtils.getCurrentUser(request);
 		String uname = user.getName();
 
+		if (query == null) {
+			query = new QueryBase();
+		}
 		if (logger.isInfoEnabled()) {
-			if (query != null) {
-				logger.info("用户{}按条件{}查询标签信息", uname, query.getParameters());
-			} else {
-				query = new QueryBase();
-				logger.info("用户{}查询标签信息", uname);
-			}
+			logger.info("用户{}按条件{}查询标签信息", uname, query.getParameters());
 		}
 		tagService.getTags(user, query);
 
@@ -355,7 +353,6 @@ public class TagAction extends AbstractAction {
 		short status = Status.SUCCESS;
 
 		if (logger.isInfoEnabled()) {
-
 			logger.info("[{}] {} {}", status, uname, msg);
 		}
 
@@ -367,12 +364,11 @@ public class TagAction extends AbstractAction {
 		User user = AuthUtils.getCurrentUser(request);
 		String uname = user.getName();
 
+		if (query == null) {
+			query = new QueryBase();
+		}
 		if (logger.isInfoEnabled()) {
-			if (query != null) {
-				logger.info("用户{}按条件{}统计标签信息", uname, query.getParameters());
-			} else {
-				logger.info("用户{}统计标签信息", uname);
-			}
+			logger.info("用户{}按条件{}统计标签信息", uname, query.getParameters());
 		}
 		long count = tagService.countTags(user, query);
 

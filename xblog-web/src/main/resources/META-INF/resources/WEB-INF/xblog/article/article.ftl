@@ -20,6 +20,9 @@
         </div>
     <div class="panel-body">
         ${article_detail}
+        <#if is_article_list??>
+            <a href="${xblog.article_read_url}?id=${article.id}">阅读全文...</a>
+        </#if>
     </div>
     <div class="panel-footer">
         <span class="glyphicon glyphicon-folder-open"></span>
