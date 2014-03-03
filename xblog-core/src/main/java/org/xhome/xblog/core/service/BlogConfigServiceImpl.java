@@ -2,6 +2,7 @@ package org.xhome.xblog.core.service;
 
 import org.xhome.xauth.Config;
 import org.xhome.xauth.core.service.ConfigServiceImpl;
+import org.xhome.xblog.Article;
 
 /**
  * @project xblog-core
@@ -31,6 +32,52 @@ public class BlogConfigServiceImpl extends ConfigServiceImpl implements
 		Config config = configDAO
 				.queryConfigByItem(ITEM_ARTICLE_CONTENT_LENGTH);
 		return Long.parseLong(config.getValue());
+	}
+
+	/**
+	 * @see org.xhome.xblog.core.service.BlogConfigService#getTitleOfIndex()
+	 */
+	@Override
+	public String getTitleOfIndex() {
+		Config config = configDAO.queryConfigByItem(ITEM_TITLE_INDEX);
+		return config.getValue();
+	}
+
+	/**
+	 * @see org.xhome.xblog.core.service.BlogConfigService#getTitleOfRead(org.xhome.xblog.Article)
+	 */
+	@Override
+	public String getTitleOfRead(Article article) {
+		Config config = configDAO.queryConfigByItem(ITEM_TITLE_READ);
+		String value = config.getValue();
+		String title = value.replaceAll("${article.title}", article.getTitle());
+		return title;
+	}
+
+	/**
+	 * @see org.xhome.xblog.core.service.BlogConfigService#getTitleOfEdit(org.xhome.xblog.Article)
+	 */
+	@Override
+	public String getTitleOfEdit(Article article) {
+		if (article == null) {
+			Config config = configDAO.queryConfigByItem(ITEM_TITLE_NEW);
+			return config.getValue();
+		} else {
+			Config config = configDAO.queryConfigByItem(ITEM_TITLE_EDIT);
+			String value = config.getValue();
+			String title = value.replaceAll("${article.title}",
+					article.getTitle());
+			return title;
+		}
+
+	}
+
+	/**
+	 * @see org.xhome.xblog.core.service.BlogConfigService#getTitleOfEdit()
+	 */
+	@Override
+	public String getTitleOfEdit() {
+		return getTitleOfEdit(null);
 	}
 
 }

@@ -1,7 +1,13 @@
 <!DOCTYPE html>
 <#import "/xblog/xblog.ftl" as xblog />
 <html lang="zh_CN">
-<@xblog.head title="写文章" description="XBlog" keywords="XHome, XBlog, 博客">
+<#if commonResult?? && commonResult.status?? && commonResult.status == 0>
+    <#assign article = commonResult.data />
+    <#assign page_title = xconfig('xblog_title_edit')?replace('$' + '{article.title}', article.title) />
+<#else>
+    <#assign page_title = xconfig('xblog_title_new') />
+</#if>
+<@xblog.head title="${page_title}" description="XBlog" keywords="XHome, XBlog, 博客">
 <link href="${xblog.base_url}/xlibs/ext/resources/css/ext-all.css" rel="stylesheet" type="text/css"/>
 </@xblog.head>
 <body>
@@ -167,32 +173,32 @@ Ext.onReady(function() {
         }],
     });
 
-    <#if commonResult?? && commonResult.status?? && commonResult.status == 0>
+    <#if article??>
         form.add({
             xtype: 'hidden',
             name: 'article.id',
             itemId: 'article.id',
-            value: ${commonResult.data.id},
+            value: ${article.id},
         }); 
         form.add({
             xtype: 'hidden',
             name: 'article.status',
             itemId: 'article.status',
-            value: ${commonResult.data.status},
+            value: ${article.status},
         }); 
         form.add({
             xtype: 'hidden',
             name: 'article.version',
             itemId: 'article.version',
-            value: ${commonResult.data.version},
+            value: ${article.version},
         }); 
-        form.getComponent('article.title').setValue('${commonResult.data.title}'); 
-        form.getComponent('article.detail').setValue('${commonResult.data.detail?replace('\'', '"')}');
+        form.getComponent('article.title').setValue('${article.title}'); 
+        form.getComponent('article.detail').setValue('${article.detail?replace('\'', '"')}');
         var container = form.getComponent('container');
-        container.getComponent('article.category.id').select(${commonResult.data.category.id}); 
-        form.getComponent('article.category.name').setValue('${commonResult.data.category.name}'); 
+        container.getComponent('article.category.id').select(${article.category.id}); 
+        form.getComponent('article.category.name').setValue('${article.category.name}'); 
         var tags = []; 
-        <#list commonResult.data.tags as tag>
+        <#list article.tags as tag>
             tags.push(${tag.id});
             form.add({
                 xtype: 'hidden',

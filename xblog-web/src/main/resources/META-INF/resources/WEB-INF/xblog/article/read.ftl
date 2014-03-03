@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <#import "../xblog.ftl" as xblog />
 <html lang="zh_CN">
-<@xblog.head title="博客" description="XBlog" keywords="XHome, XBlog, 博客">
-<link href="${xblog.base_url}/xlibs/ext/resources/css/ext-all.css" rel="stylesheet" type="text/css"/>
+<#if commonResult?? && commonResult.status?? && commonResult.status == 0 && commonResult.data?? && commonResult.data.article??>
+    <#assign article = commonResult.data.article /> 
+</#if>
+<@xblog.head title="${xconfig('xblog_title_read')?replace('$' + '{article.title}', article.title)}" description="XBlog" keywords="XHome, XBlog, 博客">
 </@xblog.head>
 <body>
 <#-- 导航菜单 开始 -->
@@ -17,9 +19,8 @@
 
     <#-- 页面主内容 开始 -->
     <div class="col-lg-10">
-        <#if commonResult?? && commonResult.status?? && commonResult.status == 0 && commonResult.data?? && commonResult.data.article??>
+        <#if article??>
             <#-- 文章内容 开始 -->
-            <#assign article = commonResult.data.article /> 
             <@include file = "article.ftl" /> 
             <#-- 文章内容 结束 -->
             

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<#import "xauth/xauth.ftl" as xauth />
+<#import "/xauth/xauth.ftl" as xauth />
 <html lang="zh_CN">
-<@xauth.head title="后台管理" description="XAuth" keywords="XHome, XAuth, 后台管理">
+<@xauth.head title="后台管理 | ${xconfig('xblog_title_index')}" description="XAuth" keywords="XHome, XAuth, 后台管理">
 <link href="xlibs/ext/resources/css/ext-all.css" rel="stylesheet" type="text/css"/>
 <link href="xlibs/css/dashboard.css" rel="stylesheet" type="text/css"/>
 </@xauth.head>

@@ -4,7 +4,6 @@
         <div class="col-lg-2">
             <a class="navbar-brand" href="${xblog.article_index_url}">XHome XBlog</a>
         </div>
-
         <div class="col-lg-7">
         <ul class="nav navbar-nav navbar-left">
             <li <#if nav_active == 'index'>class="active"</#if>><a href="${xblog.article_index_url}">博客</a></li>
