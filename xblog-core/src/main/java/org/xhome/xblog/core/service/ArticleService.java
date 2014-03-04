@@ -63,9 +63,13 @@ public interface ArticleService {
 
 	public int unlockArticleTag(User oper, Article article, List<Tag> tags);
 
+	public int removeArticleTag(User oper, Article article);
+
 	public int removeArticleTag(User oper, Article article, Tag tag);
 
 	public int removeArticleTag(User oper, Article article, List<Tag> tags);
+
+	public int deleteArticleTag(User oper, Article article);
 
 	public int deleteArticleTag(User oper, Article article, Tag tag);
 

@@ -127,7 +127,7 @@
 		<trim prefix="WHERE" prefixOverrides="AND">
 			<if test="parameters.search_word != null and parameters.search_word != ''">
 				AND (a.title LIKE CONCAT('%',#{parameters.search_word},'%')
-					OR fn_xhome_xblog_strip_html_tags(a.detail) LIKE CONCAT('%',#{parameters.search_word},'%'))
+					OR fxblog_strip_html_tags(a.detail) LIKE CONCAT('%',#{parameters.search_word},'%'))
 			</if>
 			<if test="parameters.title != null and parameters.title != ''">
 				AND a.title LIKE CONCAT('%',#{parameters.title},'%')
@@ -147,7 +147,7 @@
 			</if>
 			)
 			<if test="parameters.detail != null and parameters.detail != ''">
-				AND fn_xhome_xblog_strip_html_tags(a.detail) LIKE CONCAT('%',#{parameters.detail},'%')
+				AND fxblog_strip_html_tags(a.detail) LIKE CONCAT('%',#{parameters.detail},'%')
 			</if>
 			<if test="parameters.status != null and parameters.status != ''">
 				AND a.status = #{parameters.status}
@@ -277,11 +277,17 @@
 	<update id="removeArticleTag" parameterType="Map">
 		UPDATE xhome_xblog_article_tag
 		SET modifier = #{modifier}, modified = NOW(), version = version + 1, status = 0
-		WHERE status != 0 AND article = #{article.id} AND tag = #{tag.id}
+		WHERE status != 0 AND article = #{article.id}
+		<if test="tag != null">
+			AND tag = #{tag.id}
+		</if>
 	</update>
 	
 	<delete id="deleteArticleTag" parameterType="Map">
-		DELETE FROM xhome_xblog_article_tag WHERE article = #{article.id} AND tag = #{tag.id}
+		DELETE FROM xhome_xblog_article_tag WHERE article = #{article.id}
+		<if test="tag != null">
+			AND tag = #{tag.id}
+		</if>
 	</delete>
 	
 	<select id="hasArticleTag" resultType="boolean" parameterType="Map">

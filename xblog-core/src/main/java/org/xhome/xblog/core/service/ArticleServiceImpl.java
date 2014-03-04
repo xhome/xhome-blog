@@ -333,7 +333,7 @@ public class ArticleServiceImpl implements ArticleService {
 			categoryDAO.decreaseArticle(article);
 
 			// 移除文章后更新标签文章总数
-			tagDAO.decreaseArticle(article);
+			this.removeArticleTag(oper, article);
 		} else {
 			if (logger.isDebugEnabled()) {
 				logger.debug("article {}[{}] isn't removeable", title, id);
@@ -390,7 +390,7 @@ public class ArticleServiceImpl implements ArticleService {
 			categoryDAO.decreaseArticle(article);
 
 			// 删除文章后更新标签文章总数
-			tagDAO.decreaseArticle(article);
+			this.deleteArticleTag(oper, article);
 		} else {
 			if (logger.isDebugEnabled()) {
 				logger.debug("article {}[{}] isn't deleteable", title, id);
@@ -884,6 +884,45 @@ public class ArticleServiceImpl implements ArticleService {
 
 	@Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Throwable.class)
 	@Override
+	public int removeArticleTag(User oper, Article article) {
+		Long articleId = article.getId();
+		String title = article.getTitle();
+		String mstr = title + "#tags";
+
+		if (!this.beforeArticleTagManage(oper, Action.REMOVE, article, null)) {
+			if (logger.isDebugEnabled()) {
+				logger.debug(
+						"try to remove tags for article {}[{}], but it's blocked",
+						title, articleId);
+			}
+
+			this.logManageArticleTag(mstr, Action.REMOVE, articleId,
+					Status.BLOCKED, oper);
+			this.afterArticleTagManage(oper, Action.REMOVE, Status.BLOCKED,
+					article, null);
+			return Status.BLOCKED;
+		}
+
+		Map<String, Object> articleTag = new HashMap<String, Object>();
+		articleTag.put("article", article);
+		articleTag.put("modifier",
+				oper != null ? oper.getId() : article.getModifier());
+
+		// 更新对应标签文章总数
+		tagDAO.decreaseArticle(article);
+		short r = articleDAO.removeArticleTag(articleTag) == 1 ? Status.SUCCESS
+				: Status.ERROR;
+		if (logger.isDebugEnabled()) {
+			logger.debug("remove tags from article {}[{}]", title, articleId);
+		}
+
+		this.logManageArticleTag(mstr, Action.REMOVE, articleId, r, oper);
+		this.afterArticleTagManage(oper, Action.REMOVE, r, article, null);
+		return r;
+	}
+
+	@Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Throwable.class)
+	@Override
 	public int removeArticleTag(User oper, Article article, Tag tag) {
 		Long articleId = article.getId(), tagId = tag.getId();
 		String title = article.getTitle(), tagName = tag.getName();
@@ -896,8 +935,8 @@ public class ArticleServiceImpl implements ArticleService {
 						tagName, tagId, title, articleId);
 			}
 
-			this.logManageArticleTag(mstr, Action.REMOVE, null, Status.BLOCKED,
-					oper);
+			this.logManageArticleTag(mstr, Action.REMOVE, articleId,
+					Status.BLOCKED, oper);
 			this.afterArticleTagManage(oper, Action.REMOVE, Status.BLOCKED,
 					article, tag);
 			return Status.BLOCKED;
@@ -926,7 +965,7 @@ public class ArticleServiceImpl implements ArticleService {
 			r = Status.NO_REMOVE;
 		}
 
-		this.logManageArticleTag(mstr, Action.REMOVE, null, r, oper);
+		this.logManageArticleTag(mstr, Action.REMOVE, articleId, r, oper);
 		this.afterArticleTagManage(oper, Action.REMOVE, r, article, tag);
 		return r;
 	}
@@ -953,6 +992,43 @@ public class ArticleServiceImpl implements ArticleService {
 
 	@Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Throwable.class)
 	@Override
+	public int deleteArticleTag(User oper, Article article) {
+		Long articleId = article.getId();
+		String title = article.getTitle();
+		String mstr = title + "#tags";
+
+		if (!this.beforeArticleTagManage(oper, Action.DELETE, article, null)) {
+			if (logger.isDebugEnabled()) {
+				logger.debug(
+						"try to delete tags for article {}[{}], but it's blocked",
+						title, articleId);
+			}
+
+			this.logManageArticleTag(mstr, Action.DELETE, articleId,
+					Status.BLOCKED, oper);
+			this.afterArticleTagManage(oper, Action.DELETE, Status.BLOCKED,
+					article, null);
+			return Status.BLOCKED;
+		}
+
+		Map<String, Object> articleTag = new HashMap<String, Object>();
+		articleTag.put("article", article);
+
+		// 更新对应标签文章总数
+		tagDAO.decreaseArticle(article);
+		short r = articleDAO.deleteArticleTag(articleTag) == 1 ? Status.SUCCESS
+				: Status.ERROR;
+		if (logger.isDebugEnabled()) {
+			logger.debug("delete tags from article {}[{}]", title, articleId);
+		}
+
+		this.logManageArticleTag(mstr, Action.DELETE, articleId, r, oper);
+		this.afterArticleTagManage(oper, Action.DELETE, r, article, null);
+		return Status.SUCCESS;
+	}
+
+	@Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Throwable.class)
+	@Override
 	public int deleteArticleTag(User oper, Article article, Tag tag) {
 		Long articleId = article.getId(), tagId = tag.getId();
 		String title = article.getTitle(), tagName = tag.getName();
@@ -965,8 +1041,8 @@ public class ArticleServiceImpl implements ArticleService {
 						tagName, tagId, title, articleId);
 			}
 
-			this.logManageArticleTag(mstr, Action.DELETE, null, Status.BLOCKED,
-					oper);
+			this.logManageArticleTag(mstr, Action.DELETE, articleId,
+					Status.BLOCKED, oper);
 			this.afterArticleTagManage(oper, Action.DELETE, Status.BLOCKED,
 					article, tag);
 			return Status.BLOCKED;
@@ -993,7 +1069,7 @@ public class ArticleServiceImpl implements ArticleService {
 			r = Status.NO_DELETE;
 		}
 
-		this.logManageArticleTag(mstr, Action.DELETE, null, r, oper);
+		this.logManageArticleTag(mstr, Action.DELETE, articleId, r, oper);
 		this.afterArticleTagManage(oper, Action.DELETE, r, article, tag);
 		return Status.SUCCESS;
 	}

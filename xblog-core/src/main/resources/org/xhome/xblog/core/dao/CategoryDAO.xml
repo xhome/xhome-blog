@@ -147,14 +147,14 @@
 		UPDATE xhome_xblog_category AS c
 		JOIN xhome_xblog_article AS a ON a.id = #{id} AND a.category = c.id
 		SET c.articleCount = c.articleCount + 1
-		WHERE c.status != 0 AND a.status != 0
+		WHERE c.status != 0
 	</update>
 	
 	<update id="decreaseArticle" parameterType="org.xhome.xblog.Article">
 		UPDATE xhome_xblog_category AS c
 		JOIN xhome_xblog_article AS a ON a.id = #{id} AND a.category = c.id
 		SET c.articleCount = c.articleCount - 1
-		WHERE c.status != 0 AND a.status != 0
+		WHERE c.status != 0
 	</update>
 	
 </mapper>

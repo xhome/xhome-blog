@@ -78,10 +78,10 @@ public class BlogValidatorConfig implements Config {
 		configs.put(TAG_NAME_SIZE_MAX, "30");
 		configs.put(TAG_NAME_SIZE_MESSAGE, "标签名不能超过30个字符");
 
-		configs.put(CATEGORY_NAME_EMPTY_MESSAGE, "栏目名不能为空");
+		configs.put(CATEGORY_NAME_EMPTY_MESSAGE, "分类名不能为空");
 		configs.put(CATEGORY_NAME_SIZE_MIN, "0");
 		configs.put(CATEGORY_NAME_SIZE_MAX, "30");
-		configs.put(CATEGORY_NAME_SIZE_MESSAGE, "栏目名不能超过30个字符");
+		configs.put(CATEGORY_NAME_SIZE_MESSAGE, "分类名不能超过30个字符");
 
 		configs.put(ARTICLE_TITLE_EMPTY_MESSAGE, "文章标题不能为空");
 		configs.put(ARTICLE_TITLE_SIZE_MIN, "0");

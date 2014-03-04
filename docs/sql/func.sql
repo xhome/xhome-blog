@@ -1,9 +1,9 @@
 USE xblog;
 
 /* 去除HTML标签 */
-DROP FUNCTION IF EXISTS fn_xhome_xblog_strip_html_tags;
+DROP FUNCTION IF EXISTS fxblog_strip_html_tags;
 DELIMITER |
-CREATE FUNCTION fn_xhome_xblog_strip_html_tags( Dirty TEXT )
+CREATE FUNCTION fxblog_strip_html_tags( Dirty TEXT )
 RETURNS TEXT
 DETERMINISTIC 
 BEGIN

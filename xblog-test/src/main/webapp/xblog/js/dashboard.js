@@ -21,6 +21,13 @@ Ext.onReady(function() {
                     text: '博客管理',
                     iconCls: 'icon-nav-manage',
                     children: [{
+                        id: 'xblog_manage-article',
+                        text: '文章管理',
+                        leaf: true,
+                        iconCls: 'icon-nav-manage-article',
+                        showScript: 'xblog/js/manage/article.js',
+                        showClass: 'XHome.XBlog.Manage.Article',
+                    },{
                         id: 'xblog_manage-category',
                         text: '分类管理',
                         leaf: true,
