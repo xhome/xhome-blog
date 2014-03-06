@@ -14,7 +14,7 @@ public class Category extends Base {
 	private static final long serialVersionUID = -5455284914202137553L;
 
 	private String name; // 分类名称
-	private Long articleCount; // 分类文章总数
+	private long articleCount; // 分类文章总数
 	private Category parent; // NULL表示顶级分类
 
 	public Category() {
@@ -40,7 +40,7 @@ public class Category extends Base {
 	/**
 	 * @return the articleCount
 	 */
-	public Long getArticleCount() {
+	public long getArticleCount() {
 		return articleCount;
 	}
 
@@ -48,7 +48,7 @@ public class Category extends Base {
 	 * @param articleCount
 	 *            the articleCount to set
 	 */
-	public void setArticleCount(Long articleCount) {
+	public void setArticleCount(long articleCount) {
 		this.articleCount = articleCount;
 	}
 

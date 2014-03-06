@@ -22,8 +22,8 @@ public class Article extends Base {
 	private Category category; // 所属分类
 	private List<Tag> tags; // 文章标签
 	private List<Comment> comments; // 文章评论
-	private Long readCount; // 文章阅读总数
-	private Long commentCount; // 文章评论总数
+	private long readCount; // 文章阅读总数
+	private long commentCount; // 文章评论总数
 
 	/* 文章权限属性 */
 	public final static int PERMISSION_OPEN = 1 << 0; // 完全公开权限
@@ -108,7 +108,7 @@ public class Article extends Base {
 	/**
 	 * @return the readCount
 	 */
-	public Long getReadCount() {
+	public long getReadCount() {
 		return readCount;
 	}
 
@@ -116,14 +116,14 @@ public class Article extends Base {
 	 * @param readCount
 	 *            the readCount to set
 	 */
-	public void setReadCount(Long readCount) {
+	public void setReadCount(long readCount) {
 		this.readCount = readCount;
 	}
 
 	/**
 	 * @return the commentCount
 	 */
-	public Long getCommentCount() {
+	public long getCommentCount() {
 		return commentCount;
 	}
 
@@ -131,7 +131,7 @@ public class Article extends Base {
 	 * @param commentCount
 	 *            the commentCount to set
 	 */
-	public void setCommentCount(Long commentCount) {
+	public void setCommentCount(long commentCount) {
 		this.commentCount = commentCount;
 	}
 

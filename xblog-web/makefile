@@ -1,6 +1,6 @@
 install:package
 	mvn install -Dmaven.test.skip=true
-package:
+package:clean
 	mvn package -Dmaven.test.skip=true
 clean:
 	mvn clean

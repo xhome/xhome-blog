@@ -124,6 +124,8 @@ public class CategoryServiceImpl implements CategoryService {
 					category);
 			return Status.NOT_EXISTS;
 		}
+		category.setOwner(old.getOwner());
+		category.setCreated(old.getCreated());
 
 		String oldName = old.getName();
 
@@ -166,8 +168,6 @@ public class CategoryServiceImpl implements CategoryService {
 			return Status.EXISTS;
 		}
 
-		category.setOwner(old.getOwner());
-		category.setCreated(old.getCreated());
 		Timestamp t = new Timestamp(System.currentTimeMillis());
 		category.setModified(t);
 

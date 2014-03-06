@@ -7,6 +7,7 @@
 <#assign article_base_url = xblog_base_url + "/article" />
 <#assign article_index_url = article_base_url + "/index.htm" />
 <#assign article_read_url = article_base_url + "/read.htm" />
+<#assign article_edit_url = article_base_url + "/edit.htm" />
 <#assign article_search_url = article_base_url + "/search.htm" />
 
 <#assign comment_base_url = xblog_base_url + "/comment" />

@@ -163,6 +163,8 @@ public class ArticleRolePermissionServiceImpl implements
 					Status.NOT_EXISTS, articleRolePermission);
 			return Status.NOT_EXISTS;
 		}
+		articleRolePermission.setOwner(old.getOwner());
+		articleRolePermission.setCreated(old.getCreated());
 
 		if (!old.getVersion().equals(articleRolePermission.getVersion())) {
 			if (logger.isDebugEnabled()) {
@@ -192,8 +194,6 @@ public class ArticleRolePermissionServiceImpl implements
 			return status;
 		}
 
-		articleRolePermission.setOwner(old.getOwner());
-		articleRolePermission.setCreated(old.getCreated());
 		Timestamp t = new Timestamp(System.currentTimeMillis());
 		articleRolePermission.setModified(t);
 

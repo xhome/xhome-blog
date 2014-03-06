@@ -159,6 +159,8 @@ public class TagRolePermissionServiceImpl implements TagRolePermissionService {
 					Status.NOT_EXISTS, tagRolePermission);
 			return Status.NOT_EXISTS;
 		}
+		tagRolePermission.setOwner(old.getOwner());
+		tagRolePermission.setCreated(old.getCreated());
 
 		if (!old.getVersion().equals(tagRolePermission.getVersion())) {
 			if (logger.isDebugEnabled()) {
@@ -188,8 +190,6 @@ public class TagRolePermissionServiceImpl implements TagRolePermissionService {
 			return status;
 		}
 
-		tagRolePermission.setOwner(old.getOwner());
-		tagRolePermission.setCreated(old.getCreated());
 		Timestamp t = new Timestamp(System.currentTimeMillis());
 		tagRolePermission.setModified(t);
 

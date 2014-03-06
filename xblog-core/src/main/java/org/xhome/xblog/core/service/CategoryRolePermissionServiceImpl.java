@@ -164,6 +164,8 @@ public class CategoryRolePermissionServiceImpl implements
 					Status.NOT_EXISTS, categoryRolePermission);
 			return Status.NOT_EXISTS;
 		}
+		categoryRolePermission.setOwner(old.getOwner());
+		categoryRolePermission.setCreated(old.getCreated());
 
 		if (!old.getVersion().equals(categoryRolePermission.getVersion())) {
 			if (logger.isDebugEnabled()) {
@@ -193,8 +195,6 @@ public class CategoryRolePermissionServiceImpl implements
 			return status;
 		}
 
-		categoryRolePermission.setOwner(old.getOwner());
-		categoryRolePermission.setCreated(old.getCreated());
 		Timestamp t = new Timestamp(System.currentTimeMillis());
 		categoryRolePermission.setModified(t);
 

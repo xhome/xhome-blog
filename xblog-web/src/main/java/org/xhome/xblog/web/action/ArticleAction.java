@@ -116,10 +116,12 @@ public class ArticleAction extends AbstractAction {
 		Map<String, Object> data = new HashMap<String, Object>();
 
 		QueryBase categories = new QueryBase();
+		categories.setLimit(Long.MAX_VALUE);
 		categoryService.getCategorys(user, categories);
 		data.put("categories", categories);
 
 		QueryBase tags = new QueryBase();
+		tags.setLimit(Long.MAX_VALUE);
 		tagService.getTags(user, tags);
 		data.put("tags", tags);
 
@@ -147,7 +149,14 @@ public class ArticleAction extends AbstractAction {
 		articleService.getArticles(user, articles);
 		data.put("articles", articles);
 
-		return new CommonResult(Status.SUCCESS, "", data);
+		short status = Status.SUCCESS;
+		String uname = user.getName();
+		String msg = "博客首页请求成功";
+		if (logger.isInfoEnabled()) {
+			logger.info("[{}] {} {}", status, uname, msg);
+		}
+
+		return new CommonResult(status, msg, data);
 	}
 
 	/**
@@ -165,17 +174,22 @@ public class ArticleAction extends AbstractAction {
 		Map<String, Object> data = new HashMap<String, Object>();
 
 		QueryBase categories = new QueryBase();
+		categories.setLimit(Long.MAX_VALUE);
 		categoryService.getCategorys(user, categories);
 		data.put("categories", categories);
 
 		QueryBase tags = new QueryBase();
+		tags.setLimit(Long.MAX_VALUE);
 		tagService.getTags(user, tags);
 		data.put("tags", tags);
 
 		Article article = articleService.getArticle(user, id);
-		data.put("article", article);
 
+		String uname = user.getName();
+		String msg = null;
+		short status = Status.SUCCESS;
 		if (article != null) {
+			data.put("article", article);
 			articleService.increaseRead(user, article);
 
 			Record record = new Record(article, user,
@@ -183,9 +197,16 @@ public class ArticleAction extends AbstractAction {
 					RequestUtils.getRequestAgent(request),
 					request.getHeader("User-Agent"));
 			recordService.logRecord(record);
+			msg = "文章[" + id + "]" + article.getTitle() + "查询成功";
+		} else {
+			msg = "文章阅读页请求成功";
 		}
 
-		return new CommonResult(Status.SUCCESS, "", data);
+		if (logger.isInfoEnabled()) {
+			logger.info("[{}] {} {}", status, uname, msg);
+		}
+
+		return new CommonResult(status, msg, data);
 	}
 
 	/**
@@ -200,28 +221,39 @@ public class ArticleAction extends AbstractAction {
 	public Object editArticle(
 			@RequestParam(value = "id", required = false) Long id,
 			HttpServletRequest request) {
-		if (id == null) {
-			return RM_ARTICLE_EDIT;
-		}
 		User user = AuthUtils.getCurrentUser(request);
-		String uname = user.getName();
-		Article article = articleService.getArticle(user, id);
+		Map<String, Object> data = new HashMap<String, Object>();
 
+		QueryBase categories = new QueryBase();
+		categories.setLimit(Long.MAX_VALUE);
+		categoryService.getCategorys(user, categories);
+		data.put("categories", categories);
+
+		QueryBase tags = new QueryBase();
+		tags.setLimit(Long.MAX_VALUE);
+		tagService.getTags(user, tags);
+		data.put("tags", tags);
+
+		Article article = null;
+		if (id != null) {
+			article = articleService.getArticle(user, id);
+		}
+
+		String uname = user.getName();
 		String msg = null;
 		short status = Status.SUCCESS;
-
 		if (article != null) {
+			data.put("article", article);
 			msg = "文章[" + id + "]" + article.getTitle() + "查询成功";
 		} else {
-			status = Status.ERROR;
-			msg = "文章查询失败";
+			msg = "文章编辑页请求成功";
 		}
 
 		if (logger.isInfoEnabled()) {
 			logger.info("[{}] {} {}", status, uname, msg);
 		}
 
-		return new CommonResult(status, msg, article);
+		return new CommonResult(status, msg, data);
 	}
 
 	/**
@@ -231,24 +263,34 @@ public class ArticleAction extends AbstractAction {
 	 */
 	private void extractArticleContent(Article article) {
 		Document doc = Jsoup.parse(article.getDetail());
-		Element body = doc.body();
+		Element element = doc.body(), tmp;
 
 		long maxLen = blogConfigService.getArticleContentLength();
-		long textLen = 0;
+		long textLen = 0, tmpLen = 0;
 		StringBuffer content = new StringBuffer();
 
-		Iterator<Element> elements = body.children().iterator();
-		while (elements.hasNext()) {
-			Element element = elements.next();
-			textLen += element.text().length();
+		while (element != null) {
+			Iterator<Element> elements = element.children().iterator();
+			while (elements.hasNext()) {
+				tmp = elements.next();
+				tmpLen += tmp.text().length();
 
-			if (textLen < maxLen) {
-				content.append(element.outerHtml());
+				if (tmpLen < maxLen) {
+					content.append(tmp.outerHtml());
+					textLen = tmpLen;
+				} else {
+					break;
+				}
+
+			}
+			if (textLen == 0) {
+				element = element.child(0);
+				tmpLen = 0;
 			} else {
 				break;
 			}
-
 		}
+
 		article.setContent(content.toString());
 	}
 

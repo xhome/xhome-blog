@@ -156,6 +156,8 @@ public class TagUserPermissionServiceImpl implements TagUserPermissionService {
 					Status.NOT_EXISTS, tagUserPermission);
 			return Status.NOT_EXISTS;
 		}
+		tagUserPermission.setOwner(old.getOwner());
+		tagUserPermission.setCreated(old.getCreated());
 
 		if (!old.getVersion().equals(tagUserPermission.getVersion())) {
 			if (logger.isDebugEnabled()) {
@@ -185,8 +187,6 @@ public class TagUserPermissionServiceImpl implements TagUserPermissionService {
 			return status;
 		}
 
-		tagUserPermission.setOwner(old.getOwner());
-		tagUserPermission.setCreated(old.getCreated());
 		Timestamp t = new Timestamp(System.currentTimeMillis());
 		tagUserPermission.setModified(t);
 

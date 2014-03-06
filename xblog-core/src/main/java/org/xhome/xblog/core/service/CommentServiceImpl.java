@@ -137,6 +137,8 @@ public class CommentServiceImpl implements CommentService {
 					comment);
 			return Status.NOT_EXISTS;
 		}
+		comment.setOwner(old.getOwner());
+		comment.setCreated(old.getCreated());
 
 		String oldContent = old.getContent();
 
@@ -166,8 +168,6 @@ public class CommentServiceImpl implements CommentService {
 			return status;
 		}
 
-		comment.setOwner(old.getOwner());
-		comment.setCreated(old.getCreated());
 		Timestamp t = new Timestamp(System.currentTimeMillis());
 		comment.setModified(t);
 

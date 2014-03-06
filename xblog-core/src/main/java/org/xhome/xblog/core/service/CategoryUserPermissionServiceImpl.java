@@ -161,6 +161,8 @@ public class CategoryUserPermissionServiceImpl implements
 					Status.NOT_EXISTS, categoryUserPermission);
 			return Status.NOT_EXISTS;
 		}
+		categoryUserPermission.setOwner(old.getOwner());
+		categoryUserPermission.setCreated(old.getCreated());
 
 		if (!old.getVersion().equals(categoryUserPermission.getVersion())) {
 			if (logger.isDebugEnabled()) {
@@ -190,8 +192,6 @@ public class CategoryUserPermissionServiceImpl implements
 			return status;
 		}
 
-		categoryUserPermission.setOwner(old.getOwner());
-		categoryUserPermission.setCreated(old.getCreated());
 		Timestamp t = new Timestamp(System.currentTimeMillis());
 		categoryUserPermission.setModified(t);
 

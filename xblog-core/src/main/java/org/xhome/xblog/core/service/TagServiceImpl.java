@@ -119,6 +119,8 @@ public class TagServiceImpl implements TagService {
 			this.afterTagManage(oper, Action.UPDATE, Status.NOT_EXISTS, tag);
 			return Status.NOT_EXISTS;
 		}
+		tag.setOwner(old.getOwner());
+		tag.setCreated(old.getCreated());
 
 		String oldName = old.getName();
 
@@ -157,8 +159,6 @@ public class TagServiceImpl implements TagService {
 			return Status.EXISTS;
 		}
 
-		tag.setOwner(old.getOwner());
-		tag.setCreated(old.getCreated());
 		Timestamp t = new Timestamp(System.currentTimeMillis());
 		tag.setModified(t);
 

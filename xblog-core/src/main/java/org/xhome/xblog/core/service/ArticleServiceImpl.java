@@ -142,6 +142,9 @@ public class ArticleServiceImpl implements ArticleService {
 			return Status.NOT_EXISTS;
 		}
 
+		article.setOwner(old.getOwner());
+		article.setCreated(old.getCreated());
+
 		String oldTitle = old.getTitle();
 
 		if (!old.getVersion().equals(article.getVersion())) {
@@ -170,8 +173,6 @@ public class ArticleServiceImpl implements ArticleService {
 			return status;
 		}
 
-		article.setOwner(old.getOwner());
-		article.setCreated(old.getCreated());
 		Timestamp t = new Timestamp(System.currentTimeMillis());
 		article.setModified(t);
 

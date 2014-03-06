@@ -7,7 +7,12 @@
         <#else>
             <#assign article_title = article.title />
         </#if>
-        <h1 class="panel-title"><a href="${xblog.article_read_url}?id=${article.id}">${article_title}</a></h1> 
+        <h1 class="panel-title">
+            <a href="${xblog.article_read_url}?id=${article.id}">${article_title}</a>
+            <#if xblog.xauth.user?? && article.owner ?? && (xblog.xauth.user.id == article.owner)>
+                <a href="${xblog.article_edit_url}?id=${article.id}" style="float:right;">编辑</a> 
+            </#if>
+        </h1> 
     </div>
         <div class="well" style="padding: 2px; margin: 0px; border-radius: 0px;">
             <span class="glyphicon glyphicon-calendar"></span> ${article.modifiedStr}

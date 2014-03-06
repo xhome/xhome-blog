@@ -6,7 +6,6 @@
  * Describe: 文件相关表单校验
  */
 
-
 /**
  * 评论表单校验
  *
@@ -87,7 +86,82 @@ var validateCommentForm = function(submitHandler, showErrors, form) {
             },
             'comment.content': {
                 required: "评论内容不能为空",
-                maxlength: "评论内容不能超过1000个字符",
+                maxlength: "评论内容不能超过{0}个字符",
+            },
+        },
+        showErrors: showErrors,
+        submitHandler: submitHandler,
+    });
+};
+
+/**
+ * 文章编辑表单校验
+ *
+ * @param submitHandler 表单提交处理函数
+ * @param showErrors 校验错误提示处理函数
+ * @param form 评论表单ID
+ */
+var validateArticleForm = function(submitHandler, showErrors, form) {
+    if (!form) {
+        form = '#article_edit_form'; 
+    }
+    
+    if (!showErrors) {
+        showErrors = function(map, list) {
+            if (list.length > 0) {
+                alert(list[0].message); 
+            }
+        };
+    }
+    
+    if (!submitHandler) {
+        submitHandler = function(form) {
+            var params = $('#article_params'),
+                categoryId = $('#article_category').val(),
+                categoryName = $('#article_category>option:selected').text(),
+                tags = $('#article_tags input:checked'),
+                tag, tagId, tagName, i, tlen = 'article_tags'.length + 1;
+
+            if (tags.length == 0) {
+                alert('请选择文章标签');
+                return false;
+            }
+           
+            params.html('<input type="hidden" id="article.category.id" name="article.category.id" value="' + categoryId + '" />'
+                + '<input type="hidden" id="article.category.name" name="article.category.name" value="' + categoryName + '" />'); 
+            
+            for (i = 0; i < tags.length; i++) {
+                tag = tags[i];
+                tagId = tag.id.substr(tlen);
+                tagName = tag.value;
+                params.append('<input type="hidden" id="article.tags[' + i + '].id" name="article.tags[' + i + '].id" value="' + tagId + '" />'
+                    + '<input type="hidden" id="article.tags[' + i + '].name" name="article.tags[' + i + '].name" value="' + tagName + '" />'
+                ); 
+            } 
+            form.submit();
+            return true; 
+        };
+    } 
+    
+    return $(form).validate({
+        rules: {
+            'article.title': {
+                required: true,
+                maxlength: 50,
+            },
+            'article.detail': {
+                required: true,
+                maxlength: 60000,
+            },
+        },
+        messages: {
+            'article.title': {
+                required: "请输入文章标题",
+                maxlength: "文章标题不能超过{0}个字符",
+            }, 
+            'article.detail': {
+                required: "文章内容不能为空",
+                maxlength: "文章内容不能超过{0}个字符",
             },
         },
         showErrors: showErrors,

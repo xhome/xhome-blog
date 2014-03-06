@@ -5,6 +5,7 @@
     <#assign article = commonResult.data.article /> 
 </#if>
 <@xblog.head title="${xconfig('xblog_title_read')?replace('$' + '{article.title}', article.title)}" description="XBlog" keywords="XHome, XBlog, 博客">
+    <link href="${xblog.xblog_base_url}/css/article/article.css" rel="stylesheet" media="screen" />
 </@xblog.head>
 <body>
 <#-- 导航菜单 开始 -->
