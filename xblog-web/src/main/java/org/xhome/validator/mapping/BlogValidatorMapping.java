@@ -62,12 +62,10 @@ public class BlogValidatorMapping implements Mapping {
 				+ tagNameValidator);
 		mappings.put(TagAction.RM_TAG_LOCK, tagVersionValidator);
 		mappings.put(TagAction.RM_TAG_UNLOCK, tagVersionValidator);
-		mappings.put(TagAction.RM_TAG_REMOVE, tagVersionValidator);
 		mappings.put(TagAction.RM_TAG_DELETE, tagVersionValidator);
 		mappings.put(TagAction.RM_TAG_EXISTS, tagNameValidator);
 		mappings.put(TagAction.RM_TAG_UPDATEABLE, tagIdNameValidator);
 		mappings.put(TagAction.RM_TAG_LOCKED, tagIdNameValidator);
-		mappings.put(TagAction.RM_TAG_REMOVEABLE, tagIdNameValidator);
 		mappings.put(TagAction.RM_TAG_DELETEABLE, tagIdNameValidator);
 
 		String categoryNameValidator = CategoryNameValidator.class.getName(), categoryIdNameValidator = idValidator
@@ -79,16 +77,12 @@ public class BlogValidatorMapping implements Mapping {
 		mappings.put(CategoryAction.RM_CATEGORY_LOCK, categoryVersionValidator);
 		mappings.put(CategoryAction.RM_CATEGORY_UNLOCK,
 				categoryVersionValidator);
-		mappings.put(CategoryAction.RM_CATEGORY_REMOVE,
-				categoryVersionValidator);
 		mappings.put(CategoryAction.RM_CATEGORY_DELETE,
 				categoryVersionValidator);
 		mappings.put(CategoryAction.RM_CATEGORY_EXISTS, categoryNameValidator);
 		mappings.put(CategoryAction.RM_CATEGORY_UPDATEABLE,
 				categoryIdNameValidator);
 		mappings.put(CategoryAction.RM_CATEGORY_LOCKED, categoryIdNameValidator);
-		mappings.put(CategoryAction.RM_CATEGORY_REMOVEABLE,
-				categoryIdNameValidator);
 		mappings.put(CategoryAction.RM_CATEGORY_DELETEABLE,
 				categoryIdNameValidator);
 
@@ -107,28 +101,22 @@ public class BlogValidatorMapping implements Mapping {
 				+ articleAUValidator);
 		mappings.put(ArticleAction.RM_ARTICLE_LOCK, articleVersionValidator);
 		mappings.put(ArticleAction.RM_ARTICLE_UNLOCK, articleVersionValidator);
-		mappings.put(ArticleAction.RM_ARTICLE_REMOVE, articleVersionValidator);
 		mappings.put(ArticleAction.RM_ARTICLE_DELETE, articleVersionValidator);
 		mappings.put(ArticleAction.RM_ARTICLE_EXISTS, articleTitleValidator);
 		mappings.put(ArticleAction.RM_ARTICLE_UPDATEABLE,
 				articleIdTitleValidator);
 		mappings.put(ArticleAction.RM_ARTICLE_LOCKED, articleIdTitleValidator);
-		mappings.put(ArticleAction.RM_ARTICLE_REMOVEABLE,
-				articleIdTitleValidator);
 		mappings.put(ArticleAction.RM_ARTICLE_DELETEABLE,
 				articleIdTitleValidator);
 
 		mappings.put(ArticleAction.RM_ARTICLE_TAG_ADD, articleTagValidator);
 		mappings.put(ArticleAction.RM_ARTICLE_TAG_LOCK, articleTagValidator);
 		mappings.put(ArticleAction.RM_ARTICLE_TAG_UNLOCK, articleTagValidator);
-		mappings.put(ArticleAction.RM_ARTICLE_TAG_REMOVE, articleTagValidator);
 		mappings.put(ArticleAction.RM_ARTICLE_TAG_DELETE, articleTagValidator);
 		mappings.put(ArticleAction.RM_ARTICLE_TAG_EXISTS, articleTagValidator);
 		mappings.put(ArticleAction.RM_ARTICLE_TAG_UPDATEABLE,
 				articleTagValidator);
 		mappings.put(ArticleAction.RM_ARTICLE_TAG_LOCKED, articleTagValidator);
-		mappings.put(ArticleAction.RM_ARTICLE_TAG_REMOVEABLE,
-				articleTagValidator);
 		mappings.put(ArticleAction.RM_ARTICLE_TAG_DELETEABLE,
 				articleTagValidator);
 
@@ -146,13 +134,10 @@ public class BlogValidatorMapping implements Mapping {
 				+ commentACTValidator);
 		mappings.put(CommentAction.RM_COMMENT_LOCK, commentAVersionValidator);
 		mappings.put(CommentAction.RM_COMMENT_UNLOCK, commentAVersionValidator);
-		mappings.put(CommentAction.RM_COMMENT_REMOVE, commentAVersionValidator);
 		mappings.put(CommentAction.RM_COMMENT_DELETE, commentAVersionValidator);
 		mappings.put(CommentAction.RM_COMMENT_UPDATEABLE,
 				commentAVersionValidator);
 		mappings.put(CommentAction.RM_COMMENT_LOCKED, commentAVersionValidator);
-		mappings.put(CommentAction.RM_COMMENT_REMOVEABLE,
-				commentAVersionValidator);
 		mappings.put(CommentAction.RM_COMMENT_DELETEABLE,
 				commentAVersionValidator);
 
@@ -168,8 +153,6 @@ public class BlogValidatorMapping implements Mapping {
 				tagPTRVersionValidator);
 		mappings.put(TagRolePermissionAction.RM_TAG_ROLE_PERMISSION_UNLOCK,
 				tagPTRVersionValidator);
-		mappings.put(TagRolePermissionAction.RM_TAG_ROLE_PERMISSION_REMOVE,
-				tagPTRVersionValidator);
 		mappings.put(TagRolePermissionAction.RM_TAG_ROLE_PERMISSION_DELETE,
 				tagPTRVersionValidator);
 		mappings.put(TagRolePermissionAction.RM_TAG_ROLE_PERMISSION_EXISTS,
@@ -177,8 +160,6 @@ public class BlogValidatorMapping implements Mapping {
 		mappings.put(TagRolePermissionAction.RM_TAG_ROLE_PERMISSION_UPDATEABLE,
 				tagPTRValidator);
 		mappings.put(TagRolePermissionAction.RM_TAG_ROLE_PERMISSION_LOCKED,
-				tagPTRValidator);
-		mappings.put(TagRolePermissionAction.RM_TAG_ROLE_PERMISSION_REMOVEABLE,
 				tagPTRValidator);
 		mappings.put(TagRolePermissionAction.RM_TAG_ROLE_PERMISSION_DELETEABLE,
 				tagPTRValidator);
@@ -194,8 +175,6 @@ public class BlogValidatorMapping implements Mapping {
 				tagPTUVersionValidator);
 		mappings.put(TagUserPermissionAction.RM_TAG_USER_PERMISSION_UNLOCK,
 				tagPTUVersionValidator);
-		mappings.put(TagUserPermissionAction.RM_TAG_USER_PERMISSION_REMOVE,
-				tagPTUVersionValidator);
 		mappings.put(TagUserPermissionAction.RM_TAG_USER_PERMISSION_DELETE,
 				tagPTUVersionValidator);
 		mappings.put(TagUserPermissionAction.RM_TAG_USER_PERMISSION_EXISTS,
@@ -203,8 +182,6 @@ public class BlogValidatorMapping implements Mapping {
 		mappings.put(TagUserPermissionAction.RM_TAG_USER_PERMISSION_UPDATEABLE,
 				tagPTUValidator);
 		mappings.put(TagUserPermissionAction.RM_TAG_USER_PERMISSION_LOCKED,
-				tagPTUValidator);
-		mappings.put(TagUserPermissionAction.RM_TAG_USER_PERMISSION_REMOVEABLE,
 				tagPTUValidator);
 		mappings.put(TagUserPermissionAction.RM_TAG_USER_PERMISSION_DELETEABLE,
 				tagPTUValidator);
@@ -228,9 +205,6 @@ public class BlogValidatorMapping implements Mapping {
 				CategoryRolePermissionAction.RM_CATEGORY_ROLE_PERMISSION_UNLOCK,
 				categoryPCRVersionValidator);
 		mappings.put(
-				CategoryRolePermissionAction.RM_CATEGORY_ROLE_PERMISSION_REMOVE,
-				categoryPCRVersionValidator);
-		mappings.put(
 				CategoryRolePermissionAction.RM_CATEGORY_ROLE_PERMISSION_DELETE,
 				categoryPCRVersionValidator);
 		mappings.put(
@@ -241,9 +215,6 @@ public class BlogValidatorMapping implements Mapping {
 				categoryPCRValidator);
 		mappings.put(
 				CategoryRolePermissionAction.RM_CATEGORY_ROLE_PERMISSION_LOCKED,
-				categoryPCRValidator);
-		mappings.put(
-				CategoryRolePermissionAction.RM_CATEGORY_ROLE_PERMISSION_REMOVEABLE,
 				categoryPCRValidator);
 		mappings.put(
 				CategoryRolePermissionAction.RM_CATEGORY_ROLE_PERMISSION_DELETEABLE,
@@ -266,9 +237,6 @@ public class BlogValidatorMapping implements Mapping {
 				CategoryUserPermissionAction.RM_CATEGORY_USER_PERMISSION_UNLOCK,
 				categoryPCUVersionValidator);
 		mappings.put(
-				CategoryUserPermissionAction.RM_CATEGORY_USER_PERMISSION_REMOVE,
-				categoryPCUVersionValidator);
-		mappings.put(
 				CategoryUserPermissionAction.RM_CATEGORY_USER_PERMISSION_DELETE,
 				categoryPCUVersionValidator);
 		mappings.put(
@@ -279,9 +247,6 @@ public class BlogValidatorMapping implements Mapping {
 				categoryPCUValidator);
 		mappings.put(
 				CategoryUserPermissionAction.RM_CATEGORY_USER_PERMISSION_LOCKED,
-				categoryPCUValidator);
-		mappings.put(
-				CategoryUserPermissionAction.RM_CATEGORY_USER_PERMISSION_REMOVEABLE,
 				categoryPCUValidator);
 		mappings.put(
 				CategoryUserPermissionAction.RM_CATEGORY_USER_PERMISSION_DELETEABLE,
@@ -306,9 +271,6 @@ public class BlogValidatorMapping implements Mapping {
 				ArticleRolePermissionAction.RM_ARTICLE_ROLE_PERMISSION_UNLOCK,
 				articlePARVersionValidator);
 		mappings.put(
-				ArticleRolePermissionAction.RM_ARTICLE_ROLE_PERMISSION_REMOVE,
-				articlePARVersionValidator);
-		mappings.put(
 				ArticleRolePermissionAction.RM_ARTICLE_ROLE_PERMISSION_DELETE,
 				articlePARVersionValidator);
 		mappings.put(
@@ -319,9 +281,6 @@ public class BlogValidatorMapping implements Mapping {
 				articlePARValidator);
 		mappings.put(
 				ArticleRolePermissionAction.RM_ARTICLE_ROLE_PERMISSION_LOCKED,
-				articlePARValidator);
-		mappings.put(
-				ArticleRolePermissionAction.RM_ARTICLE_ROLE_PERMISSION_REMOVEABLE,
 				articlePARValidator);
 		mappings.put(
 				ArticleRolePermissionAction.RM_ARTICLE_ROLE_PERMISSION_DELETEABLE,
@@ -344,9 +303,6 @@ public class BlogValidatorMapping implements Mapping {
 				ArticleUserPermissionAction.RM_ARTICLE_USER_PERMISSION_UNLOCK,
 				articlePAUVersionValidator);
 		mappings.put(
-				ArticleUserPermissionAction.RM_ARTICLE_USER_PERMISSION_REMOVE,
-				articlePAUVersionValidator);
-		mappings.put(
 				ArticleUserPermissionAction.RM_ARTICLE_USER_PERMISSION_DELETE,
 				articlePAUVersionValidator);
 		mappings.put(
@@ -357,9 +313,6 @@ public class BlogValidatorMapping implements Mapping {
 				articlePAUValidator);
 		mappings.put(
 				ArticleUserPermissionAction.RM_ARTICLE_USER_PERMISSION_LOCKED,
-				articlePAUValidator);
-		mappings.put(
-				ArticleUserPermissionAction.RM_ARTICLE_USER_PERMISSION_REMOVEABLE,
 				articlePAUValidator);
 		mappings.put(
 				ArticleUserPermissionAction.RM_ARTICLE_USER_PERMISSION_DELETEABLE,

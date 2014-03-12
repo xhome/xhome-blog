@@ -265,62 +265,6 @@ public class CommentServiceImpl implements CommentService {
 
 	@Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Throwable.class)
 	@Override
-	public int removeComment(User oper, Comment comment) {
-		Long id = comment.getId();
-		Article article = comment.getArticle();
-		long aid = article.getId();
-		String content = comment.getContent();
-		String cstr = "Article[" + aid + "], Comment[" + id + "]";
-
-		if (!this.beforeCommentManage(oper, Action.REMOVE, comment)) {
-			if (logger.isDebugEnabled()) {
-				logger.debug("try to remove comment {}[{}], but it's blocked",
-						content, id);
-			}
-
-			this.logManage(cstr, Action.REMOVE, null, Status.BLOCKED, oper);
-			this.afterCommentManage(oper, Action.REMOVE, Status.BLOCKED,
-					comment);
-			return Status.BLOCKED;
-		}
-
-		short r = Status.SUCCESS;
-		if (commentDAO.isCommentRemoveable(comment)) {
-			if (logger.isDebugEnabled()) {
-				logger.debug("remove comment {}[{}]", content, id);
-			}
-			commentDAO.removeComment(comment);
-
-			// 移除文章后减少文章评论数
-			articleDAO.decreaseComment(article);
-		} else {
-			if (logger.isDebugEnabled()) {
-				logger.debug("comment {}[{}] isn't removeable", content, id);
-			}
-			r = Status.NO_REMOVE;
-		}
-
-		this.logManage(cstr, Action.REMOVE, id, r, oper);
-		this.afterCommentManage(oper, Action.REMOVE, r, comment);
-		return r;
-	}
-
-	@Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Throwable.class)
-	@Override
-	public int removeComments(User oper, List<Comment> comments) {
-		int r = Status.SUCCESS;
-		for (Comment comment : comments) {
-			r = this.removeComment(oper, comment);
-			if (r != Status.SUCCESS) {
-				throw new RuntimeException("fail to remove Comment ["
-						+ comment.getId() + "]");
-			}
-		}
-		return r;
-	}
-
-	@Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Throwable.class)
-	@Override
 	public int deleteComment(User oper, Comment comment) {
 		Long id = comment.getId();
 		Article article = comment.getArticle();
@@ -446,44 +390,6 @@ public class CommentServiceImpl implements CommentService {
 
 		this.logManage(cstr, Action.IS_LOCKED, id, Status.SUCCESS, oper);
 		this.afterCommentManage(oper, Action.IS_LOCKED, Status.SUCCESS, comment);
-		return e;
-	}
-
-	@Override
-	public boolean isCommentRemoveable(User oper, Comment comment) {
-		Long id = comment.getId();
-		Article article = comment.getArticle();
-		long aid = article.getId();
-		String content = comment.getContent();
-		String cstr = "Article[" + aid + "], Comment[" + id + "]";
-
-		if (!this.beforeCommentManage(oper, Action.IS_REMOVEABLE, comment)) {
-			if (logger.isDebugEnabled()) {
-				logger.debug(
-						"try to juge removeable of comment {}[{}], but it's blocked",
-						content, id);
-			}
-
-			this.logManage(cstr, Action.IS_REMOVEABLE, null, Status.BLOCKED,
-					oper);
-			this.afterCommentManage(oper, Action.IS_REMOVEABLE, Status.BLOCKED,
-					comment);
-			return false;
-		}
-
-		boolean e = commentDAO.isCommentRemoveable(comment);
-
-		if (logger.isDebugEnabled()) {
-			if (e) {
-				logger.debug("comment {}[{}] is removeable", content, id);
-			} else {
-				logger.debug("comment {}[{}] isn't removeable", content, id);
-			}
-		}
-
-		this.logManage(cstr, Action.IS_REMOVEABLE, id, Status.SUCCESS, oper);
-		this.afterCommentManage(oper, Action.IS_REMOVEABLE, Status.SUCCESS,
-				comment);
 		return e;
 	}
 

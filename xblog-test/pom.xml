@@ -10,7 +10,6 @@
     <properties>
         <xblog-web.version>1.0</xblog-web.version>
         <xhome-libs.version>1.0</xhome-libs.version>
-        <javax.servlet.version>3.1.0</javax.servlet.version>
         <junit.version>4.11</junit.version>
         <jetty.version>9.1.0.RC2</jetty.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -28,13 +27,6 @@
             <groupId>org.xhome</groupId>
             <artifactId>xhome-libs</artifactId>
             <version>${xhome-libs.version}</version>
-        </dependency>
-        
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
-            <version>${javax.servlet.version}</version>
-            <scope>provided</scope>
         </dependency>
         
         <dependency>

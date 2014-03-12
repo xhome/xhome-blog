@@ -39,13 +39,11 @@ public class ArticleUserPermissionAction extends AbstractAction {
 	public final static String RM_ARTICLE_USER_PERMISSION_UPDATE = "xblog/permission/article/user/update";
 	public final static String RM_ARTICLE_USER_PERMISSION_LOCK = "xblog/permission/article/user/lock";
 	public final static String RM_ARTICLE_USER_PERMISSION_UNLOCK = "xblog/permission/article/user/unlock";
-	public final static String RM_ARTICLE_USER_PERMISSION_REMOVE = "xblog/permission/article/user/remove";
 	public final static String RM_ARTICLE_USER_PERMISSION_DELETE = "xblog/permission/article/user/delete";
 
 	public final static String RM_ARTICLE_USER_PERMISSION_EXISTS = "xblog/permission/article/user/exists";
 	public final static String RM_ARTICLE_USER_PERMISSION_UPDATEABLE = "xblog/permission/article/user/updateable";
 	public final static String RM_ARTICLE_USER_PERMISSION_LOCKED = "xblog/permission/article/user/locked";
-	public final static String RM_ARTICLE_USER_PERMISSION_REMOVEABLE = "xblog/permission/article/user/removeable";
 	public final static String RM_ARTICLE_USER_PERMISSION_DELETEABLE = "xblog/permission/article/user/deleteable";
 	public final static String RM_ARTICLE_USER_PERMISSION_GET = "xblog/permission/article/user/get";
 	public final static String RM_ARTICLE_USER_PERMISSION_QUERY = "xblog/permission/article/user/query";
@@ -178,37 +176,6 @@ public class ArticleUserPermissionAction extends AbstractAction {
 		return new CommonResult(status, msg, permission);
 	}
 
-	@RequestMapping(value = RM_ARTICLE_USER_PERMISSION_REMOVE, method = RequestMethod.POST)
-	public Object removeArticleUserPermission(
-			@Validated @RequestAttribute("permissions") List<ArticleUserPermission> permissions,
-			HttpServletRequest request) {
-		short status = 0;
-		String msg = null;
-
-		User user = AuthUtils.getCurrentUser(request);
-		for (ArticleUserPermission permission : permissions) {
-			AuthUtils.setModifier(request, permission);
-		}
-		try {
-			status = (short) permissionService.removeArticleUserPermissions(
-					user, permissions);
-		} catch (RuntimeException e) {
-			status = Status.ERROR;
-		}
-
-		if (status == Status.SUCCESS) {
-			msg = "用户为文章移除用户权限成功";
-		} else {
-			msg = "用户为文章移除用户权限失败";
-		}
-
-		if (logger.isInfoEnabled()) {
-			logger.info("[{}] {} {}", status, user.getName(), msg);
-		}
-
-		return new CommonResult(status, msg, permissions);
-	}
-
 	@RequestMapping(value = RM_ARTICLE_USER_PERMISSION_DELETE, method = RequestMethod.POST)
 	public Object deleteArticleUserPermission(
 			@Validated @RequestAttribute("permissions") List<ArticleUserPermission> permissions,
@@ -330,37 +297,6 @@ public class ArticleUserPermissionAction extends AbstractAction {
 		}
 
 		return new CommonResult(status, msg, locked);
-	}
-
-	@RequestMapping(value = RM_ARTICLE_USER_PERMISSION_REMOVEABLE, method = RequestMethod.GET)
-	public Object isArticleUserPermissionRemoveable(
-			@Validated @RequestAttribute("permission") ArticleUserPermission permission,
-			HttpServletRequest request) {
-		short status = Status.SUCCESS;
-		String msg = null;
-
-		User user = AuthUtils.getCurrentUser(request);
-		boolean removeable = permissionService
-				.isArticleUserPermissionRemoveable(user, permission);
-		Article article = permission.getArticle();
-		User puser = permission.getUser();
-		if (removeable) {
-			msg = "用户查询到文章" + article.getTitle() + "[" + article.getId()
-					+ "]用户" + puser.getName() + "[" + puser.getId() + "]权限"
-					+ permission.getPermission() + "[" + permission.getId()
-					+ "]可以移除";
-		} else {
-			msg = "用户查询到文章" + article.getTitle() + "[" + article.getId()
-					+ "]用户" + puser.getName() + "[" + puser.getId() + "]权限"
-					+ permission.getPermission() + "[" + permission.getId()
-					+ "]不可以移除";
-		}
-
-		if (logger.isInfoEnabled()) {
-			logger.info("[{}] {} {}", status, user.getName(), msg);
-		}
-
-		return new CommonResult(status, msg, removeable);
 	}
 
 	@RequestMapping(value = RM_ARTICLE_USER_PERMISSION_DELETEABLE, method = RequestMethod.GET)

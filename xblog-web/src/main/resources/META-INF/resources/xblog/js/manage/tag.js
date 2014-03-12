@@ -130,7 +130,7 @@ Ext.define('XHome.XBlog.Manage.Tag', {
                 XHome.utils.request({
                     confirmMsg: '确认删除标签: ' + msg + ' ?',
                     progressMsg: '正在删除标签: ' + msg + '......',
-                    url: 'xblog/tag/remove.json',
+                    url: 'xblog/tag/delete.json',
                     params: XHome.utils.formEncode(tags, 'tags'),
                     success: function(result) {
                         store.remove(selections);

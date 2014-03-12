@@ -104,9 +104,8 @@ public class TagServiceTest extends AbstractTest {
 	}
 
 	@Test
-	public void testRemoveTag() {
+	public void testDeleteTag() {
 		Tag tag = tagService.getTag(oper, "TestTag");
-		tagService.removeTag(oper, tag);
 		tagService.deleteTag(oper, tag);
 	}
 

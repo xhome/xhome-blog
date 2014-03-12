@@ -54,7 +54,7 @@ public abstract class AbstractTest {
 			return;
 		}
 		logger.debug("Id:" + tag.getId() + "\tName:" + tag.getName()
-				+ "\tArticleTotal:" + tag.getArticleTotal() + "\tStatus:"
+				+ "\tArticleTotal:" + tag.getArticleCount() + "\tStatus:"
 				+ tag.getStatus());
 	}
 
@@ -71,14 +71,14 @@ public abstract class AbstractTest {
 			return;
 		}
 		logger.debug("Id:" + category.getId() + "\tName:" + category.getName()
-				+ "\tArticleTotal:" + category.getArticleTotal() + "\tStatus:"
+				+ "\tArticleTotal:" + category.getArticleCount() + "\tStatus:"
 				+ category.getStatus());
 
 		Category parent = category.getParent();
 		if (parent != null) {
 			logger.debug("\tParent:\tId:" + category.getId() + "\tName:"
 					+ category.getName() + "\tArticleTotal:"
-					+ category.getArticleTotal() + "\tStatus:"
+					+ category.getArticleCount() + "\tStatus:"
 					+ category.getStatus());
 		}
 	}

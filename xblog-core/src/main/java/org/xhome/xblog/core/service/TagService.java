@@ -25,10 +25,6 @@ public interface TagService {
 
 	public int unlockTag(User oper, Tag tag);
 
-	public int removeTag(User oper, Tag tag);
-
-	public int removeTags(User oper, List<Tag> tags);
-
 	public int deleteTag(User oper, Tag tag);
 
 	public int deleteTags(User oper, List<Tag> tags);
@@ -38,8 +34,6 @@ public interface TagService {
 	public boolean isTagUpdateable(User oper, Tag tag);
 
 	public boolean isTagLocked(User oper, Tag tag);
-
-	public boolean isTagRemoveable(User oper, Tag tag);
 
 	public boolean isTagDeleteable(User oper, Tag tag);
 

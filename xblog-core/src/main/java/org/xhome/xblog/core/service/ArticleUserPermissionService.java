@@ -29,12 +29,6 @@ public interface ArticleUserPermissionService {
 	public int unlockArticleUserPermission(User oper,
 			ArticleUserPermission articleUserPermission);
 
-	public int removeArticleUserPermission(User oper,
-			ArticleUserPermission articleUserPermission);
-
-	public int removeArticleUserPermissions(User oper,
-			List<ArticleUserPermission> articleUserPermissions);
-
 	public int deleteArticleUserPermission(User oper,
 			ArticleUserPermission articleUserPermission);
 
@@ -48,9 +42,6 @@ public interface ArticleUserPermissionService {
 			ArticleUserPermission articleUserPermission);
 
 	public boolean isArticleUserPermissionLocked(User oper,
-			ArticleUserPermission articleUserPermission);
-
-	public boolean isArticleUserPermissionRemoveable(User oper,
 			ArticleUserPermission articleUserPermission);
 
 	public boolean isArticleUserPermissionDeleteable(User oper,

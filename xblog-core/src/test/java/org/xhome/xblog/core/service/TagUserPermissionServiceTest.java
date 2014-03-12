@@ -129,11 +129,9 @@ public class TagUserPermissionServiceTest extends AbstractTest {
 	}
 
 	@Test
-	public void testRemoveTagUserPermission() {
+	public void testDeleteTagUserPermission() {
 		TagUserPermission tagUserPermission = tagUserPermissionService
 				.getTagUserPermission(oper, id);
-		tagUserPermissionService.removeTagUserPermission(oper,
-				tagUserPermission);
 		tagUserPermissionService.deleteTagUserPermission(oper,
 				tagUserPermission);
 	}

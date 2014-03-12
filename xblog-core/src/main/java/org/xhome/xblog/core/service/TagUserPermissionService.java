@@ -29,12 +29,6 @@ public interface TagUserPermissionService {
 	public int unlockTagUserPermission(User oper,
 			TagUserPermission tagUserPermission);
 
-	public int removeTagUserPermission(User oper,
-			TagUserPermission tagUserPermission);
-
-	public int removeTagUserPermissions(User oper,
-			List<TagUserPermission> tagUserPermissions);
-
 	public int deleteTagUserPermission(User oper,
 			TagUserPermission tagUserPermission);
 
@@ -48,9 +42,6 @@ public interface TagUserPermissionService {
 			TagUserPermission tagUserPermission);
 
 	public boolean isTagUserPermissionLocked(User oper,
-			TagUserPermission tagUserPermission);
-
-	public boolean isTagUserPermissionRemoveable(User oper,
 			TagUserPermission tagUserPermission);
 
 	public boolean isTagUserPermissionDeleteable(User oper,

@@ -86,12 +86,6 @@
 		WHERE id = #{id}
 	</update>
 	
-	<update id="removeArticleRolePermission" parameterType="org.xhome.xblog.ArticleRolePermission">
-		UPDATE xhome_xblog_article_role_permission
-		SET modifier = #{modifier}, modified = NOW(), version = version + 1, status = 0
-		WHERE id = #{id}
-	</update>
-	
 	<delete id="deleteArticleRolePermission" parameterType="org.xhome.xblog.ArticleRolePermission">
 		DELETE FROM xhome_xblog_article_role_permission WHERE id = #{id}
 	</delete>
@@ -111,31 +105,26 @@
 			<if test="role == null">
 				AND role IS NULL
 			</if>
-			AND status != 0
 		</trim>
 	</select>
 	
 	<select id="isArticleRolePermissionUpdateable" resultType="boolean" parameterType="org.xhome.xblog.ArticleRolePermission">
-		SELECT COUNT(*) FROM xhome_xblog_article_role_permission WHERE id = #{id} AND status != 0 AND status != 4
+		SELECT COUNT(*) FROM xhome_xblog_article_role_permission WHERE id = #{id} AND status != 10
 	</select>
 	
 	<select id="isArticleRolePermissionLocked" resultType="boolean" parameterType="org.xhome.xblog.ArticleRolePermission">
-		SELECT COUNT(*) FROM xhome_xblog_article_role_permission WHERE id = #{id} AND status != 0 AND status = 5
-	</select>
-	
-	<select id="isArticleRolePermissionRemoveable" resultType="boolean" parameterType="org.xhome.xblog.ArticleRolePermission">
-		SELECT COUNT(*) FROM xhome_xblog_article_role_permission WHERE id = #{id} AND status != 2 AND status != 4
+		SELECT COUNT(*) FROM xhome_xblog_article_role_permission WHERE id = #{id} AND status = 5
 	</select>
 	
 	<select id="isArticleRolePermissionDeleteable" resultType="boolean" parameterType="org.xhome.xblog.ArticleRolePermission">
-		SELECT COUNT(*) FROM xhome_xblog_article_role_permission WHERE id = #{id} AND status != 3 AND status != 4
+		SELECT COUNT(*) FROM xhome_xblog_article_role_permission WHERE id = #{id} AND status != 10 AND status != 15
 	</select>
 	
 	<sql id="select_permission">
 		SELECT p.*, t.id AS article_id, t.title AS article_title, u.id AS role_id, u.name AS role_name
 		FROM xhome_xblog_article_role_permission AS p
-		LEFT JOIN xhome_xblog_article AS t ON p.article = t.id AND t.status != 0
-		LEFT JOIN xhome_xauth_role AS u ON p.role = u.id AND u.status != 0
+		LEFT JOIN xhome_xblog_article AS t ON p.article = t.id
+		LEFT JOIN xhome_xauth_role AS u ON p.role = u.id
 	</sql>
 	
 	<select id="queryArticleRolePermission" resultMap="articleRolePermissionResultMap" parameterType="long">
@@ -201,9 +190,6 @@
 			</if>
 			<if test="parameters.id_ge != null and parameters.id_ge != ''">
 				AND p.id &gt;= #{parameters.id_ge}
-			</if>
-			<if test="parameters.status == null or parameters.status == ''">
-				AND p.status != 0
 			</if>
 		</trim>
 	</sql>

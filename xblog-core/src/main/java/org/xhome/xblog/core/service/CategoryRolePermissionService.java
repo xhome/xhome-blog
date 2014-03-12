@@ -29,12 +29,6 @@ public interface CategoryRolePermissionService {
 	public int unlockCategoryRolePermission(User oper,
 			CategoryRolePermission categoryRolePermission);
 
-	public int removeCategoryRolePermission(User oper,
-			CategoryRolePermission categoryRolePermission);
-
-	public int removeCategoryRolePermissions(User oper,
-			List<CategoryRolePermission> categoryRolePermissions);
-
 	public int deleteCategoryRolePermission(User oper,
 			CategoryRolePermission categoryRolePermission);
 
@@ -48,9 +42,6 @@ public interface CategoryRolePermissionService {
 			CategoryRolePermission categoryRolePermission);
 
 	public boolean isCategoryRolePermissionLocked(User oper,
-			CategoryRolePermission categoryRolePermission);
-
-	public boolean isCategoryRolePermissionRemoveable(User oper,
 			CategoryRolePermission categoryRolePermission);
 
 	public boolean isCategoryRolePermissionDeleteable(User oper,

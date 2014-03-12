@@ -328,77 +328,6 @@ public class ArticleRolePermissionServiceImpl implements
 
 	@Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Throwable.class)
 	@Override
-	public int removeArticleRolePermission(User oper,
-			ArticleRolePermission articleRolePermission) {
-		long id = articleRolePermission.getId();
-		Article article = articleRolePermission.getArticle();
-		Role role = articleRolePermission.getRole();
-		Long articleId = article != null ? article.getId() : null, roleId = role != null ? role
-				.getId() : null;
-		String articleTitle = article != null ? article.getTitle() : "", roleName = role != null ? role
-				.getName() : null;
-		;
-		int permission = articleRolePermission.getPermission();
-		String mstr = articleTitle + "(" + articleId + ")" + ", " + roleName
-				+ "(" + roleId + ")";
-
-		if (!this.beforeArticleRolePermissionManage(oper, Action.REMOVE,
-				articleRolePermission)) {
-			if (logger.isDebugEnabled()) {
-				logger.debug(
-						"try to remove article {}[{}] permission {} for role {}[{}], but it's blocked",
-						articleTitle, articleId, permission, roleName, roleId);
-			}
-
-			this.logManage(mstr, Action.REMOVE, null, Status.BLOCKED, oper);
-			this.afterArticleRolePermissionManage(oper, Action.REMOVE,
-					Status.BLOCKED, articleRolePermission);
-			return Status.BLOCKED;
-		}
-
-		short r = Status.SUCCESS;
-		if (articleRolePermissionDAO
-				.isArticleRolePermissionRemoveable(articleRolePermission)) {
-			if (logger.isDebugEnabled()) {
-				logger.debug(
-						"remove article {}[{}] permission {} for role {}[{}]",
-						articleTitle, articleId, permission, roleName, roleId);
-			}
-			articleRolePermissionDAO
-					.removeArticleRolePermission(articleRolePermission);
-		} else {
-			if (logger.isDebugEnabled()) {
-				logger.debug(
-						"article {}[{}] permission {} for role {}[{}] isn't removeable",
-						articleTitle, articleId, permission, roleName, roleId);
-			}
-			r = Status.NO_REMOVE;
-		}
-
-		this.logManage(mstr, Action.REMOVE, id, r, oper);
-		this.afterArticleRolePermissionManage(oper, Action.REMOVE, r,
-				articleRolePermission);
-		return r;
-	}
-
-	@Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Throwable.class)
-	@Override
-	public int removeArticleRolePermissions(User oper,
-			List<ArticleRolePermission> articleRolePermissions) {
-		int r = Status.SUCCESS;
-		for (ArticleRolePermission articleRolePermission : articleRolePermissions) {
-			r = this.removeArticleRolePermission(oper, articleRolePermission);
-			if (r != Status.SUCCESS) {
-				throw new RuntimeException(
-						"fail to remove ArticleRolePermission ["
-								+ articleRolePermission.getId() + "]");
-			}
-		}
-		return r;
-	}
-
-	@Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Throwable.class)
-	@Override
 	public int deleteArticleRolePermission(User oper,
 			ArticleRolePermission articleRolePermission) {
 		long id = articleRolePermission.getId();
@@ -615,57 +544,6 @@ public class ArticleRolePermissionServiceImpl implements
 
 		this.logManage(mstr, Action.IS_LOCKED, id, Status.SUCCESS, oper);
 		this.afterArticleRolePermissionManage(oper, Action.IS_LOCKED,
-				Status.SUCCESS, articleRolePermission);
-		return e;
-	}
-
-	@Override
-	public boolean isArticleRolePermissionRemoveable(User oper,
-			ArticleRolePermission articleRolePermission) {
-		long id = articleRolePermission.getId();
-		Article article = articleRolePermission.getArticle();
-		Role role = articleRolePermission.getRole();
-		Long articleId = article != null ? article.getId() : null, roleId = role != null ? role
-				.getId() : null;
-		String articleTitle = article != null ? article.getTitle() : "", roleName = role != null ? role
-				.getName() : null;
-		;
-		int permission = articleRolePermission.getPermission();
-		String mstr = articleTitle + "(" + articleId + ")" + ", " + roleName
-				+ "(" + roleId + ")";
-
-		if (!this.beforeArticleRolePermissionManage(oper, Action.IS_REMOVEABLE,
-				articleRolePermission)) {
-			if (logger.isDebugEnabled()) {
-				logger.debug(
-						"try to juge removeable of article {}[{}] permission {} for role {}[{}], but it's blocked",
-						articleTitle, articleId, permission, roleName, roleId);
-			}
-
-			this.logManage(mstr, Action.IS_REMOVEABLE, null, Status.BLOCKED,
-					oper);
-			this.afterArticleRolePermissionManage(oper, Action.IS_REMOVEABLE,
-					Status.BLOCKED, articleRolePermission);
-			return false;
-		}
-
-		boolean e = articleRolePermissionDAO
-				.isArticleRolePermissionRemoveable(articleRolePermission);
-
-		if (logger.isDebugEnabled()) {
-			if (e) {
-				logger.debug(
-						"article {}[{}] permission {} for role {}[{}] is removeable",
-						articleTitle, articleId, permission, roleName, roleId);
-			} else {
-				logger.debug(
-						"article {}[{}] permission {} for role {}[{}] isn't removeable",
-						articleTitle, articleId, permission, roleName, roleId);
-			}
-		}
-
-		this.logManage(mstr, Action.IS_REMOVEABLE, id, Status.SUCCESS, oper);
-		this.afterArticleRolePermissionManage(oper, Action.IS_REMOVEABLE,
 				Status.SUCCESS, articleRolePermission);
 		return e;
 	}

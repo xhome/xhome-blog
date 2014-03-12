@@ -115,9 +115,8 @@ public class ArticleServiceTest extends AbstractTest {
 	}
 
 	@Test
-	public void testRemoveArticle() {
+	public void testDeleteArticle() {
 		Article article = articleService.getArticle(oper, id);
-		articleService.removeArticle(oper, article);
 		articleService.deleteArticle(oper, article);
 	}
 
@@ -173,11 +172,10 @@ public class ArticleServiceTest extends AbstractTest {
 	}
 
 	@Test
-	public void testRemoveArticleTag() {
+	public void testDeleteArticleTag() {
 		Article article = articleService.getArticle(oper, id);
 		Tag tag = tagService.getTag(oper, "TestTag");
-		logger.debug("{}", articleService.removeArticleTag(oper, article, tag));
-		// articleService.deleteArticleTag(oper, article, tag);
+		articleService.deleteArticleTag(oper, article, tag);
 	}
 
 }

@@ -29,12 +29,6 @@
 		WHERE id = #{id}
 	</update>
 	
-	<update id="removeTag" parameterType="org.xhome.xblog.Tag">
-		UPDATE xhome_xblog_tag
-		SET modifier = #{modifier}, modified = NOW(), version = version + 1, status = 0
-		WHERE id = #{id}
-	</update>
-	
 	<delete id="deleteTag" parameterType="org.xhome.xblog.Tag">
 		DELETE FROM xhome_xblog_tag WHERE id = #{id}
 	</delete>
@@ -44,19 +38,15 @@
 	</select>
 	
 	<select id="isTagUpdateable" resultType="boolean" parameterType="org.xhome.xblog.Tag">
-		SELECT COUNT(*) FROM xhome_xblog_tag WHERE id = #{id} AND status != 0 AND status != 4
+		SELECT COUNT(*) FROM xhome_xblog_tag WHERE id = #{id} AND status != 10
 	</select>
 	
 	<select id="isTagLocked" resultType="boolean" parameterType="org.xhome.xblog.Tag">
-		SELECT COUNT(*) FROM xhome_xblog_tag WHERE id = #{id} AND status != 0 AND status = 5
-	</select>
-	
-	<select id="isTagRemoveable" resultType="boolean" parameterType="org.xhome.xblog.Tag">
-		SELECT COUNT(*) FROM xhome_xblog_tag WHERE id = #{id} AND status != 2 AND status != 4
+		SELECT COUNT(*) FROM xhome_xblog_tag WHERE id = #{id} AND status = 5
 	</select>
 	
 	<select id="isTagDeleteable" resultType="boolean" parameterType="org.xhome.xblog.Tag">
-		SELECT COUNT(*) FROM xhome_xblog_tag WHERE id = #{id} AND status != 3 AND status != 4
+		SELECT COUNT(*) FROM xhome_xblog_tag WHERE id = #{id} AND status != 10 AND status != 15
 	</select>
 	
 	<select id="queryTagById" resultType="org.xhome.xblog.Tag" parameterType="long">
@@ -64,7 +54,7 @@
 	</select>
 	
 	<select id="queryTagByName" resultType="org.xhome.xblog.Tag" parameterType="String">
-		SELECT * FROM xhome_xblog_tag WHERE name = #{name} AND status != 0 LIMIT 1
+		SELECT * FROM xhome_xblog_tag WHERE name = #{name} LIMIT 1
 	</select>
 	
 	<sql id="restriction_tags">
@@ -111,9 +101,6 @@
 			<if test="parameters.id_ge != null and parameters.id_ge != ''">
 				AND id &gt;= #{parameters.id_ge}
 			</if>
-			<if test="parameters.status == null or parameters.status == ''">
-				AND status != 0
-			</if>
 		</trim>
 	</sql>
 	
@@ -141,14 +128,12 @@
 		UPDATE xhome_xblog_tag AS t
 		JOIN xhome_xblog_article_tag AS at ON at.article = #{id} AND at.tag = t.id
 		SET t.articleCount = t.articleCount + 1
-		WHERE t.status != 0 AND at.status != 0
 	</update>
 	
 	<update id="decreaseArticle" parameterType="org.xhome.xblog.Article">
 		UPDATE xhome_xblog_tag AS t
 		JOIN xhome_xblog_article_tag AS at ON at.article = #{id} AND at.tag = t.id
 		SET t.articleCount = t.articleCount - 1
-		WHERE t.status != 0 AND at.status != 0
 	</update>
 	
 </mapper>

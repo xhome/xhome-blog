@@ -260,56 +260,6 @@ public class CategoryServiceImpl implements CategoryService {
 
 	@Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Throwable.class)
 	@Override
-	public int removeCategory(User oper, Category category) {
-		String name = category.getName();
-		Long id = category.getId();
-
-		if (!this.beforeCategoryManage(oper, Action.REMOVE, category)) {
-			if (logger.isDebugEnabled()) {
-				logger.debug("try to remove category {}[{}], but it's blocked",
-						name, id);
-			}
-
-			this.logManage(name, Action.REMOVE, null, Status.BLOCKED, oper);
-			this.afterCategoryManage(oper, Action.REMOVE, Status.BLOCKED,
-					category);
-			return Status.BLOCKED;
-		}
-
-		short r = Status.SUCCESS;
-		if (categoryDAO.isCategoryRemoveable(category)) {
-			if (logger.isDebugEnabled()) {
-				logger.debug("remove category {}[{}]", name, id);
-			}
-			categoryDAO.removeCategory(category);
-		} else {
-			if (logger.isDebugEnabled()) {
-				logger.debug("category {}[{}] isn't removeable", name, id);
-			}
-			r = Status.NO_REMOVE;
-		}
-
-		this.logManage(name, Action.REMOVE, id, r, oper);
-		this.afterCategoryManage(oper, Action.REMOVE, r, category);
-		return r;
-	}
-
-	@Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Throwable.class)
-	@Override
-	public int removeCategories(User oper, List<Category> categories) {
-		int r = Status.SUCCESS;
-		for (Category category : categories) {
-			r = this.removeCategory(oper, category);
-			if (r != Status.SUCCESS) {
-				throw new RuntimeException("fail to remove Category ["
-						+ category.getId() + "]");
-			}
-		}
-		return r;
-	}
-
-	@Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Throwable.class)
-	@Override
 	public int deleteCategory(User oper, Category category) {
 		String name = category.getName();
 		Long id = category.getId();
@@ -457,41 +407,6 @@ public class CategoryServiceImpl implements CategoryService {
 
 		this.logManage(name, Action.IS_LOCKED, id, Status.SUCCESS, oper);
 		this.afterCategoryManage(oper, Action.IS_LOCKED, Status.SUCCESS,
-				category);
-		return e;
-	}
-
-	@Override
-	public boolean isCategoryRemoveable(User oper, Category category) {
-		String name = category.getName();
-		Long id = category.getId();
-
-		if (!this.beforeCategoryManage(oper, Action.IS_REMOVEABLE, category)) {
-			if (logger.isDebugEnabled()) {
-				logger.debug(
-						"try to juge removeable of category {}[{}], but it's blocked",
-						name, id);
-			}
-
-			this.logManage(name, Action.IS_REMOVEABLE, null, Status.BLOCKED,
-					oper);
-			this.afterCategoryManage(oper, Action.IS_REMOVEABLE,
-					Status.BLOCKED, category);
-			return false;
-		}
-
-		boolean e = categoryDAO.isCategoryRemoveable(category);
-
-		if (logger.isDebugEnabled()) {
-			if (e) {
-				logger.debug("category {}[{}] is removeable", name, id);
-			} else {
-				logger.debug("category {}[{}] isn't removeable", name, id);
-			}
-		}
-
-		this.logManage(name, Action.IS_REMOVEABLE, id, Status.SUCCESS, oper);
-		this.afterCategoryManage(oper, Action.IS_REMOVEABLE, Status.SUCCESS,
 				category);
 		return e;
 	}

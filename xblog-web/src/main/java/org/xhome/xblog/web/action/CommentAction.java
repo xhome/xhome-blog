@@ -38,12 +38,10 @@ public class CommentAction extends AbstractAction {
 	public final static String RM_COMMENT_UPDATE = "xblog/comment/update";
 	public final static String RM_COMMENT_LOCK = "xblog/comment/lock";
 	public final static String RM_COMMENT_UNLOCK = "xblog/comment/unlock";
-	public final static String RM_COMMENT_REMOVE = "xblog/comment/remove";
 	public final static String RM_COMMENT_DELETE = "xblog/comment/delete";
 
 	public final static String RM_COMMENT_UPDATEABLE = "xblog/comment/updateable";
 	public final static String RM_COMMENT_LOCKED = "xblog/comment/locked";
-	public final static String RM_COMMENT_REMOVEABLE = "xblog/comment/removeable";
 	public final static String RM_COMMENT_DELETEABLE = "xblog/comment/deleteable";
 	public final static String RM_COMMENT_GET = "xblog/comment/get";
 	public final static String RM_COMMENT_QUERY = "xblog/comment/query";
@@ -150,37 +148,7 @@ public class CommentAction extends AbstractAction {
 		return new CommonResult(status, msg, comment);
 	}
 
-	@RequestMapping(value = RM_COMMENT_REMOVE, method = RequestMethod.POST)
-	public Object removeComment(
-			@Validated @RequestAttribute("comments") List<Comment> comments,
-			HttpServletRequest request) {
-		short status = 0;
-		String msg = null;
-
-		User user = AuthUtils.getCurrentUser(request);
-		for (Comment comment : comments) {
-			AuthUtils.setModifier(request, comment);
-		}
-		try {
-			status = (short) commentService.removeComments(user, comments);
-		} catch (RuntimeException e) {
-			status = Status.ERROR;
-		}
-
-		if (status == Status.SUCCESS) {
-			msg = "为文章移除评论成功";
-		} else {
-			msg = "为文章移除评论失败";
-		}
-
-		if (logger.isInfoEnabled()) {
-			logger.info("[{}] {} {}", status, user.getName(), msg);
-		}
-
-		return new CommonResult(status, msg, comments);
-	}
-
-	// @RequestMapping(value = RM_COMMENT_DELETE, method = RequestMethod.POST)
+	@RequestMapping(value = RM_COMMENT_DELETE, method = RequestMethod.POST)
 	public Object deleteComment(
 			@Validated @RequestAttribute("comments") List<Comment> comments,
 			HttpServletRequest request) {
@@ -257,31 +225,6 @@ public class CommentAction extends AbstractAction {
 		}
 
 		return new CommonResult(status, msg, locked);
-	}
-
-	// @RequestMapping(value = RM_COMMENT_REMOVEABLE, method =
-	// RequestMethod.GET)
-	public Object isCommentRemoveable(
-			@Validated @RequestAttribute("comment") Comment comment,
-			HttpServletRequest request) {
-		short status = Status.SUCCESS;
-		String msg = null;
-
-		User user = AuthUtils.getCurrentUser(request);
-		boolean removeable = commentService.isCommentRemoveable(user, comment);
-		if (removeable) {
-			msg = "查询到评论[" + comment.getId() + "]" + comment.getContent()
-					+ "可以移除";
-		} else {
-			msg = "查询到评论[" + comment.getId() + "]" + comment.getContent()
-					+ "不可以移除";
-		}
-
-		if (logger.isInfoEnabled()) {
-			logger.info("[{}] {} {}", status, user.getName(), msg);
-		}
-
-		return new CommonResult(status, msg, removeable);
 	}
 
 	// @RequestMapping(value = RM_COMMENT_DELETEABLE, method =

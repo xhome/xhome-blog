@@ -29,12 +29,6 @@ public interface CategoryUserPermissionService {
 	public int unlockCategoryUserPermission(User oper,
 			CategoryUserPermission categoryUserPermission);
 
-	public int removeCategoryUserPermission(User oper,
-			CategoryUserPermission categoryUserPermission);
-
-	public int removeCategoryUserPermissions(User oper,
-			List<CategoryUserPermission> categoryUserPermissions);
-
 	public int deleteCategoryUserPermission(User oper,
 			CategoryUserPermission categoryUserPermission);
 
@@ -48,9 +42,6 @@ public interface CategoryUserPermissionService {
 			CategoryUserPermission categoryUserPermission);
 
 	public boolean isCategoryUserPermissionLocked(User oper,
-			CategoryUserPermission categoryUserPermission);
-
-	public boolean isCategoryUserPermissionRemoveable(User oper,
 			CategoryUserPermission categoryUserPermission);
 
 	public boolean isCategoryUserPermissionDeleteable(User oper,

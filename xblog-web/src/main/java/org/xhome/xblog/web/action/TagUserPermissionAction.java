@@ -39,13 +39,11 @@ public class TagUserPermissionAction extends AbstractAction {
 	public final static String RM_TAG_USER_PERMISSION_UPDATE = "xblog/permission/tag/user/update";
 	public final static String RM_TAG_USER_PERMISSION_LOCK = "xblog/permission/tag/user/lock";
 	public final static String RM_TAG_USER_PERMISSION_UNLOCK = "xblog/permission/tag/user/unlock";
-	public final static String RM_TAG_USER_PERMISSION_REMOVE = "xblog/permission/tag/user/remove";
 	public final static String RM_TAG_USER_PERMISSION_DELETE = "xblog/permission/tag/user/delete";
 
 	public final static String RM_TAG_USER_PERMISSION_EXISTS = "xblog/permission/tag/user/exists";
 	public final static String RM_TAG_USER_PERMISSION_UPDATEABLE = "xblog/permission/tag/user/updateable";
 	public final static String RM_TAG_USER_PERMISSION_LOCKED = "xblog/permission/tag/user/locked";
-	public final static String RM_TAG_USER_PERMISSION_REMOVEABLE = "xblog/permission/tag/user/removeable";
 	public final static String RM_TAG_USER_PERMISSION_DELETEABLE = "xblog/permission/tag/user/deleteable";
 	public final static String RM_TAG_USER_PERMISSION_GET = "xblog/permission/tag/user/get";
 	public final static String RM_TAG_USER_PERMISSION_QUERY = "xblog/permission/tag/user/query";
@@ -178,36 +176,6 @@ public class TagUserPermissionAction extends AbstractAction {
 		return new CommonResult(status, msg, permission);
 	}
 
-	@RequestMapping(value = RM_TAG_USER_PERMISSION_REMOVE, method = RequestMethod.POST)
-	public Object removeTagUserPermission(
-			@Validated @RequestAttribute("permissions") List<TagUserPermission> permissions,
-			HttpServletRequest request) {
-		short status = 0;
-		String msg = null;
-
-		User user = AuthUtils.getCurrentUser(request);
-		for (TagUserPermission permission : permissions) {
-			AuthUtils.setModifier(request, permission);
-		}
-		try {
-			status = (short) permissionService.removeTagUserPermissions(user,
-					permissions);
-		} catch (RuntimeException e) {
-			status = Status.ERROR;
-		}
-		if (status == Status.SUCCESS) {
-			msg = "用户为标签移除用户权限成功";
-		} else {
-			msg = "用户为标签移除用户权限失败";
-		}
-
-		if (logger.isInfoEnabled()) {
-			logger.info("[{}] {} {}", status, user.getName(), msg);
-		}
-
-		return new CommonResult(status, msg, permissions);
-	}
-
 	@RequestMapping(value = RM_TAG_USER_PERMISSION_DELETE, method = RequestMethod.POST)
 	public Object deleteTagUserPermission(
 			@Validated @RequestAttribute("permissions") List<TagUserPermission> permissions,
@@ -329,37 +297,6 @@ public class TagUserPermissionAction extends AbstractAction {
 		}
 
 		return new CommonResult(status, msg, locked);
-	}
-
-	@RequestMapping(value = RM_TAG_USER_PERMISSION_REMOVEABLE, method = RequestMethod.GET)
-	public Object isTagUserPermissionRemoveable(
-			@Validated @RequestAttribute("permission") TagUserPermission permission,
-			HttpServletRequest request) {
-		short status = Status.SUCCESS;
-		String msg = null;
-
-		User user = AuthUtils.getCurrentUser(request);
-		boolean removeable = permissionService.isTagUserPermissionRemoveable(
-				user, permission);
-		Tag tag = permission.getTag();
-		User puser = permission.getUser();
-		if (removeable) {
-			msg = "用户查询到标签" + tag.getName() + "[" + tag.getId() + "]用户"
-					+ puser.getName() + "[" + puser.getId() + "]权限"
-					+ permission.getPermission() + "[" + permission.getId()
-					+ "]可以移除";
-		} else {
-			msg = "用户查询到标签" + tag.getName() + "[" + tag.getId() + "]用户"
-					+ puser.getName() + "[" + puser.getId() + "]权限"
-					+ permission.getPermission() + "[" + permission.getId()
-					+ "]不可以移除";
-		}
-
-		if (logger.isInfoEnabled()) {
-			logger.info("[{}] {} {}", status, user.getName(), msg);
-		}
-
-		return new CommonResult(status, msg, removeable);
 	}
 
 	@RequestMapping(value = RM_TAG_USER_PERMISSION_DELETEABLE, method = RequestMethod.GET)

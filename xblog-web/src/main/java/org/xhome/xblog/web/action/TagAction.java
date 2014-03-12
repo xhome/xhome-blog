@@ -39,13 +39,11 @@ public class TagAction extends AbstractAction {
 	public final static String RM_TAG_UPDATE = "xblog/tag/update";
 	public final static String RM_TAG_LOCK = "xblog/tag/lock";
 	public final static String RM_TAG_UNLOCK = "xblog/tag/unlock";
-	public final static String RM_TAG_REMOVE = "xblog/tag/remove";
 	public final static String RM_TAG_DELETE = "xblog/tag/delete";
 
 	public final static String RM_TAG_EXISTS = "xblog/tag/exists";
 	public final static String RM_TAG_UPDATEABLE = "xblog/tag/updateable";
 	public final static String RM_TAG_LOCKED = "xblog/tag/locked";
-	public final static String RM_TAG_REMOVEABLE = "xblog/tag/removeable";
 	public final static String RM_TAG_DELETEABLE = "xblog/tag/deleteable";
 	public final static String RM_TAG_GET = "xblog/tag/get";
 	public final static String RM_TAG_QUERY = "xblog/tag/query";
@@ -140,36 +138,7 @@ public class TagAction extends AbstractAction {
 		return new CommonResult(status, msg, tag);
 	}
 
-	// @RequestMapping(value = RM_TAG_REMOVE, method = RequestMethod.POST)
-	public Object removeTag(
-			@Validated @RequestAttribute("tags") List<Tag> tags,
-			HttpServletRequest request) {
-		short status = 0;
-		String msg = null;
-
-		User user = AuthUtils.getCurrentUser(request);
-		for (Tag tag : tags) {
-			AuthUtils.setModifier(request, tag);
-		}
-		try {
-			status = (short) tagService.removeTags(user, tags);
-		} catch (RuntimeException e) {
-			status = Status.ERROR;
-		}
-		if (status == Status.SUCCESS) {
-			msg = "移除标签成功";
-		} else {
-			msg = "移除标签失败";
-		}
-
-		if (logger.isInfoEnabled()) {
-			logger.info("[{}] {} {}", status, user.getName(), msg);
-		}
-
-		return new CommonResult(status, msg, tags);
-	}
-
-	// @RequestMapping(value = RM_TAG_DELETE, method = RequestMethod.POST)
+	@RequestMapping(value = RM_TAG_DELETE, method = RequestMethod.POST)
 	public Object deleteTag(
 			@Validated @RequestAttribute("tags") List<Tag> tags,
 			HttpServletRequest request) {
@@ -259,27 +228,6 @@ public class TagAction extends AbstractAction {
 		}
 
 		return new CommonResult(status, msg, locked);
-	}
-
-	// @RequestMapping(value = RM_TAG_REMOVEABLE, method = RequestMethod.GET)
-	public Object isTagRemoveable(@Validated @RequestAttribute("tag") Tag tag,
-			HttpServletRequest request) {
-		short status = Status.SUCCESS;
-		String msg = null;
-
-		User user = AuthUtils.getCurrentUser(request);
-		boolean removeable = tagService.isTagRemoveable(user, tag);
-		if (removeable) {
-			msg = "查询到标签[" + tag.getId() + "]" + tag.getName() + "可以移除";
-		} else {
-			msg = "查询到标签[" + tag.getId() + "]" + tag.getName() + "不可以移除";
-		}
-
-		if (logger.isInfoEnabled()) {
-			logger.info("[{}] {} {}", status, user.getName(), msg);
-		}
-
-		return new CommonResult(status, msg, removeable);
 	}
 
 	// @RequestMapping(value = RM_TAG_DELETEABLE, method = RequestMethod.GET)

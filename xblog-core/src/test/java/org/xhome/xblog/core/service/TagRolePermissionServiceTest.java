@@ -129,11 +129,9 @@ public class TagRolePermissionServiceTest extends AbstractTest {
 	}
 
 	@Test
-	public void testRemoveTagRolePermission() {
+	public void testDeleteTagRolePermission() {
 		TagRolePermission tagRolePermission = tagRolePermissionService
 				.getTagRolePermission(oper, id);
-		tagRolePermissionService.removeTagRolePermission(oper,
-				tagRolePermission);
 		tagRolePermissionService.deleteTagRolePermission(oper,
 				tagRolePermission);
 	}

@@ -105,9 +105,8 @@ public class CategoryServiceTest extends AbstractTest {
 	}
 
 	@Test
-	public void testRemoveCategory() {
+	public void testDeleteCategory() {
 		Category category = categoryService.getCategory(oper, "TestCategory");
-		categoryService.removeCategory(oper, category);
 		categoryService.deleteCategory(oper, category);
 	}
 

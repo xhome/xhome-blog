@@ -23,8 +23,6 @@ public interface CategoryDAO {
 
 	public int unlockCategory(Category category);
 
-	public int removeCategory(Category category);
-
 	public int deleteCategory(Category category);
 
 	public boolean isCategoryExists(Category category);
@@ -32,8 +30,6 @@ public interface CategoryDAO {
 	public boolean isCategoryUpdateable(Category category);
 
 	public boolean isCategoryLocked(Category category);
-
-	public boolean isCategoryRemoveable(Category category);
 
 	public boolean isCategoryDeleteable(Category category);
 

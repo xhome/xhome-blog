@@ -246,55 +246,6 @@ public class TagServiceImpl implements TagService {
 
 	@Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Throwable.class)
 	@Override
-	public int removeTag(User oper, Tag tag) {
-		String name = tag.getName();
-		Long id = tag.getId();
-
-		if (!this.beforeTagManage(oper, Action.REMOVE, tag)) {
-			if (logger.isDebugEnabled()) {
-				logger.debug("try to remove tag {}[{}], but it's blocked",
-						name, id);
-			}
-
-			this.logManage(name, Action.REMOVE, null, Status.BLOCKED, oper);
-			this.afterTagManage(oper, Action.REMOVE, Status.BLOCKED, tag);
-			return Status.BLOCKED;
-		}
-
-		short r = Status.SUCCESS;
-		if (tagDAO.isTagRemoveable(tag)) {
-			if (logger.isDebugEnabled()) {
-				logger.debug("remove tag {}[{}]", name, id);
-			}
-			tagDAO.removeTag(tag);
-		} else {
-			if (logger.isDebugEnabled()) {
-				logger.debug("tag {}[{}] isn't removeable", name, id);
-			}
-			r = Status.NO_REMOVE;
-		}
-
-		this.logManage(name, Action.REMOVE, id, r, oper);
-		this.afterTagManage(oper, Action.REMOVE, r, tag);
-		return r;
-	}
-
-	@Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Throwable.class)
-	@Override
-	public int removeTags(User oper, List<Tag> tags) {
-		int r = Status.SUCCESS;
-		for (Tag tag : tags) {
-			r = this.removeTag(oper, tag);
-			if (r != Status.SUCCESS) {
-				throw new RuntimeException("fail to remove tag [" + tag.getId()
-						+ "]" + tag.getName());
-			}
-		}
-		return r;
-	}
-
-	@Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Throwable.class)
-	@Override
 	public int deleteTag(User oper, Tag tag) {
 		String name = tag.getName();
 		Long id = tag.getId();
@@ -435,39 +386,6 @@ public class TagServiceImpl implements TagService {
 
 		this.logManage(name, Action.IS_LOCKED, id, Status.SUCCESS, oper);
 		this.afterTagManage(oper, Action.IS_LOCKED, Status.SUCCESS, tag);
-		return e;
-	}
-
-	@Override
-	public boolean isTagRemoveable(User oper, Tag tag) {
-		String name = tag.getName();
-		Long id = tag.getId();
-
-		if (!this.beforeTagManage(oper, Action.IS_REMOVEABLE, tag)) {
-			if (logger.isDebugEnabled()) {
-				logger.debug(
-						"try to juge removeable of tag {}[{}], but it's blocked",
-						name, id);
-			}
-
-			this.logManage(name, Action.IS_REMOVEABLE, null, Status.BLOCKED,
-					oper);
-			this.afterTagManage(oper, Action.IS_REMOVEABLE, Status.BLOCKED, tag);
-			return false;
-		}
-
-		boolean e = tagDAO.isTagRemoveable(tag);
-
-		if (logger.isDebugEnabled()) {
-			if (e) {
-				logger.debug("tag {}[{}] is removeable", name, id);
-			} else {
-				logger.debug("tag {}[{}] isn't removeable", name, id);
-			}
-		}
-
-		this.logManage(name, Action.IS_REMOVEABLE, id, Status.SUCCESS, oper);
-		this.afterTagManage(oper, Action.IS_REMOVEABLE, Status.SUCCESS, tag);
 		return e;
 	}
 

@@ -39,13 +39,11 @@ public class CategoryAction extends AbstractAction {
 	public final static String RM_CATEGORY_UPDATE = "xblog/category/update";
 	public final static String RM_CATEGORY_LOCK = "xblog/category/lock";
 	public final static String RM_CATEGORY_UNLOCK = "xblog/category/unlock";
-	public final static String RM_CATEGORY_REMOVE = "xblog/category/remove";
 	public final static String RM_CATEGORY_DELETE = "xblog/category/delete";
 
 	public final static String RM_CATEGORY_EXISTS = "xblog/category/exists";
 	public final static String RM_CATEGORY_UPDATEABLE = "xblog/category/updateable";
 	public final static String RM_CATEGORY_LOCKED = "xblog/category/locked";
-	public final static String RM_CATEGORY_REMOVEABLE = "xblog/category/removeable";
 	public final static String RM_CATEGORY_DELETEABLE = "xblog/category/deleteable";
 	public final static String RM_CATEGORY_GET = "xblog/category/get";
 	public final static String RM_CATEGORY_QUERY = "xblog/category/query";
@@ -144,36 +142,7 @@ public class CategoryAction extends AbstractAction {
 		return new CommonResult(status, msg, category);
 	}
 
-	@RequestMapping(value = RM_CATEGORY_REMOVE, method = RequestMethod.POST)
-	public Object removeCategory(
-			@Validated @RequestAttribute("categories") List<Category> categories,
-			HttpServletRequest request) {
-		short status = 0;
-		String msg = null;
-
-		User user = AuthUtils.getCurrentUser(request);
-		for (Category category : categories) {
-			AuthUtils.setModifier(request, category);
-		}
-		try {
-			status = (short) categoryService.removeCategories(user, categories);
-		} catch (RuntimeException e) {
-			status = Status.ERROR;
-		}
-		if (status == Status.SUCCESS) {
-			msg = "移除分类成功";
-		} else {
-			msg = "移除分类失败";
-		}
-
-		if (logger.isInfoEnabled()) {
-			logger.info("[{}] {} {}", status, user.getName(), msg);
-		}
-
-		return new CommonResult(status, msg, categories);
-	}
-
-	// @RequestMapping(value = RM_CATEGORY_DELETE, method = RequestMethod.POST)
+	@RequestMapping(value = RM_CATEGORY_DELETE, method = RequestMethod.POST)
 	public Object deleteCategory(
 			@Validated @RequestAttribute("categories") List<Category> categories,
 			HttpServletRequest request) {
@@ -272,32 +241,6 @@ public class CategoryAction extends AbstractAction {
 		}
 
 		return new CommonResult(status, msg, locked);
-	}
-
-	// @RequestMapping(value = RM_CATEGORY_REMOVEABLE, method =
-	// RequestMethod.GET)
-	public Object isCategoryRemoveable(
-			@Validated @RequestAttribute("category") Category category,
-			HttpServletRequest request) {
-		short status = Status.SUCCESS;
-		String msg = null;
-
-		User user = AuthUtils.getCurrentUser(request);
-		boolean removeable = categoryService.isCategoryRemoveable(user,
-				category);
-		if (removeable) {
-			msg = "查询到分类[" + category.getId() + "]" + category.getName()
-					+ "可以移除";
-		} else {
-			msg = "查询到分类[" + category.getId() + "]" + category.getName()
-					+ "不可以移除";
-		}
-
-		if (logger.isInfoEnabled()) {
-			logger.info("[{}] {} {}", status, user.getName(), msg);
-		}
-
-		return new CommonResult(status, msg, removeable);
 	}
 
 	// @RequestMapping(value = RM_CATEGORY_DELETEABLE, method =

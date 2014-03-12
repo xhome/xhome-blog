@@ -323,74 +323,6 @@ public class TagRolePermissionServiceImpl implements TagRolePermissionService {
 
 	@Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Throwable.class)
 	@Override
-	public int removeTagRolePermission(User oper,
-			TagRolePermission tagRolePermission) {
-		long id = tagRolePermission.getId();
-		Tag tag = tagRolePermission.getTag();
-		Role role = tagRolePermission.getRole();
-		Long tagId = tag != null ? tag.getId() : null, roleId = role != null ? role
-				.getId() : null;
-		String tagName = tag != null ? tag.getName() : "", roleName = role != null ? role
-				.getName() : null;
-		;
-		int permission = tagRolePermission.getPermission();
-		String mstr = tagName + "(" + tagId + ")" + ", " + roleName + "("
-				+ roleId + ")";
-
-		if (!this.beforeTagRolePermissionManage(oper, Action.REMOVE,
-				tagRolePermission)) {
-			if (logger.isDebugEnabled()) {
-				logger.debug(
-						"try to remove tag {}[{}] permission {} for role {}[{}], but it's blocked",
-						tagName, tagId, permission, roleName, roleId);
-			}
-
-			this.logManage(mstr, Action.REMOVE, null, Status.BLOCKED, oper);
-			this.afterTagRolePermissionManage(oper, Action.REMOVE,
-					Status.BLOCKED, tagRolePermission);
-			return Status.BLOCKED;
-		}
-
-		short r = Status.SUCCESS;
-		if (tagRolePermissionDAO
-				.isTagRolePermissionRemoveable(tagRolePermission)) {
-			if (logger.isDebugEnabled()) {
-				logger.debug("remove tag {}[{}] permission {} for role {}[{}]",
-						tagName, tagId, permission, roleName, roleId);
-			}
-			tagRolePermissionDAO.removeTagRolePermission(tagRolePermission);
-		} else {
-			if (logger.isDebugEnabled()) {
-				logger.debug(
-						"tag {}[{}] permission {} for role {}[{}] isn't removeable",
-						tagName, tagId, permission, roleName, roleId);
-			}
-			r = Status.NO_REMOVE;
-		}
-
-		this.logManage(mstr, Action.REMOVE, id, r, oper);
-		this.afterTagRolePermissionManage(oper, Action.REMOVE, r,
-				tagRolePermission);
-		return r;
-	}
-
-	@Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Throwable.class)
-	@Override
-	public int removeTagRolePermissions(User oper,
-			List<TagRolePermission> tagRolePermissions) {
-		int r = Status.SUCCESS;
-		for (TagRolePermission tagRolePermission : tagRolePermissions) {
-			r = this.removeTagRolePermission(oper, tagRolePermission);
-			if (r != Status.SUCCESS) {
-				throw new RuntimeException("fail to remove TagRolePermission ["
-						+ tagRolePermission.getId() + "]");
-			}
-		}
-		return r;
-	}
-
-	@Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Throwable.class)
-	@Override
 	public int deleteTagRolePermission(User oper,
 			TagRolePermission tagRolePermission) {
 		long id = tagRolePermission.getId();
@@ -604,57 +536,6 @@ public class TagRolePermissionServiceImpl implements TagRolePermissionService {
 
 		this.logManage(mstr, Action.IS_LOCKED, id, Status.SUCCESS, oper);
 		this.afterTagRolePermissionManage(oper, Action.IS_LOCKED,
-				Status.SUCCESS, tagRolePermission);
-		return e;
-	}
-
-	@Override
-	public boolean isTagRolePermissionRemoveable(User oper,
-			TagRolePermission tagRolePermission) {
-		long id = tagRolePermission.getId();
-		Tag tag = tagRolePermission.getTag();
-		Role role = tagRolePermission.getRole();
-		Long tagId = tag != null ? tag.getId() : null, roleId = role != null ? role
-				.getId() : null;
-		String tagName = tag != null ? tag.getName() : "", roleName = role != null ? role
-				.getName() : null;
-		;
-		int permission = tagRolePermission.getPermission();
-		String mstr = tagName + "(" + tagId + ")" + ", " + roleName + "("
-				+ roleId + ")";
-
-		if (!this.beforeTagRolePermissionManage(oper, Action.IS_REMOVEABLE,
-				tagRolePermission)) {
-			if (logger.isDebugEnabled()) {
-				logger.debug(
-						"try to juge removeable of tag {}[{}] permission {} for role {}[{}], but it's blocked",
-						tagName, tagId, permission, roleName, roleId);
-			}
-
-			this.logManage(mstr, Action.IS_REMOVEABLE, null, Status.BLOCKED,
-					oper);
-			this.afterTagRolePermissionManage(oper, Action.IS_REMOVEABLE,
-					Status.BLOCKED, tagRolePermission);
-			return false;
-		}
-
-		boolean e = tagRolePermissionDAO
-				.isTagRolePermissionRemoveable(tagRolePermission);
-
-		if (logger.isDebugEnabled()) {
-			if (e) {
-				logger.debug(
-						"tag {}[{}] permission {} for role {}[{}] is removeable",
-						tagName, tagId, permission, roleName, roleId);
-			} else {
-				logger.debug(
-						"tag {}[{}] permission {} for role {}[{}] isn't removeable",
-						tagName, tagId, permission, roleName, roleId);
-			}
-		}
-
-		this.logManage(mstr, Action.IS_REMOVEABLE, id, Status.SUCCESS, oper);
-		this.afterTagRolePermissionManage(oper, Action.IS_REMOVEABLE,
 				Status.SUCCESS, tagRolePermission);
 		return e;
 	}

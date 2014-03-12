@@ -323,76 +323,6 @@ public class ArticleUserPermissionServiceImpl implements
 
 	@Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Throwable.class)
 	@Override
-	public int removeArticleUserPermission(User oper,
-			ArticleUserPermission articleUserPermission) {
-		long id = articleUserPermission.getId();
-		Article article = articleUserPermission.getArticle();
-		User user = articleUserPermission.getUser();
-		Long articleId = article != null ? article.getId() : null, userId = user != null ? user
-				.getId() : null;
-		String articleTitle = article != null ? article.getTitle() : "", userName = user != null ? user
-				.getName() : "";
-		int permission = articleUserPermission.getPermission();
-		String mstr = articleTitle + "(" + articleId + ")" + ", " + userName
-				+ "(" + userId + ")";
-
-		if (!this.beforeArticleUserPermissionManage(oper, Action.REMOVE,
-				articleUserPermission)) {
-			if (logger.isDebugEnabled()) {
-				logger.debug(
-						"try to remove article {}[{}] permission {} for user {}[{}], but it's blocked",
-						articleTitle, articleId, permission, userName, userId);
-			}
-
-			this.logManage(mstr, Action.REMOVE, null, Status.BLOCKED, oper);
-			this.afterArticleUserPermissionManage(oper, Action.REMOVE,
-					Status.BLOCKED, articleUserPermission);
-			return Status.BLOCKED;
-		}
-
-		short r = Status.SUCCESS;
-		if (articleUserPermissionDAO
-				.isArticleUserPermissionRemoveable(articleUserPermission)) {
-			if (logger.isDebugEnabled()) {
-				logger.debug(
-						"remove article {}[{}] permission {} for user {}[{}]",
-						articleTitle, articleId, permission, userName, userId);
-			}
-			articleUserPermissionDAO
-					.removeArticleUserPermission(articleUserPermission);
-		} else {
-			if (logger.isDebugEnabled()) {
-				logger.debug(
-						"article {}[{}] permission {} for user {}[{}] isn't removeable",
-						articleTitle, articleId, permission, userName, userId);
-			}
-			r = Status.NO_REMOVE;
-		}
-
-		this.logManage(mstr, Action.REMOVE, id, r, oper);
-		this.afterArticleUserPermissionManage(oper, Action.REMOVE, r,
-				articleUserPermission);
-		return r;
-	}
-
-	@Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Throwable.class)
-	@Override
-	public int removeArticleUserPermissions(User oper,
-			List<ArticleUserPermission> articleUserPermissions) {
-		int r = Status.SUCCESS;
-		for (ArticleUserPermission articleUserPermission : articleUserPermissions) {
-			r = this.removeArticleUserPermission(oper, articleUserPermission);
-			if (r != Status.SUCCESS) {
-				throw new RuntimeException(
-						"fail to remove ArticleUserPermission ["
-								+ articleUserPermission.getId() + "]");
-			}
-		}
-		return r;
-	}
-
-	@Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Throwable.class)
-	@Override
 	public int deleteArticleUserPermission(User oper,
 			ArticleUserPermission articleUserPermission) {
 		long id = articleUserPermission.getId();
@@ -605,56 +535,6 @@ public class ArticleUserPermissionServiceImpl implements
 
 		this.logManage(mstr, Action.IS_LOCKED, id, Status.SUCCESS, oper);
 		this.afterArticleUserPermissionManage(oper, Action.IS_LOCKED,
-				Status.SUCCESS, articleUserPermission);
-		return e;
-	}
-
-	@Override
-	public boolean isArticleUserPermissionRemoveable(User oper,
-			ArticleUserPermission articleUserPermission) {
-		long id = articleUserPermission.getId();
-		Article article = articleUserPermission.getArticle();
-		User user = articleUserPermission.getUser();
-		Long articleId = article != null ? article.getId() : null, userId = user != null ? user
-				.getId() : null;
-		String articleTitle = article != null ? article.getTitle() : "", userName = user != null ? user
-				.getName() : "";
-		int permission = articleUserPermission.getPermission();
-		String mstr = articleTitle + "(" + articleId + ")" + ", " + userName
-				+ "(" + userId + ")";
-
-		if (!this.beforeArticleUserPermissionManage(oper, Action.IS_REMOVEABLE,
-				articleUserPermission)) {
-			if (logger.isDebugEnabled()) {
-				logger.debug(
-						"try to juge removeable of article {}[{}] permission {} for user {}[{}], but it's blocked",
-						articleTitle, articleId, permission, userName, userId);
-			}
-
-			this.logManage(mstr, Action.IS_REMOVEABLE, null, Status.BLOCKED,
-					oper);
-			this.afterArticleUserPermissionManage(oper, Action.IS_REMOVEABLE,
-					Status.BLOCKED, articleUserPermission);
-			return false;
-		}
-
-		boolean e = articleUserPermissionDAO
-				.isArticleUserPermissionRemoveable(articleUserPermission);
-
-		if (logger.isDebugEnabled()) {
-			if (e) {
-				logger.debug(
-						"article {}[{}] permission {} for user {}[{}] is removeable",
-						articleTitle, articleId, permission, userName, userId);
-			} else {
-				logger.debug(
-						"article {}[{}] permission {} for user {}[{}] isn't removeable",
-						articleTitle, articleId, permission, userName, userId);
-			}
-		}
-
-		this.logManage(mstr, Action.IS_REMOVEABLE, id, Status.SUCCESS, oper);
-		this.afterArticleUserPermissionManage(oper, Action.IS_REMOVEABLE,
 				Status.SUCCESS, articleUserPermission);
 		return e;
 	}

@@ -147,7 +147,7 @@ Ext.define('XHome.XBlog.Manage.Article', {
                 XHome.utils.request({
                     confirmMsg: '确认删除文章: ' + msg + ' ?',
                     progressMsg: '正在删除文章: ' + msg + '......',
-                    url: 'xblog/article/remove.json',
+                    url: 'xblog/article/delete.json',
                     params: XHome.utils.formEncode(articles, 'articles'),
                     success: function(result) {
                         store.remove(selections);

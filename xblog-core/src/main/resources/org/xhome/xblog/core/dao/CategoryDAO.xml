@@ -35,34 +35,24 @@
 		WHERE id = #{id}
 	</update>
 	
-	<update id="removeCategory" parameterType="org.xhome.xblog.Category">
-		UPDATE xhome_xblog_category
-		SET modifier = #{modifier}, modified = NOW(), version = version + 1, status = 0
-		WHERE id = #{id}
-	</update>
-	
 	<delete id="deleteCategory" parameterType="org.xhome.xblog.Category">
 		DELETE FROM xhome_xblog_category WHERE id = #{id}
 	</delete>
 	
 	<select id="isCategoryExists" resultType="boolean" parameterType="org.xhome.xblog.Category">
-		SELECT COUNT(*) FROM xhome_xblog_category WHERE name = #{name} AND status != 0
+		SELECT COUNT(*) FROM xhome_xblog_category WHERE name = #{name}
 	</select>
 	
 	<select id="isCategoryUpdateable" resultType="boolean" parameterType="org.xhome.xblog.Category">
-		SELECT COUNT(*) FROM xhome_xblog_category WHERE id = #{id} AND status != 0 AND status != 4
+		SELECT COUNT(*) FROM xhome_xblog_category WHERE id = #{id} AND status != 10
 	</select>
 	
 	<select id="isCategoryLocked" resultType="boolean" parameterType="org.xhome.xblog.Category">
-		SELECT COUNT(*) FROM xhome_xblog_category WHERE id = #{id} AND status != 0 AND status = 5
-	</select>
-	
-	<select id="isCategoryRemoveable" resultType="boolean" parameterType="org.xhome.xblog.Category">
-		SELECT COUNT(*) FROM xhome_xblog_category WHERE id = #{id} AND status != 2 AND status != 4
+		SELECT COUNT(*) FROM xhome_xblog_category WHERE id = #{id} AND status = 5
 	</select>
 	
 	<select id="isCategoryDeleteable" resultType="boolean" parameterType="org.xhome.xblog.Category">
-		SELECT COUNT(*) FROM xhome_xblog_category WHERE id = #{id} AND status != 3 AND status != 4
+		SELECT COUNT(*) FROM xhome_xblog_category WHERE id = #{id} AND status != 10 AND status != 15
 	</select>
 	
 	<select id="queryCategoryById" resultType="org.xhome.xblog.Category" parameterType="long">
@@ -70,7 +60,7 @@
 	</select>
 	
 	<select id="queryCategoryByName" resultType="org.xhome.xblog.Category" parameterType="String">
-		SELECT * FROM xhome_xblog_category WHERE name = #{name} AND status != 0 LIMIT 1
+		SELECT * FROM xhome_xblog_category WHERE name = #{name} LIMIT 1
 	</select>
 	
 	<sql id="restriction_categorys">
@@ -117,9 +107,6 @@
 			<if test="parameters.id_ge != null and parameters.id_ge != ''">
 				AND id &gt;= #{parameters.id_ge}
 			</if>
-			<if test="parameters.status == null or parameters.status == ''">
-				AND status != 0
-			</if>
 		</trim>
 	</sql>
 	
@@ -147,14 +134,12 @@
 		UPDATE xhome_xblog_category AS c
 		JOIN xhome_xblog_article AS a ON a.id = #{id} AND a.category = c.id
 		SET c.articleCount = c.articleCount + 1
-		WHERE c.status != 0
 	</update>
 	
 	<update id="decreaseArticle" parameterType="org.xhome.xblog.Article">
 		UPDATE xhome_xblog_category AS c
 		JOIN xhome_xblog_article AS a ON a.id = #{id} AND a.category = c.id
 		SET c.articleCount = c.articleCount - 1
-		WHERE c.status != 0
 	</update>
 	
 </mapper>

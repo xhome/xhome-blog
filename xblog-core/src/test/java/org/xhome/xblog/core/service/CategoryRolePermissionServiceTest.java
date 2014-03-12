@@ -134,11 +134,9 @@ public class CategoryRolePermissionServiceTest extends AbstractTest {
 	}
 
 	@Test
-	public void testRemoveCategoryRolePermission() {
+	public void testDeleteCategoryRolePermission() {
 		CategoryRolePermission categoryRolePermission = categoryRolePermissionService
 				.getCategoryRolePermission(oper, id);
-		categoryRolePermissionService.removeCategoryRolePermission(oper,
-				categoryRolePermission);
 		categoryRolePermissionService.deleteCategoryRolePermission(oper,
 				categoryRolePermission);
 	}

@@ -67,37 +67,27 @@
 		WHERE id = #{id}
 	</update>
 	
-	<update id="removeArticle" parameterType="org.xhome.xblog.Article">
-		UPDATE xhome_xblog_article
-		SET modifier = #{modifier}, modified = NOW(), version = version + 1, status = 0
-		WHERE id = #{id}
-	</update>
-	
 	<delete id="deleteArticle" parameterType="org.xhome.xblog.Article">
 		DELETE FROM xhome_xblog_article WHERE id = #{id}
 	</delete>
 	
 	<select id="isArticleUpdateable" resultType="boolean" parameterType="org.xhome.xblog.Article">
-		SELECT COUNT(*) FROM xhome_xblog_article WHERE id = #{id} AND status != 0 AND status != 4
+		SELECT COUNT(*) FROM xhome_xblog_article WHERE id = #{id} AND status != 10
 	</select>
 	
 	<select id="isArticleLocked" resultType="boolean" parameterType="org.xhome.xblog.Article">
-		SELECT COUNT(*) FROM xhome_xblog_article WHERE id = #{id} AND status != 0 AND status = 5
-	</select>
-	
-	<select id="isArticleRemoveable" resultType="boolean" parameterType="org.xhome.xblog.Article">
-		SELECT COUNT(*) FROM xhome_xblog_article WHERE id = #{id} AND status != 2 AND status != 4
+		SELECT COUNT(*) FROM xhome_xblog_article WHERE id = #{id} AND status = 5
 	</select>
 	
 	<select id="isArticleDeleteable" resultType="boolean" parameterType="org.xhome.xblog.Article">
-		SELECT COUNT(*) FROM xhome_xblog_article WHERE id = #{id} AND status != 3 AND status != 4
+		SELECT COUNT(*) FROM xhome_xblog_article WHERE id = #{id} AND status != 10 AND status != 15
 	</select>
 	
 	<sql id="fromArticle">
 		FROM xhome_xblog_article AS a
-		LEFT JOIN xhome_xblog_category AS c ON a.category = c.id AND c.status != 0
-		LEFT JOIN xhome_xblog_article_tag AS at ON at.article = a.id AND at.status != 0
-		LEFT JOIN xhome_xblog_tag AS t ON at.tag = t.id AND t.status != 0
+		LEFT JOIN xhome_xblog_category AS c ON a.category = c.id
+		LEFT JOIN xhome_xblog_article_tag AS at ON at.article = a.id
+		LEFT JOIN xhome_xblog_tag AS t ON at.tag = t.id
 	</sql>
 	
 	<sql id="selectArticleLittle">
@@ -233,9 +223,6 @@
 			<if test="parameters.tag_name_equal != null and parameters.tag_name_equal != ''">
 				AND t.name = #{parameters.tag_name_equal}
 			</if>
-			<if test="parameters.status == null or parameters.status == ''">
-				AND a.status != 0
-			</if>
 		</trim>
 		GROUP BY a.id
 		ORDER BY a.modified DESC
@@ -245,9 +232,9 @@
 		<include refid="selectArticleLittle"/>
 		FROM xhome_xblog_article AS a
 		RIGHT JOIN (<include refid="queryArticleId"/> LIMIT #{start}, #{limit}) AS aid USING(id)
-		LEFT JOIN xhome_xblog_category AS c ON a.category = c.id AND c.status != 0
-		LEFT JOIN xhome_xblog_article_tag AS at ON at.article = a.id AND at.status != 0
-		LEFT JOIN xhome_xblog_tag AS t ON at.tag = t.id AND t.status != 0
+		LEFT JOIN xhome_xblog_category AS c ON a.category = c.id
+		LEFT JOIN xhome_xblog_article_tag AS at ON at.article = a.id
+		LEFT JOIN xhome_xblog_tag AS t ON at.tag = t.id
 		ORDER BY a.modified DESC
 	</select>
 	
@@ -265,22 +252,13 @@
 	<update id="lockArticleTag" parameterType="Map">
 		UPDATE xhome_xblog_article_tag
 		SET modifier = #{modifier}, modified = NOW(), version = version + 1, status = 5
-		WHERE status != 0 AND article = #{article.id} AND tag = #{tag.id}
+		WHERE article = #{article.id} AND tag = #{tag.id}
 	</update>
 	
 	<update id="unlockArticleTag" parameterType="Map">
 		UPDATE xhome_xblog_article_tag
 		SET modifier = #{modifier}, modified = NOW(), version = version + 1, status = 1
-		WHERE status != 0 AND article = #{article.id} AND tag = #{tag.id}
-	</update>
-	
-	<update id="removeArticleTag" parameterType="Map">
-		UPDATE xhome_xblog_article_tag
-		SET modifier = #{modifier}, modified = NOW(), version = version + 1, status = 0
-		WHERE status != 0 AND article = #{article.id}
-		<if test="tag != null">
-			AND tag = #{tag.id}
-		</if>
+		WHERE article = #{article.id} AND tag = #{tag.id}
 	</update>
 	
 	<delete id="deleteArticleTag" parameterType="Map">
@@ -291,23 +269,19 @@
 	</delete>
 	
 	<select id="hasArticleTag" resultType="boolean" parameterType="Map">
-		SELECT COUNT(*) FROM xhome_xblog_article_tag WHERE status != 0 AND article = #{article.id} AND tag = #{tag.id}
+		SELECT COUNT(*) FROM xhome_xblog_article_tag WHERE article = #{article.id} AND tag = #{tag.id}
 	</select>
 	
 	<select id="isArticleTagUpdateable" resultType="boolean" parameterType="Map">
-		SELECT COUNT(*) FROM xhome_xblog_article_tag WHERE status != 0 AND article = #{article.id} AND tag = #{tag.id} AND status != 4
+		SELECT COUNT(*) FROM xhome_xblog_article_tag WHERE article = #{article.id} AND tag = #{tag.id} AND status != 10
 	</select>
 	
 	<select id="isArticleTagLocked" resultType="boolean" parameterType="Map">
-		SELECT COUNT(*) FROM xhome_xblog_article_tag WHERE status != 0 AND article = #{article.id} AND tag = #{tag.id} AND status = 5
-	</select>
-	
-	<select id="isArticleTagRemoveable" resultType="boolean" parameterType="Map">
-		SELECT COUNT(*) FROM xhome_xblog_article_tag WHERE status != 0 AND article = #{article.id} AND tag = #{tag.id} AND status != 2 AND status != 4
+		SELECT COUNT(*) FROM xhome_xblog_article_tag WHERE article = #{article.id} AND tag = #{tag.id} AND status = 5
 	</select>
 	
 	<select id="isArticleTagDeleteable" resultType="boolean" parameterType="Map">
-		SELECT COUNT(*) FROM xhome_xblog_article_tag WHERE status != 0 AND article = #{article.id} AND tag = #{tag.id} AND status != 3 AND status != 4
+		SELECT COUNT(*) FROM xhome_xblog_article_tag WHERE article = #{article.id} AND tag = #{tag.id} AND status != 10 AND status != 15
 	</select>
 	
 	<update id="increaseRead" parameterType="org.xhome.xblog.Article">

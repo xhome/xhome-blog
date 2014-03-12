@@ -25,10 +25,6 @@ public interface CommentService {
 
 	public int unlockComment(User oper, Comment comment);
 
-	public int removeComment(User oper, Comment comment);
-
-	public int removeComments(User oper, List<Comment> comments);
-
 	public int deleteComment(User oper, Comment comment);
 
 	public int deleteComments(User oper, List<Comment> comments);
@@ -36,8 +32,6 @@ public interface CommentService {
 	public boolean isCommentUpdateable(User oper, Comment comment);
 
 	public boolean isCommentLocked(User oper, Comment comment);
-
-	public boolean isCommentRemoveable(User oper, Comment comment);
 
 	public boolean isCommentDeleteable(User oper, Comment comment);
 

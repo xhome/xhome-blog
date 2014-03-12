@@ -25,10 +25,6 @@ public interface CategoryService {
 
 	public int unlockCategory(User oper, Category category);
 
-	public int removeCategory(User oper, Category category);
-
-	public int removeCategories(User oper, List<Category> categories);
-
 	public int deleteCategory(User oper, Category category);
 
 	public int deleteCategories(User oper, List<Category> categories);
@@ -38,8 +34,6 @@ public interface CategoryService {
 	public boolean isCategoryUpdateable(User oper, Category category);
 
 	public boolean isCategoryLocked(User oper, Category category);
-
-	public boolean isCategoryRemoveable(User oper, Category category);
 
 	public boolean isCategoryDeleteable(User oper, Category category);
 

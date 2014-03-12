@@ -27,10 +27,6 @@ public interface ArticleService {
 
 	public int unlockArticle(User oper, Article article);
 
-	public int removeArticle(User oper, Article article);
-
-	public int removeArticles(User oper, List<Article> articles);
-
 	public int deleteArticle(User oper, Article article);
 
 	public int deleteArticles(User oper, List<Article> articles);
@@ -38,8 +34,6 @@ public interface ArticleService {
 	public boolean isArticleUpdateable(User oper, Article article);
 
 	public boolean isArticleLocked(User oper, Article article);
-
-	public boolean isArticleRemoveable(User oper, Article article);
 
 	public boolean isArticleDeleteable(User oper, Article article);
 
@@ -63,12 +57,6 @@ public interface ArticleService {
 
 	public int unlockArticleTag(User oper, Article article, List<Tag> tags);
 
-	public int removeArticleTag(User oper, Article article);
-
-	public int removeArticleTag(User oper, Article article, Tag tag);
-
-	public int removeArticleTag(User oper, Article article, List<Tag> tags);
-
 	public int deleteArticleTag(User oper, Article article);
 
 	public int deleteArticleTag(User oper, Article article, Tag tag);
@@ -80,8 +68,6 @@ public interface ArticleService {
 	public boolean isArticleTagUpdateable(User oper, Article article, Tag tag);
 
 	public boolean isArticleTagLocked(User oper, Article article, Tag tag);
-
-	public boolean isArticleTagRemoveable(User oper, Article article, Tag tag);
 
 	public boolean isArticleTagDeleteable(User oper, Article article, Tag tag);
 

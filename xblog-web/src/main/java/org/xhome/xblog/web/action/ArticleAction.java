@@ -66,13 +66,11 @@ public class ArticleAction extends AbstractAction {
 	public final static String RM_ARTICLE_UPDATE = "xblog/article/update";
 	public final static String RM_ARTICLE_LOCK = "xblog/article/lock";
 	public final static String RM_ARTICLE_UNLOCK = "xblog/article/unlock";
-	public final static String RM_ARTICLE_REMOVE = "xblog/article/remove";
 	public final static String RM_ARTICLE_DELETE = "xblog/article/delete";
 
 	public final static String RM_ARTICLE_EXISTS = "xblog/article/exists";
 	public final static String RM_ARTICLE_UPDATEABLE = "xblog/article/updateable";
 	public final static String RM_ARTICLE_LOCKED = "xblog/article/locked";
-	public final static String RM_ARTICLE_REMOVEABLE = "xblog/article/removeable";
 	public final static String RM_ARTICLE_DELETEABLE = "xblog/article/deleteable";
 	public final static String RM_ARTICLE_GET = "xblog/article/get";
 	public final static String RM_ARTICLE_QUERY = "xblog/article/query";
@@ -81,13 +79,11 @@ public class ArticleAction extends AbstractAction {
 	public final static String RM_ARTICLE_TAG_ADD = "xblog/article/tag/add";
 	public final static String RM_ARTICLE_TAG_LOCK = "xblog/article/tag/lock";
 	public final static String RM_ARTICLE_TAG_UNLOCK = "xblog/article/tag/unlock";
-	public final static String RM_ARTICLE_TAG_REMOVE = "xblog/article/tag/remove";
 	public final static String RM_ARTICLE_TAG_DELETE = "xblog/article/tag/delete";
 
 	public final static String RM_ARTICLE_TAG_EXISTS = "xblog/article/tag/exists";
 	public final static String RM_ARTICLE_TAG_UPDATEABLE = "xblog/article/tag/updateable";
 	public final static String RM_ARTICLE_TAG_LOCKED = "xblog/article/tag/locked";
-	public final static String RM_ARTICLE_TAG_REMOVEABLE = "xblog/article/tag/removeable";
 	public final static String RM_ARTICLE_TAG_DELETEABLE = "xblog/article/tag/deleteable";
 
 	/**
@@ -194,8 +190,8 @@ public class ArticleAction extends AbstractAction {
 
 			Record record = new Record(article, user,
 					RequestUtils.getRequestAddress(request),
-					RequestUtils.getRequestAgent(request),
-					request.getHeader("User-Agent"));
+					RequestUtils.getRequestUserAgent(request),
+					RequestUtils.getRequestUserAgentName(request));
 			recordService.logRecord(record);
 			msg = "文章[" + id + "]" + article.getTitle() + "查询成功";
 		} else {
@@ -421,37 +417,7 @@ public class ArticleAction extends AbstractAction {
 		return new CommonResult(status, msg, article);
 	}
 
-	@RequestMapping(value = RM_ARTICLE_REMOVE, method = RequestMethod.POST)
-	public Object removeArticle(
-			@Validated @RequestAttribute("articles") List<Article> articles,
-			HttpServletRequest request) {
-		short status = 0;
-		String msg = null;
-
-		User user = AuthUtils.getCurrentUser(request);
-		for (Article article : articles) {
-			AuthUtils.setModifier(request, article);
-		}
-		try {
-			status = (short) articleService.removeArticles(user, articles);
-		} catch (RuntimeException e) {
-			status = Status.ERROR;
-		}
-		if (status == Status.SUCCESS) {
-			msg = "移除文章成功";
-		} else {
-			msg = "移除文章失败";
-		}
-
-		if (logger.isInfoEnabled()) {
-			logger.info("[{}] {} {}", status, user.getName(), msg);
-		}
-
-		return new CommonResult(status, msg, articles);
-	}
-
-	@ResponseBody
-	// @RequestMapping(value = RM_ARTICLE_DELETE, method = RequestMethod.POST)
+	@RequestMapping(value = RM_ARTICLE_DELETE, method = RequestMethod.POST)
 	public Object deleteArticle(
 			@Validated @RequestAttribute("articles") List<Article> articles,
 			HttpServletRequest request) {
@@ -531,31 +497,6 @@ public class ArticleAction extends AbstractAction {
 		return new CommonResult(status, msg, locked);
 	}
 
-	// @RequestMapping(value = RM_ARTICLE_REMOVEABLE, method =
-	// RequestMethod.GET)
-	public Object isArticleRemoveable(
-			@Validated @RequestAttribute("article") Article article,
-			BindingResult result, HttpServletRequest request) {
-		short status = Status.SUCCESS;
-		String msg = null;
-
-		User user = AuthUtils.getCurrentUser(request);
-		boolean removeable = articleService.isArticleRemoveable(user, article);
-		if (removeable) {
-			msg = "查询到文章[" + article.getId() + "]" + article.getTitle()
-					+ "可以移除";
-		} else {
-			msg = "查询到文章[" + article.getId() + "]" + article.getTitle()
-					+ "不可以移除";
-		}
-
-		if (logger.isInfoEnabled()) {
-			logger.info("[{}] {} {}", status, user.getName(), msg);
-		}
-
-		return new CommonResult(status, msg, removeable);
-	}
-
 	// @RequestMapping(value = RM_ARTICLE_DELETEABLE, method =
 	// RequestMethod.GET)
 	public Object isArticleDeleteable(
@@ -605,8 +546,8 @@ public class ArticleAction extends AbstractAction {
 		if (article != null) {
 			Record record = new Record(article, user,
 					RequestUtils.getRequestAddress(request),
-					RequestUtils.getRequestAgent(request),
-					request.getHeader("User-Agent"));
+					RequestUtils.getRequestUserAgent(request),
+					RequestUtils.getRequestUserAgentName(request));
 			recordService.logRecord(record);
 		}
 
@@ -742,33 +683,7 @@ public class ArticleAction extends AbstractAction {
 		return new CommonResult(status, msg, article);
 	}
 
-	// @RequestMapping(value = RM_ARTICLE_TAG_REMOVE, method =
-	// RequestMethod.POST)
-	public Object removeArticleTag(
-			@Validated @RequestAttribute("article") Article article,
-			HttpServletRequest request) {
-		short status = 0;
-		String msg = null;
-
-		User cuser = AuthUtils.getCurrentUser(request);
-		AuthUtils.setModifier(request, article);
-		status = (short) articleService.removeArticleTag(cuser, article,
-				article.getTags());
-		if (status == Status.SUCCESS) {
-			msg = "移除文章[" + article.getId() + "]" + article.getTitle() + "标签成功";
-		} else {
-			msg = "移除文章[" + article.getId() + "]" + article.getTitle() + "标签失败";
-		}
-
-		if (logger.isInfoEnabled()) {
-			logger.info("[{}] {} {}", status, cuser.getName(), msg);
-		}
-
-		return new CommonResult(status, msg, article);
-	}
-
-	// @RequestMapping(value = RM_ARTICLE_TAG_DELETE, method =
-	// RequestMethod.POST)
+	@RequestMapping(value = RM_ARTICLE_TAG_DELETE, method = RequestMethod.POST)
 	public Object deleteArticleTag(
 			@Validated @RequestAttribute("article") Article article,
 			HttpServletRequest request) {
@@ -871,34 +786,6 @@ public class ArticleAction extends AbstractAction {
 		}
 
 		return new CommonResult(status, msg, locked);
-	}
-
-	// @RequestMapping(value = RM_ARTICLE_TAG_REMOVEABLE, method =
-	// RequestMethod.GET)
-	public Object isArticleTagRemoveable(
-			@Validated @RequestAttribute("article") Article article,
-			HttpServletRequest request) {
-		short status = Status.SUCCESS;
-		String msg = null;
-
-		User cuser = AuthUtils.getCurrentUser(request);
-		List<Tag> tags = article.getTags();
-		Tag tag = tags.get(0);
-		boolean removeable = articleService.isArticleTagRemoveable(cuser,
-				article, tag);
-		if (removeable) {
-			msg = "查询到文章[" + article.getId() + "]" + article.getTitle() + "标签["
-					+ tag.getId() + "]" + tag.getName() + "可以移除";
-		} else {
-			msg = "查询到文章[" + article.getId() + "]" + article.getTitle() + "标签["
-					+ tag.getId() + "]" + tag.getName() + "不可以移除";
-		}
-
-		if (logger.isInfoEnabled()) {
-			logger.info("[{}] {} {}", status, cuser.getName(), msg);
-		}
-
-		return new CommonResult(status, msg, removeable);
 	}
 
 	// @RequestMapping(value = RM_ARTICLE_TAG_DELETEABLE, method =

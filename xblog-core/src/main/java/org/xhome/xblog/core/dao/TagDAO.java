@@ -23,8 +23,6 @@ public interface TagDAO {
 
 	public int unlockTag(Tag tag);
 
-	public int removeTag(Tag tag);
-
 	public int deleteTag(Tag tag);
 
 	public boolean isTagExists(Tag tag);
@@ -32,8 +30,6 @@ public interface TagDAO {
 	public boolean isTagUpdateable(Tag tag);
 
 	public boolean isTagLocked(Tag tag);
-
-	public boolean isTagRemoveable(Tag tag);
 
 	public boolean isTagDeleteable(Tag tag);
 

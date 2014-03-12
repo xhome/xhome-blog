@@ -132,11 +132,9 @@ public class ArticleRolePermissionServiceTest extends AbstractTest {
 	}
 
 	@Test
-	public void testRemoveArticleRolePermission() {
+	public void testDeleteArticleRolePermission() {
 		ArticleRolePermission articleRolePermission = articleRolePermissionService
 				.getArticleRolePermission(oper, id);
-		articleRolePermissionService.removeArticleRolePermission(oper,
-				articleRolePermission);
 		articleRolePermissionService.deleteArticleRolePermission(oper,
 				articleRolePermission);
 	}

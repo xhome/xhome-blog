@@ -104,30 +104,20 @@
 		WHERE id = #{id}
 	</update>
 	
-	<update id="removeComment" parameterType="org.xhome.xblog.Comment">
-		UPDATE xhome_xblog_comment
-		SET modifier = #{modifier}, modified = NOW(), version = version + 1, status = 0
-		WHERE id = #{id}
-	</update>
-	
 	<delete id="deleteComment" parameterType="org.xhome.xblog.Comment">
 		DELETE FROM xhome_xblog_comment WHERE id = #{id}
 	</delete>
 	
 	<select id="isCommentUpdateable" resultType="boolean" parameterType="org.xhome.xblog.Comment">
-		SELECT COUNT(*) FROM xhome_xblog_comment WHERE id = #{id} AND status != 0 AND status != 4
+		SELECT COUNT(*) FROM xhome_xblog_comment WHERE id = #{id} AND status != 10
 	</select>
 	
 	<select id="isCommentLocked" resultType="boolean" parameterType="org.xhome.xblog.Comment">
-		SELECT COUNT(*) FROM xhome_xblog_comment WHERE id = #{id} AND status != 0 AND status = 5
-	</select>
-	
-	<select id="isCommentRemoveable" resultType="boolean" parameterType="org.xhome.xblog.Comment">
-		SELECT COUNT(*) FROM xhome_xblog_comment WHERE id = #{id} AND status != 2 AND status != 4
+		SELECT COUNT(*) FROM xhome_xblog_comment WHERE id = #{id} AND status = 5
 	</select>
 	
 	<select id="isCommentDeleteable" resultType="boolean" parameterType="org.xhome.xblog.Comment">
-		SELECT COUNT(*) FROM xhome_xblog_comment WHERE id = #{id} AND status != 3 AND status != 4
+		SELECT COUNT(*) FROM xhome_xblog_comment WHERE id = #{id} AND status != 10 AND status != 15
 	</select>
 	
 	<sql id="select_comment">
@@ -221,9 +211,6 @@
 			</if>
 			<if test="parameters.id_ge != null and parameters.id_ge != ''">
 				AND id &gt;= #{parameters.id_ge}
-			</if>
-			<if test="parameters.status == null or parameters.status == ''">
-				AND status != 0
 			</if>
 		</trim>
 	</sql>

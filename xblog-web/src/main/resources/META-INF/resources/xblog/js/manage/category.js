@@ -130,7 +130,7 @@ Ext.define('XHome.XBlog.Manage.Category', {
                 XHome.utils.request({
                     confirmMsg: '确认删除分类: ' + msg + ' ?',
                     progressMsg: '正在删除分类: ' + msg + '......',
-                    url: 'xblog/category/remove.json',
+                    url: 'xblog/category/delete.json',
                     params: XHome.utils.formEncode(categories, 'categories'),
                     success: function(result) {
                         store.remove(selections);

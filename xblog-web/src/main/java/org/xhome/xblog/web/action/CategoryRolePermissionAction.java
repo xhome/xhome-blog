@@ -40,13 +40,11 @@ public class CategoryRolePermissionAction extends AbstractAction {
 	public final static String RM_CATEGORY_ROLE_PERMISSION_UPDATE = "xblog/permission/category/role/update";
 	public final static String RM_CATEGORY_ROLE_PERMISSION_LOCK = "xblog/permission/category/role/lock";
 	public final static String RM_CATEGORY_ROLE_PERMISSION_UNLOCK = "xblog/permission/category/role/unlock";
-	public final static String RM_CATEGORY_ROLE_PERMISSION_REMOVE = "xblog/permission/category/role/remove";
 	public final static String RM_CATEGORY_ROLE_PERMISSION_DELETE = "xblog/permission/category/role/delete";
 
 	public final static String RM_CATEGORY_ROLE_PERMISSION_EXISTS = "xblog/permission/category/role/exists";
 	public final static String RM_CATEGORY_ROLE_PERMISSION_UPDATEABLE = "xblog/permission/category/role/updateable";
 	public final static String RM_CATEGORY_ROLE_PERMISSION_LOCKED = "xblog/permission/category/role/locked";
-	public final static String RM_CATEGORY_ROLE_PERMISSION_REMOVEABLE = "xblog/permission/category/role/removeable";
 	public final static String RM_CATEGORY_ROLE_PERMISSION_DELETEABLE = "xblog/permission/category/role/deleteable";
 	public final static String RM_CATEGORY_ROLE_PERMISSION_GET = "xblog/permission/category/role/get";
 	public final static String RM_CATEGORY_ROLE_PERMISSION_QUERY = "xblog/permission/category/role/query";
@@ -179,36 +177,6 @@ public class CategoryRolePermissionAction extends AbstractAction {
 		return new CommonResult(status, msg, permission);
 	}
 
-	@RequestMapping(value = RM_CATEGORY_ROLE_PERMISSION_REMOVE, method = RequestMethod.POST)
-	public Object removeCategoryRolePermission(
-			@Validated @RequestAttribute("permissions") List<CategoryRolePermission> permissions,
-			HttpServletRequest request) {
-		short status = 0;
-		String msg = null;
-
-		User user = AuthUtils.getCurrentUser(request);
-		for (CategoryRolePermission permission : permissions) {
-			AuthUtils.setModifier(request, permission);
-		}
-		try {
-			status = (short) permissionService.removeCategoryRolePermissions(
-					user, permissions);
-		} catch (RuntimeException e) {
-			status = Status.ERROR;
-		}
-		if (status == Status.SUCCESS) {
-			msg = "用户为分类移除角色权限成功";
-		} else {
-			msg = "用户为分类移除角色权限失败";
-		}
-
-		if (logger.isInfoEnabled()) {
-			logger.info("[{}] {} {}", status, user.getName(), msg);
-		}
-
-		return new CommonResult(status, msg, permissions);
-	}
-
 	@RequestMapping(value = RM_CATEGORY_ROLE_PERMISSION_DELETE, method = RequestMethod.POST)
 	public Object deleteCategoryRolePermission(
 			@Validated @RequestAttribute("permissions") List<CategoryRolePermission> permissions,
@@ -330,37 +298,6 @@ public class CategoryRolePermissionAction extends AbstractAction {
 		}
 
 		return new CommonResult(status, msg, locked);
-	}
-
-	@RequestMapping(value = RM_CATEGORY_ROLE_PERMISSION_REMOVEABLE, method = RequestMethod.GET)
-	public Object isCategoryRolePermissionRemoveable(
-			@Validated @RequestAttribute("permission") CategoryRolePermission permission,
-			HttpServletRequest request) {
-		short status = Status.SUCCESS;
-		String msg = null;
-
-		User user = AuthUtils.getCurrentUser(request);
-		boolean removeable = permissionService
-				.isCategoryRolePermissionRemoveable(user, permission);
-		Category category = permission.getCategory();
-		Role role = permission.getRole();
-		if (removeable) {
-			msg = "用户查询到分类" + category.getName() + "[" + category.getId()
-					+ "]角色" + role.getName() + "[" + role.getId() + "]权限"
-					+ permission.getPermission() + "[" + permission.getId()
-					+ "]可以移除";
-		} else {
-			msg = "用户查询到分类" + category.getName() + "[" + category.getId()
-					+ "]角色" + role.getName() + "[" + role.getId() + "]权限"
-					+ permission.getPermission() + "[" + permission.getId()
-					+ "]不可以移除";
-		}
-
-		if (logger.isInfoEnabled()) {
-			logger.info("[{}] {} {}", status, user.getName(), msg);
-		}
-
-		return new CommonResult(status, msg, removeable);
 	}
 
 	@RequestMapping(value = RM_CATEGORY_ROLE_PERMISSION_DELETEABLE, method = RequestMethod.GET)

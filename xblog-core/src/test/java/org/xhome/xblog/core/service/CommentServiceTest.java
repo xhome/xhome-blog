@@ -105,9 +105,8 @@ public class CommentServiceTest extends AbstractTest {
 	}
 
 	@Test
-	public void testRemoveComment() {
+	public void testDeleteComment() {
 		Comment comment = commentService.getComment(oper, id);
-		commentService.removeComment(oper, comment);
 		commentService.deleteComment(oper, comment);
 	}
 

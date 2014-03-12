@@ -324,76 +324,6 @@ public class CategoryUserPermissionServiceImpl implements
 
 	@Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Throwable.class)
 	@Override
-	public int removeCategoryUserPermission(User oper,
-			CategoryUserPermission categoryUserPermission) {
-		long id = categoryUserPermission.getId();
-		Category category = categoryUserPermission.getCategory();
-		User user = categoryUserPermission.getUser();
-		Long categoryId = category != null ? category.getId() : null, userId = user != null ? user
-				.getId() : null;
-		String categoryName = category != null ? category.getName() : "", userName = user != null ? user
-				.getName() : "";
-		int permission = categoryUserPermission.getPermission();
-		String mstr = categoryName + "(" + categoryId + ")" + ", " + userName
-				+ "(" + userId + ")";
-
-		if (!this.beforeCategoryUserPermissionManage(oper, Action.REMOVE,
-				categoryUserPermission)) {
-			if (logger.isDebugEnabled()) {
-				logger.debug(
-						"try to remove category {}[{}] permission {} for user {}[{}], but it's blocked",
-						categoryName, categoryId, permission, userName, userId);
-			}
-
-			this.logManage(mstr, Action.REMOVE, null, Status.BLOCKED, oper);
-			this.afterCategoryUserPermissionManage(oper, Action.REMOVE,
-					Status.BLOCKED, categoryUserPermission);
-			return Status.BLOCKED;
-		}
-
-		short r = Status.SUCCESS;
-		if (categoryUserPermissionDAO
-				.isCategoryUserPermissionRemoveable(categoryUserPermission)) {
-			if (logger.isDebugEnabled()) {
-				logger.debug(
-						"remove category {}[{}] permission {} for user {}[{}]",
-						categoryName, categoryId, permission, userName, userId);
-			}
-			categoryUserPermissionDAO
-					.removeCategoryUserPermission(categoryUserPermission);
-		} else {
-			if (logger.isDebugEnabled()) {
-				logger.debug(
-						"category {}[{}] permission {} for user {}[{}] isn't removeable",
-						categoryName, categoryId, permission, userName, userId);
-			}
-			r = Status.NO_REMOVE;
-		}
-
-		this.logManage(mstr, Action.REMOVE, id, r, oper);
-		this.afterCategoryUserPermissionManage(oper, Action.REMOVE, r,
-				categoryUserPermission);
-		return r;
-	}
-
-	@Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Throwable.class)
-	@Override
-	public int removeCategoryUserPermissions(User oper,
-			List<CategoryUserPermission> categoryUserPermissions) {
-		int r = Status.SUCCESS;
-		for (CategoryUserPermission categoryUserPermission : categoryUserPermissions) {
-			r = this.removeCategoryUserPermission(oper, categoryUserPermission);
-			if (r != Status.SUCCESS) {
-				throw new RuntimeException(
-						"fail to remove CategoryUserPermission ["
-								+ categoryUserPermission.getId() + "]");
-			}
-		}
-		return r;
-	}
-
-	@Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Throwable.class)
-	@Override
 	public int deleteCategoryUserPermission(User oper,
 			CategoryUserPermission categoryUserPermission) {
 		long id = categoryUserPermission.getId();
@@ -606,56 +536,6 @@ public class CategoryUserPermissionServiceImpl implements
 
 		this.logManage(mstr, Action.IS_LOCKED, id, Status.SUCCESS, oper);
 		this.afterCategoryUserPermissionManage(oper, Action.IS_LOCKED,
-				Status.SUCCESS, categoryUserPermission);
-		return e;
-	}
-
-	@Override
-	public boolean isCategoryUserPermissionRemoveable(User oper,
-			CategoryUserPermission categoryUserPermission) {
-		long id = categoryUserPermission.getId();
-		Category category = categoryUserPermission.getCategory();
-		User user = categoryUserPermission.getUser();
-		Long categoryId = category != null ? category.getId() : null, userId = user != null ? user
-				.getId() : null;
-		String categoryName = category != null ? category.getName() : "", userName = user != null ? user
-				.getName() : "";
-		int permission = categoryUserPermission.getPermission();
-		String mstr = categoryName + "(" + categoryId + ")" + ", " + userName
-				+ "(" + userId + ")";
-
-		if (!this.beforeCategoryUserPermissionManage(oper,
-				Action.IS_REMOVEABLE, categoryUserPermission)) {
-			if (logger.isDebugEnabled()) {
-				logger.debug(
-						"try to juge removeable of category {}[{}] permission {} for user {}[{}], but it's blocked",
-						categoryName, categoryId, permission, userName, userId);
-			}
-
-			this.logManage(mstr, Action.IS_REMOVEABLE, null, Status.BLOCKED,
-					oper);
-			this.afterCategoryUserPermissionManage(oper, Action.IS_REMOVEABLE,
-					Status.BLOCKED, categoryUserPermission);
-			return false;
-		}
-
-		boolean e = categoryUserPermissionDAO
-				.isCategoryUserPermissionRemoveable(categoryUserPermission);
-
-		if (logger.isDebugEnabled()) {
-			if (e) {
-				logger.debug(
-						"category {}[{}] permission {} for user {}[{}] is removeable",
-						categoryName, categoryId, permission, userName, userId);
-			} else {
-				logger.debug(
-						"category {}[{}] permission {} for user {}[{}] isn't removeable",
-						categoryName, categoryId, permission, userName, userId);
-			}
-		}
-
-		this.logManage(mstr, Action.IS_REMOVEABLE, id, Status.SUCCESS, oper);
-		this.afterCategoryUserPermissionManage(oper, Action.IS_REMOVEABLE,
 				Status.SUCCESS, categoryUserPermission);
 		return e;
 	}

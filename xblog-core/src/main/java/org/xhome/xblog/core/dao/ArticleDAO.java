@@ -23,15 +23,11 @@ public interface ArticleDAO {
 
 	public int unlockArticle(Article article);
 
-	public int removeArticle(Article article);
-
 	public int deleteArticle(Article article);
 
 	public boolean isArticleUpdateable(Article article);
 
 	public boolean isArticleLocked(Article article);
-
-	public boolean isArticleRemoveable(Article article);
 
 	public boolean isArticleDeleteable(Article article);
 
@@ -47,8 +43,6 @@ public interface ArticleDAO {
 
 	public int unlockArticleTag(Map<String, Object> articleTag);
 
-	public int removeArticleTag(Map<String, Object> articleTag);
-
 	public int deleteArticleTag(Map<String, Object> articleTag);
 
 	public boolean hasArticleTag(Map<String, Object> articleTag);
@@ -56,8 +50,6 @@ public interface ArticleDAO {
 	public boolean isArticleTagUpdateable(Map<String, Object> articleTag);
 
 	public boolean isArticleTagLocked(Map<String, Object> articleTag);
-
-	public boolean isArticleTagRemoveable(Map<String, Object> articleTag);
 
 	public boolean isArticleTagDeleteable(Map<String, Object> articleTag);
 
