@@ -60,5 +60,10 @@
     <property name="sqlSessionFactory" ref="sqlSessionFactory"/>  
     <property name="mapperInterface" value="org.xhome.xblog.core.dao.ArticleUserPermissionDAO"/> 
   </bean>
+  
+  <bean id="articleAttachmentDAO" class="org.mybatis.spring.mapper.MapperFactoryBean" scope="singleton"> 
+    <property name="sqlSessionFactory" ref="sqlSessionFactory"/>  
+    <property name="mapperInterface" value="org.xhome.xblog.core.dao.ArticleAttachmentDAO"/> 
+  </bean>
     
 </beans>

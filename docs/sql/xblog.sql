@@ -31,7 +31,7 @@ CREATE TABLE xhome_xblog_category
    created              TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
    modified             TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '修改时间',
    version              TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '版本',
-   status               TINYINT UNSIGNED NOT NULL DEFAULT 1 COMMENT '状态0:标记删除,1:正常,2:不允许删除,3:不允许修改,4:锁定',
+   status               TINYINT UNSIGNED NOT NULL DEFAULT 1 COMMENT '状态 1: 正常, 5: 锁定, 10: 不允许修改, 15: 不允许删除',
    PRIMARY KEY (id),
    CONSTRAINT FK_CATEGORY_PARENT FOREIGN KEY (parent) REFERENCES xhome_xblog_category (id) ON DELETE RESTRICT ON UPDATE CASCADE
 )
@@ -60,7 +60,7 @@ CREATE TABLE xhome_xblog_article
    created              TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
    modified             TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '修改时间',
    version              TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '版本',
-   status               TINYINT UNSIGNED NOT NULL DEFAULT 1 COMMENT '状态0:标记删除,1:正常,2:不允许删除,3:不允许修改,4:锁定',
+   status               TINYINT UNSIGNED NOT NULL DEFAULT 1 COMMENT '状态 1: 正常, 5: 锁定, 10: 不允许修改, 15: 不允许删除',
    PRIMARY KEY (id),
    CONSTRAINT FK_ARTICLE_category FOREIGN KEY (category) REFERENCES xhome_xblog_category (id) ON DELETE RESTRICT ON UPDATE CASCADE
 )
@@ -84,7 +84,7 @@ CREATE TABLE xhome_xblog_tag
    created              TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
    modified             TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '修改时间',
    version              TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '版本',
-   status               TINYINT UNSIGNED NOT NULL DEFAULT 1 COMMENT '状态0:标记删除,1:正常,2:不允许删除,3:不允许修改,4:锁定',
+   status               TINYINT UNSIGNED NOT NULL DEFAULT 1 COMMENT '状态 1: 正常, 5: 锁定, 10: 不允许修改, 15: 不允许删除',
    PRIMARY KEY (id)
 )
 ENGINE = InnoDB
@@ -107,7 +107,7 @@ CREATE TABLE xhome_xblog_article_tag
    created              TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
    modified             TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '修改时间',
    version              TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '版本',
-   status               TINYINT UNSIGNED NOT NULL DEFAULT 1 COMMENT '状态0:标记删除,1:正常,2:不允许删除,3:不允许修改,4:锁定',
+   status               TINYINT UNSIGNED NOT NULL DEFAULT 1 COMMENT '状态 1: 正常, 5: 锁定, 10: 不允许修改, 15: 不允许删除',
    PRIMARY KEY (id),
    CONSTRAINT FK_AT_TAG FOREIGN KEY (tag) REFERENCES xhome_xblog_tag (id) ON DELETE RESTRICT ON UPDATE CASCADE,
    CONSTRAINT FK_AT_ARTICLE FOREIGN KEY (article) REFERENCES xhome_xblog_article (id) ON DELETE CASCADE ON UPDATE CASCADE
@@ -137,7 +137,7 @@ CREATE TABLE xhome_xblog_comment
    created              TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
    modified             TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '修改时间',
    version              TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '版本',
-   status               TINYINT UNSIGNED NOT NULL DEFAULT 1 COMMENT '状态0:标记删除,1:正常,2:不允许删除,3:不允许修改,4:锁定',
+   status               TINYINT UNSIGNED NOT NULL DEFAULT 1 COMMENT '状态 1: 正常, 5: 锁定, 10: 不允许修改, 15: 不允许删除',
    PRIMARY KEY (id),
    CONSTRAINT FK_COMMENT_ARTICLE FOREIGN KEY (article) REFERENCES xhome_xblog_article (id) ON DELETE CASCADE ON UPDATE CASCADE
 )
@@ -149,7 +149,32 @@ AUTO_INCREMENT = 1;
 ALTER TABLE xhome_xblog_comment COMMENT '文章评论';
 
 /*==============================================================*/
-/* Table: xhome_xblog_record                           */
+/* Table: xhome_xblog_article_attachment                        */
+/*==============================================================*/
+CREATE TABLE xhome_xblog_article_attachment
+(
+   id                   BIGINT NOT NULL AUTO_INCREMENT COMMENT '附件ID',
+   article              BIGINT NOT NULL COMMENT '文章ID',
+   file_content         BIGINT NOT NULL COMMENT '上传文件ID',
+   owner                BIGINT NOT NULL COMMENT '创建者',
+   modifier             BIGINT NOT NULL COMMENT '修改者',
+   created              TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
+   modified             TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '修改时间',
+   version              TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '版本',
+   status               TINYINT UNSIGNED NOT NULL DEFAULT 1 COMMENT '状态 1: 正常, 5: 锁定, 10: 不允许修改, 15: 不允许删除',
+   PRIMARY KEY (id),
+   CONSTRAINT FK_ATTACHMENT_ARTICLE FOREIGN KEY (article) REFERENCES xhome_xblog_article (id) ON DELETE CASCADE ON UPDATE CASCADE,
+   CONSTRAINT FK_ATTACHMENT_FILE_CONTENT FOREIGN KEY (file_content) REFERENCES xhome_xfileupload_file_content (id) ON DELETE CASCADE ON UPDATE CASCADE
+)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8
+COLLATE = utf8_general_ci
+AUTO_INCREMENT = 1;
+
+ALTER TABLE xhome_xblog_article_attachment COMMENT '文章附件';
+
+/*==============================================================*/
+/* Table: xhome_xblog_record                                    */
 /*==============================================================*/
 CREATE TABLE xhome_xblog_record
 (
@@ -184,7 +209,7 @@ CREATE TABLE xhome_xblog_category_role_permission
    created              TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
    modified             TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '修改时间',
    version              TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '版本',
-   status               TINYINT UNSIGNED NOT NULL DEFAULT 1 COMMENT '状态0:标记删除,1:正常,2:不允许删除,3:不允许修改,4:锁定',
+   status               TINYINT UNSIGNED NOT NULL DEFAULT 1 COMMENT '状态 1: 正常, 5: 锁定, 10: 不允许修改, 15: 不允许删除',
    primary key (id)
 )
 ENGINE = InnoDB
@@ -208,7 +233,7 @@ CREATE TABLE xhome_xblog_category_user_permission
    created              TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
    modified             TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '修改时间',
    version              TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '版本',
-   status               TINYINT UNSIGNED NOT NULL DEFAULT 1 COMMENT '状态0:标记删除,1:正常,2:不允许删除,3:不允许修改,4:锁定',
+   status               TINYINT UNSIGNED NOT NULL DEFAULT 1 COMMENT '状态 1: 正常, 5: 锁定, 10: 不允许修改, 15: 不允许删除',
    PRIMARY KEY (id)
 )
 ENGINE = InnoDB
@@ -232,7 +257,7 @@ CREATE TABLE xhome_xblog_article_role_permission
    created              TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
    modified             TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '修改时间',
    version              TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '版本',
-   status               TINYINT UNSIGNED NOT NULL DEFAULT 1 COMMENT '状态0:标记删除,1:正常,2:不允许删除,3:不允许修改,4:锁定',
+   status               TINYINT UNSIGNED NOT NULL DEFAULT 1 COMMENT '状态 1: 正常, 5: 锁定, 10: 不允许修改, 15: 不允许删除',
    PRIMARY KEY (id)
 )
 ENGINE = InnoDB
@@ -256,7 +281,7 @@ CREATE TABLE xhome_xblog_article_user_permission
    created              TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
    modified             TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '修改时间',
    version              TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '版本',
-   status               TINYINT UNSIGNED NOT NULL DEFAULT 1 COMMENT '状态0:标记删除,1:正常,2:不允许删除,3:不允许修改,4:锁定',
+   status               TINYINT UNSIGNED NOT NULL DEFAULT 1 COMMENT '状态 1: 正常, 5: 锁定, 10: 不允许修改, 15: 不允许删除',
    PRIMARY KEY (id)
 )
 ENGINE = InnoDB
@@ -280,7 +305,7 @@ CREATE TABLE xhome_xblog_tag_role_permission
    created              TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
    modified             TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '修改时间',
    version              TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '版本',
-   status               TINYINT UNSIGNED NOT NULL DEFAULT 1 COMMENT '状态0:标记删除,1:正常,2:不允许删除,3:不允许修改,4:锁定',
+   status               TINYINT UNSIGNED NOT NULL DEFAULT 1 COMMENT '状态 1: 正常, 5: 锁定, 10: 不允许修改, 15: 不允许删除',
    PRIMARY KEY (id)
 )
 ENGINE = InnoDB
@@ -304,7 +329,7 @@ CREATE TABLE xhome_xblog_tag_user_permission
    created              TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
    modified             TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '修改时间',
    version              TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '版本',
-   status               TINYINT UNSIGNED NOT NULL DEFAULT 1 COMMENT '状态0:标记删除,1:正常,2:不允许删除,3:不允许修改,4:锁定',
+   status               TINYINT UNSIGNED NOT NULL DEFAULT 1 COMMENT '状态 1: 正常, 5: 锁定, 10: 不允许修改, 15: 不允许删除',
    PRIMARY KEY (id)
 )
 ENGINE = InnoDB
@@ -313,25 +338,3 @@ COLLATE = utf8_general_ci
 AUTO_INCREMENT = 1;
 
 ALTER TABLE xhome_xblog_tag_user_permission COMMENT '标签用户访问权限';
-
-/*==============================================================*/
-/* Table: xhome_xblog_manage_log                                */
-/*==============================================================*/
-CREATE TABLE xhome_xblog_manage_log
-(
-   id                   BIGINT NOT NULL AUTO_INCREMENT COMMENT 'ID',
-   content              VARCHAR(50) COMMENT '内容描述',
-   action               TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '0:Add, 1:Update, 2: Remove, 3: Search...',
-   type                 TINYINT UNSIGNED NOT NULL DEFAULT 2 COMMENT '1: 分类, 2: 文章, 3: 标签, 4: 文章标签, 5: 评论, 6: 文章访问记录..',
-   obj                  BIGINT COMMENT '对象ID,NULL表示未知',
-   owner                BIGINT COMMENT '创建者,NULL表示匿名用户',
-   created              TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '操作时间',
-   status               TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '操作结果,0:成功,其它：错误状态码',
-   PRIMARY KEY (id)
-)
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8
-COLLATE = utf8_general_ci
-AUTO_INCREMENT = 1;
-
-ALTER TABLE xhome_xblog_manage_log COMMENT '管理日志';

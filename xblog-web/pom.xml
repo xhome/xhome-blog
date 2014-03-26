@@ -10,6 +10,7 @@
     <properties>
         <xblog-core.version>1.0</xblog-core.version>
         <xauth-web.version>1.0</xauth-web.version>
+        <xfileupload-web.version>1.0</xfileupload-web.version>
         <xhome-validator.version>1.0</xhome-validator.version>
         <xhome-web.version>1.0</xhome-web.version>
         <xhome-crypto.version>1.0</xhome-crypto.version>
@@ -23,7 +24,7 @@
         <slf4j-api.version>1.7.5</slf4j-api.version>
         <yuicompressor-maven-plugin.version>1.3.3</yuicompressor-maven-plugin.version>
         <junit.version>4.11</junit.version>
-        <javax.servlet.version>2.5</javax.servlet.version>
+        <javax.servlet.version>3.1.0</javax.servlet.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.6</java.version>
         <java.encoding>UTF-8</java.encoding>
@@ -34,6 +35,12 @@
             <groupId>org.xhome</groupId>
             <artifactId>xblog-core</artifactId>
             <version>${xblog-core.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.xhome</groupId>
+            <artifactId>xfileupload-web</artifactId>
+            <version>${xfileupload-web.version}</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.xhome</groupId>
@@ -126,7 +133,7 @@
         </dependency>
         <dependency>
             <groupId>javax.servlet</groupId>
-            <artifactId>servlet-api</artifactId>
+            <artifactId>javax.servlet-api</artifactId>
             <version>${javax.servlet.version}</version>
             <scope>provided</scope>
         </dependency>

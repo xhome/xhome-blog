@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.xhome.xblog.core.dao.ArticleAttachmentDAO">
+	
+	<cache/>
+	
+	<resultMap id="articleAttachmentResultMap" type="org.xhome.xblog.ArticleAttachment">
+		<id property="id" column="id"/>
+		<result property="owner" column="owner"/>
+		<result property="modifier" column="modifier"/>
+		<result property="created" column="created"/>
+		<result property="modified" column="modified"/>
+		<result property="version" column="version"/>
+		<result property="status" column="status"/>
+		<association property="article" javaType="org.xhome.xblog.Article" columnPrefix="article_">
+			<id property="id" column="id"/>
+			<result property="title" column="title"/>
+			<result property="owner" column="owner"/>
+			<result property="modifier" column="modifier"/>
+			<result property="created" column="created"/>
+			<result property="modified" column="modified"/>
+			<result property="version" column="version"/>
+			<result property="status" column="status"/>
+		</association>
+		<association property="fileContent" javaType="org.xhome.xfileupload.FileContent" columnPrefix="file_content_">
+            <id property="id" column="id"/>
+            <result property="path" column="path"/>
+            <result property="name" column="name"/>
+            <result property="original" column="original"/>
+            <result property="type" column="type"/>
+            <result property="size" column="size"/>
+            <result property="owner" column="owner"/>
+            <result property="modifier" column="modifier"/>
+            <result property="created" column="created"/>
+            <result property="modified" column="modified"/>
+            <result property="version" column="version"/>
+            <result property="status" column="status"/>
+        </association>
+	</resultMap>
+	
+	<insert id="addArticleAttachment" parameterType="org.xhome.xblog.ArticleAttachment" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO xhome_xblog_article_attachment (id, article, file_content,
+			owner, modifier, created, modified, version, status)
+		VALUES(#{id}, #{article.id}, #{fileContent.id},
+			#{owner}, #{modifier}, #{created}, #{modified}, #{version}, #{status})
+	</insert>
+	
+	<delete id="deleteArticleAttachment" parameterType="org.xhome.xblog.ArticleAttachment">
+		DELETE FROM xhome_xblog_article_attachment WHERE id = #{id}
+	</delete>
+	
+	<sql id="fromArticleAttachment">
+		FROM xhome_xblog_article_attachment AS aa
+		LEFT JOIN xhome_xblog_article AS a ON aa.article = a.id
+		LEFT JOIN xhome_xfileupload_file_content AS f ON aa.file_content = f.id
+	</sql>
+	
+	<sql id="selectArticleAttachment">
+		SELECT aa.id, aa.owner, aa.modifier, aa.created, aa.modified, aa.version, aa.status,
+			a.id AS article_id, a.title AS article_title, a.owner AS article_owner, a.modifier AS article_modifier,
+			a.created AS article_created, a.modified AS article_modified, a.version AS article_version, a.status AS article_status,
+			f.id AS file_content_id, f.path AS file_content_path, f.name AS file_content_name, f.original AS file_content_original,
+			f.type AS file_content_type, f.size AS file_content_size, f.owner AS file_content_owner,
+			f.modifier AS file_content_modifier, f.created AS file_content_created, f.modified AS file_content_modified,
+			f.version AS file_content_version, f.status AS file_content_status
+	</sql>
+	
+	<select id="queryArticleAttachment" resultMap="articleAttachmentResultMap" parameterType="long">
+		<include refid="selectArticleAttachment"/>
+		<include refid="fromArticleAttachment"/>
+		WHERE aa.id = #{id}
+	</select>
+	
+	<sql id="restriction_article_attachmentes">
+		<trim prefix="WHERE" prefixOverrides="AND">
+			<if test="parameters.article_id != null and parameters.article_id != ''">
+				AND aa.article = #{parameters.article_id}
+			</if>
+			<if test="parameters.fileContent_id != null and parameters.fileContent_id != ''">
+                AND aa.file_content = #{parameters.fileContent_id}
+            </if>
+		</trim>
+		ORDER BY aa.modified DESC
+        LIMIT #{start}, #{limit}
+	</sql>
+	
+	<select id="queryArticleAttachmentes" resultMap="articleAttachmentResultMap" parameterType="org.xhome.db.query.QueryBase">
+		<include refid="selectArticleAttachment"/>
+		<include refid="fromArticleAttachment"/>
+		<include refid="restriction_article_attachmentes"/>
+	</select>
+	
+	<select id="countArticleAttachmentes" resultType="long" parameterType="org.xhome.db.query.QueryBase">
+		SELECT COUNT(*) FROM xhome_xblog_article_attachment AS aa
+		<include refid="restriction_article_attachmentes"/>
+	</select>
+	
+</mapper>

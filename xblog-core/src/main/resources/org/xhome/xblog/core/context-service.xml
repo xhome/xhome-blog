@@ -72,4 +72,8 @@
   	<property name="manageLogService" ref="manageLogService"/>
   </bean>
   
+  <bean id="articleAttachmentService" class="org.xhome.xblog.core.service.ArticleAttachmentServiceImpl" scope="singleton">
+    <property name="articleAttachmentDAO" ref="articleAttachmentDAO"/>
+  </bean>
+  
 </beans>

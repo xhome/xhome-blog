@@ -6,6 +6,7 @@
   
   <import resource="classpath*:org/xhome/xblog/core/context-service.xml"/>
   <import resource="classpath*:org/xhome/xauth/web/context-action.xml"/>
+  <import resource="classpath*:org/xhome/xfileupload/web/context-action.xml"/>
   
   <bean id="categoryAction" class="org.xhome.xblog.web.action.CategoryAction" scope="singleton">
   	<property name="categoryService" ref="categoryService"/>
@@ -21,6 +22,8 @@
   	<property name="categoryService" ref="categoryService"/>
   	<property name="tagService" ref="tagService"/>
   	<property name="blogConfigService" ref="blogConfigService"/>
+    <property name="fileContentService" ref="fileContentService"/>
+    <property name="articleAttachmentService" ref="articleAttachmentService"/>
   </bean>
   
   <bean id="commentAction" class="org.xhome.xblog.web.action.CommentAction" scope="singleton">

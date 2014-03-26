@@ -5,11 +5,12 @@
     <artifactId>xblog-core</artifactId>
     <packaging>jar</packaging>
     <version>1.0</version>
-    <name>xblog-core Maven Project</name>
+    <name>xblog-core</name>
   
     <properties>
-        <xauth-core.version>1.0</xauth-core.version>
         <xblog-bean.version>1.0</xblog-bean.version>
+        <xauth-core.version>1.0</xauth-core.version>
+        <xfileupload-bean.version>1.0</xfileupload-bean.version>
         <xhome-db.version>1.0</xhome-db.version>
         <xhome-common.version>1.0</xhome-common.version>
         <slf4j.version>1.7.5</slf4j.version>
@@ -35,6 +36,12 @@
             <groupId>org.xhome</groupId>
             <artifactId>xauth-core</artifactId>
             <version>${xauth-core.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.xhome</groupId>
+            <artifactId>xfileupload-bean</artifactId>
+            <version>${xfileupload-bean.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
