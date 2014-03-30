@@ -3,7 +3,7 @@ package org.xhome.xblog.web.validator;
 import org.jsoup.Jsoup;
 import org.jsoup.safety.Whitelist;
 import org.springframework.validation.Errors;
-import org.xhome.util.StringUtils;
+import org.xhome.common.util.StringUtils;
 import org.xhome.validator.Validator;
 import org.xhome.validator.config.BlogValidatorConfig;
 import org.xhome.xblog.Comment;
