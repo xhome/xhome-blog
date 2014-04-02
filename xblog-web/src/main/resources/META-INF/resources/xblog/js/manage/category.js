@@ -34,8 +34,8 @@ Ext.define('XHome.XBlog.Manage.Category', {
             emptyText: '请输入分类名称',
             allowBlank: false,
             blankText: '分类名称不能为空',
-            minLength: 4,
-            minLengthText: '分类名称不能少于4个字符',
+            minLength: 2,
+            minLengthText: '分类名称不能少于2个字符',
             maxLength: 30,
             maxLengthText: '分类名称不能超过30个字符',
         });

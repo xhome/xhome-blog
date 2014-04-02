@@ -34,8 +34,8 @@ Ext.define('XHome.XBlog.Manage.Tag', {
             emptyText: '请输入标签名称',
             allowBlank: false,
             blankText: '标签名称不能为空',
-            minLength: 4,
-            minLengthText: '标签名称不能少于4个字符',
+            minLength: 2,
+            minLengthText: '标签名称不能少于2个字符',
             maxLength: 30,
             maxLengthText: '标签名称不能超过30个字符',
         });

@@ -107,7 +107,7 @@
 	<select id="queryTags" resultType="org.xhome.xblog.Tag" parameterType="org.xhome.db.query.QueryBase">
 		SELECT * FROM xhome_xblog_tag
 		<include refid="restriction_tags"/>
-		ORDER BY name
+		ORDER BY articleCount DESC
 		LIMIT #{start}, #{limit}
 	</select>
 	

@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -276,6 +277,7 @@ public class ArticleAction extends AbstractAction {
         long textLen = 0, tmpLen = 0;
         StringBuffer content = new StringBuffer();
 
+        Elements children;
         while (element != null) {
             Iterator<Element> elements = element.children().iterator();
             while (elements.hasNext()) {
@@ -290,14 +292,25 @@ public class ArticleAction extends AbstractAction {
                 }
 
             }
-            if (textLen == 0 && element.childNodeSize() > 0) {
-                element = element.child(0);
+            children = element.children();
+            if (textLen == 0 && children.size() > 0) {
+                element = children.get(0);
                 tmpLen = 0;
             } else {
                 break;
             }
         }
 
+        if (content.length() == 0) {
+            String tmpStr = element.outerHtml();
+            maxLen -= 10;
+            if (tmpStr.length() > maxLen) {
+                content.append(tmpStr.substring(0, (int) maxLen));
+                content.append("</").append(element.tagName()).append("><br/>");
+            } else {
+                content.append(tmpStr);
+            }
+        }
         article.setContent(content.toString());
     }
 

@@ -113,7 +113,7 @@
 	<select id="queryCategorys" resultType="org.xhome.xblog.Category" parameterType="org.xhome.db.query.QueryBase">
 		SELECT * FROM xhome_xblog_category
 		<include refid="restriction_categorys"/>
-		ORDER BY name
+		ORDER BY articleCount DESC
 		LIMIT #{start}, #{limit}
 	</select>
 	

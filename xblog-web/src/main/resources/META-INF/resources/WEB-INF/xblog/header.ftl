@@ -1,5 +1,8 @@
 <div id="header">
+<#--
 <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+-->
+<nav class="navbar navbar-inverse navbar-static-top" role="navigation">
     <div class="container">
         <div class="col-lg-2">
             <a class="navbar-brand" href="${xblog.article_index_url}">XHome XBlog</a>
