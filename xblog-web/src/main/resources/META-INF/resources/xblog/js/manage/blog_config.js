@@ -13,6 +13,24 @@ Ext.define('XHome.XBlog.Manage.BlogConfig', {
             config = {};
         }
 
+        var switch_configs = {'xblog_allow_article_comment': 1},
+            number_configs = {'xblog_article_content_length': 1};
+
+        // 搜索面板
+        var spanel = Ext.create('XHome.Dashboard.SearchPanel', {
+            items: [{
+                name: 'parameters["display"]',
+                fieldLabel: '配置项',
+                labelWidth: 40,
+                maxLength: 50,
+                maxLengthText: '配置项不能超过50个字符',
+            }, {
+                name: 'parameters["category"]',
+                hidden: true,
+                value: 2,
+            }],
+        });
+
         // 数据显示表格
         var grid = Ext.create('XHome.Dashboard.EditorGridPanel', {
             autoSelModel: false,
@@ -34,7 +52,7 @@ Ext.define('XHome.XBlog.Manage.BlogConfig', {
                 dataIndex: 'value',
                 renderer: function(value, meta, record) {
                     var config = record.getData();
-                    if (config.item == 'xblog_allow_article_comment') {
+                    if (config.item in switch_configs) {
                         return {0: '关闭', 1: '开启'}[value]; 
                     }
                     return value; 
@@ -47,7 +65,7 @@ Ext.define('XHome.XBlog.Manage.BlogConfig', {
                 fields: ['id', 'category', 'item', 'display', 'value',
                     'createdStr', 'modifiedStr',
                     'owner', 'modifier', 'version', 'status'],
-                url: 'xauth/config/query.json?parameters["category"]=2',
+                url: 'xauth/config/query.json',
             }),
 
             /**
@@ -56,11 +74,38 @@ Ext.define('XHome.XBlog.Manage.BlogConfig', {
             editConfig: function() {
                 var selection = grid.getSelectionModel().getSelection()[0],
                     config = selection.getData(),
-                    formConfig = XHome.utils.formEncode(config, 'config');
+                    formConfig = XHome.utils.formEncode(config, 'config'),
+                    input;
+                
+                if (config.item in switch_configs) {
+                    input = Ext.create('XHome.Combo.Switch', {
+                        fieldLabel: '配置值',
+                        name: 'config.value',
+                        itemId: 'config.value',
+                        value: config.value,
+                    });
+                } else {
+                    input = {
+                        fieldLabel: '配置值',
+                        name: 'config.value',
+                        itemId: 'config.value',
+                        emptyText: '请输入配置值',
+                        allowBlank: false,
+                        blankText: '配置值不能为空',
+                        maxLength: 1000,
+                        maxLengthText: '配置值不能超过1000个字符',
+                        value: config.value,
+                    };
+                    
+                    if (config.item in number_configs) {
+                        input['xtype'] = 'numberfield';
+                    }
+                }
+
                 Ext.create('XHome.Dashboard.FormWindow', {
                     title: '修改配置项',
                     height: 150,
-                    width: 300,
+                    width: 400,
                     url: 'xauth/config/update.json',
                     success: function(result) {
                         selection.data = result.data;
@@ -72,33 +117,26 @@ Ext.define('XHome.XBlog.Manage.BlogConfig', {
                         fieldLabel: '配置项',
                         value: config.display,
                         disabled: true,
-                    }, {
-                        fieldLabel: '配置值',
-                        name: 'config.value',
-                        itemId: 'config.value',
-                        emptyText: '请输入配置值',
-                        allowBlank: false,
-                        blankText: '配置值不能为空',
-                        maxLength: 1000,
-                        maxLengthText: '配置值不能超过1000个字符',
-                        value: config.value,
-                    }],
+                    }, input ],
                 }).show();
             },
-            selType: 'cellmodel',
-            plugins: [new Ext.grid.plugin.CellEditing({
-                clicksToEdit: 1,
-            })],
-            /**
-            listeners: {
-                beforecellclick: function(gridView, td, cellIndex, record, tr, rowIndex, e, eOpts) {
-                    return true;
-                },
-            },
-            */
         });
 
-        config.items = [grid];
+        // 右键菜单
+        var rightMenu = Ext.create('Ext.menu.Menu', {
+            items: [{
+                text: '修改配置项',
+                iconAlign: 'left',
+                iconCls: 'icon_edit',
+                handler: function(button, e) {
+                    grid.editConfig();
+                },
+            }],
+        });
+
+        XHome.utils.bindGridClick(grid, rightMenu, grid.editConfig);
+
+        config.items = [spanel, grid];
         this.callParent([config]);
     },
 });
