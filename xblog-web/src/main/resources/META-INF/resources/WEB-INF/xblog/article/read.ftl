@@ -14,12 +14,8 @@
 <#-- 导航菜单 结束 -->
 
 <div id="wrapper" class="container">
-    <#-- 导航菜单 开始 --> 
-    <@include file = "nav.ftl" /> 
-    <#-- 导航菜单 结束 --> 
-
     <#-- 页面主内容 开始 -->
-    <div class="col-lg-10">
+    <div class="col-lg-9">
         <#if article??>
             <#-- 文章内容 开始 -->
             <@include file = "article.ftl" /> 
@@ -78,6 +74,10 @@
         </#if>
     </div>
     <#-- 页面主内容 结束 -->
+
+    <#-- 导航菜单 开始 --> 
+    <@include file = "nav.ftl" /> 
+    <#-- 导航菜单 结束 --> 
 </div>
 
 <#-- 版权信息 开始 -->

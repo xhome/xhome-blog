@@ -13,12 +13,8 @@
 <@include file = "header.ftl" />
 <#-- 导航菜单 结束 -->
 <div id="wrapper" class="container">
-    <#-- 导航菜单 开始 --> 
-    <@include file = "nav.ftl" /> 
-    <#-- 导航菜单 结束 --> 
-
     <#-- 页面主内容 开始 -->
-    <div class="col-lg-10">
+    <div class="col-lg-9">
         <#if commonResult?? && commonResult.status?? && commonResult.status == 0 && commonResult.data?? && commonResult.data.articles??>
             <#-- 文章列表 开始 -->
             <#assign is_article_list = true /> 
@@ -119,6 +115,10 @@
         </#if>
     </div>
     <#-- 页面主内容 结束 -->
+
+    <#-- 导航菜单 开始 --> 
+    <@include file = "nav.ftl" /> 
+    <#-- 导航菜单 结束 --> 
 </div>
 
 <#-- 版权信息 开始 -->
