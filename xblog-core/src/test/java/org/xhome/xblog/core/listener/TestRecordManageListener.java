@@ -14,22 +14,21 @@ import org.xhome.xblog.Record;
  */
 public class TestRecordManageListener implements RecordManageListener {
 
-	private Logger logger = LoggerFactory
-			.getLogger(TestRecordManageListener.class);
+    private Logger logger = LoggerFactory.getLogger(TestRecordManageListener.class);
 
-	@Override
-	public boolean beforeRecordManage(User oper, short action, Record record,
-			Object... args) {
-		logger.debug("TEST BEFORE RECORD MANAGE LISTENER {} {} ",
-				oper.getName(), action);
-		return true;
-	}
+    @Override
+    public boolean beforeRecordManage(User oper, short action, Record record,
+                    Object... args) {
+        logger.debug("TEST BEFORE RECORD MANAGE LISTENER {} {} ",
+                        oper.getName(), action);
+        return true;
+    }
 
-	@Override
-	public void afterRecordManage(User oper, short action, short result,
-			Record record, Object... args) {
-		logger.debug("TEST AFTER RECORD MANAGE LISTENER {} {}", oper.getName(),
-				action);
-	}
+    @Override
+    public void afterRecordManage(User oper, short action, short result,
+                    Record record, Object... args) {
+        logger.debug("TEST AFTER RECORD MANAGE LISTENER {} {}", oper.getName(),
+                        action);
+    }
 
 }

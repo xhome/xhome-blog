@@ -13,7 +13,7 @@ Ext.define('XHome.XBlog.Manage.BlogConfig', {
             config = {};
         }
 
-        var switch_configs = {'xblog_allow_article_comment': 1},
+        var switch_configs = {'xblog_allow_article_comment': 1, 'xblog_allow_leave_message': 1},
             number_configs = {'xblog_article_content_length': 1};
 
         // 搜索面板

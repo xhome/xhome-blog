@@ -40,7 +40,7 @@
             <#-- 文章评论列表 结束 -->
             
             <#-- 发表文章评论 开始 -->
-            <div class="well">
+            <div id="article_comment_form_panel" class="well">
                 <form id="article_comment_form" class="form-horizontal" role="form" action="${xblog.comment_base_url}/add.json" method="POST">
                     <div id="article_comment_error_msg" class="alert alert-danger" style="display: none;"></div>
                     <input type="hidden" id="comment.article.id" name="comment.article.id" value="${article.id}" />

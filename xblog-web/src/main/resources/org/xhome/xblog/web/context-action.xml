@@ -30,6 +30,12 @@
   	<property name="commentService" ref="commentService"/>
   </bean>
   
+  <bean id="messageAction" class="org.xhome.xblog.web.action.MessageAction" scope="singleton">
+    <property name="messageService" ref="messageService"/>
+    <property name="categoryService" ref="categoryService"/>
+    <property name="tagService" ref="tagService"/>
+  </bean>
+  
   <bean id="recordAction" class="org.xhome.xblog.web.action.RecordAction" scope="singleton">
   	<property name="recordService" ref="recordService"/>
   </bean>

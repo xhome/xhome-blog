@@ -10,6 +10,7 @@
         <div class="col-lg-7">
         <ul class="nav navbar-nav navbar-left">
             <li <#if nav_active == 'index'>class="active"</#if>><a href="${xblog.article_index_url}">博客</a></li>
+            <li <#if nav_active == 'message'>class="active"</#if>><a href="${xblog.message_list_url}">留言</a></li>
             <li <#if nav_active == 'about'>class="active"</#if>><a href="${xblog.base_url}/about.htm">关于</a></li>
             <#if xblog.xauth.user??>
                 <li class="dropdown">

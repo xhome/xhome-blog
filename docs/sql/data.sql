@@ -6,6 +6,7 @@ INSERT INTO xhome_xblog_tag VALUES(1, '默认标签', 1, 1, NOW(), NOW(), 1, 1);
 /* 博客管理配置项 */
 INSERT INTO xhome_xauth_config (category, item, display, value, owner, modifier, created, modified, version, status) VALUES
     /* 1 开启， 0 关闭 */                                                           
+    (2, 'xblog_allow_leave_message', '允许留言开关', '1', 1, 1, NOW(), NOW(), 0, 15),
     (2, 'xblog_allow_article_comment', '文章评论开关', '1', 1, 1, NOW(), NOW(), 0, 15),
     (2, 'xblog_article_content_length', '文章概要内容长度', '500', 1, 1, NOW(), NOW(), 0, 15),
     (2, 'xblog_title_index', '博客首页标题', 'XXXX的博客', 1, 1, NOW(), NOW(), 0, 15),

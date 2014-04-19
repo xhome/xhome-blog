@@ -26,6 +26,11 @@
     <property name="mapperInterface" value="org.xhome.xblog.core.dao.CommentDAO"/> 
   </bean>
   
+  <bean id="messageDAO" class="org.mybatis.spring.mapper.MapperFactoryBean" scope="singleton"> 
+    <property name="sqlSessionFactory" ref="sqlSessionFactory"/>  
+    <property name="mapperInterface" value="org.xhome.xblog.core.dao.MessageDAO"/> 
+  </bean>
+  
   <bean id="recordDAO" class="org.mybatis.spring.mapper.MapperFactoryBean" scope="singleton"> 
     <property name="sqlSessionFactory" ref="sqlSessionFactory"/>  
     <property name="mapperInterface" value="org.xhome.xblog.core.dao.RecordDAO"/> 

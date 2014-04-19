@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.xhome.xblog.core.dao.MessageDAO">
+	
+	<cache/>
+	
+	<resultMap id="messageResultMap" type="org.xhome.xblog.Message">
+		<id property="id" column="id"/>
+		<result property="userName" column="user_name"/>
+		<result property="userEmail" column="user_email"/>
+		<result property="userWebsite" column="user_website"/>
+		<result property="content" column="content"/>
+        <result property="reply" column="reply"/>
+		<result property="owner" column="owner"/>
+		<result property="modifier" column="modifier"/>
+		<result property="created" column="created"/>
+		<result property="modified" column="modified"/>
+		<result property="version" column="version"/>
+		<result property="status" column="status"/>
+	</resultMap>
+	
+	<insert id="addMessage" parameterType="org.xhome.xblog.Message" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO xhome_xblog_message (user_name, user_email, user_website, content, owner, modifier, created, modified, version, status)
+		VALUES(#{userName}, #{userEmail}, #{userWebsite}, #{content}, #{owner}, #{modifier}, #{created}, #{modified}, #{version}, #{status})
+	</insert>
+	
+	<update id="updateMessage" parameterType="org.xhome.xblog.Message">
+		UPDATE xhome_xblog_message
+		SET reply = #{reply}, modifier = #{modifier}, modified = NOW(), version = version + 1, status = #{status}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="lockMessage" parameterType="org.xhome.xblog.Message">
+		UPDATE xhome_xblog_message
+		SET modifier = #{modifier}, modified = NOW(), version = version + 1, status = 5
+		WHERE id = #{id}
+	</update>
+	
+	<update id="unlockMessage" parameterType="org.xhome.xblog.Message">
+		UPDATE xhome_xblog_message
+		SET modifier = #{modifier}, modified = NOW(), version = version + 1, status = 1
+		WHERE id = #{id}
+	</update>
+	
+	<delete id="deleteMessage" parameterType="org.xhome.xblog.Message">
+		DELETE FROM xhome_xblog_message WHERE id = #{id}
+	</delete>
+	
+	<select id="isMessageUpdateable" resultType="boolean" parameterType="org.xhome.xblog.Message">
+		SELECT COUNT(*) FROM xhome_xblog_message WHERE id = #{id} AND status != 10
+	</select>
+	
+	<select id="isMessageLocked" resultType="boolean" parameterType="org.xhome.xblog.Message">
+		SELECT COUNT(*) FROM xhome_xblog_message WHERE id = #{id} AND status = 5
+	</select>
+	
+	<select id="isMessageDeleteable" resultType="boolean" parameterType="org.xhome.xblog.Message">
+		SELECT COUNT(*) FROM xhome_xblog_message WHERE id = #{id} AND status != 10 AND status != 15
+	</select>
+	
+	<sql id="select_message">
+		SELECT * FROM xhome_xblog_message
+	</sql>
+	
+	<select id="queryMessage" resultMap="messageResultMap" parameterType="long">
+		<include refid="select_message"/>
+		WHERE id = #{id} LIMIT 1
+	</select>
+	
+	<sql id="restriction_messages">
+		<trim prefix="WHERE" prefixOverrides="AND">
+			<if test="parameters.user_name != null and parameters.user_name != ''">
+				AND user_name LIKE CONCAT('%',#{parameters.user_name},'%')
+			</if>
+			<if test="parameters.user_name_llike != null and parameters.user_name_llike != ''">
+				AND user_name LIKE CONCAT('%',#{parameters.user_name_llike})
+			</if>
+			<if test="parameters.user_name_rlike != null and parameters.user_name_rlike != ''">
+				AND user_name LIKE CONCAT(#{parameters.user_name_rlike},'%')
+			</if>
+			<if test="parameters.user_name_equal != null and parameters.user_name_equal != ''">
+				AND user_name = #{parameters.user_name_equal}
+			</if>
+			<if test="parameters.user_email != null and parameters.user_email != ''">
+				AND user_email LIKE CONCAT('%',#{parameters.user_email},'%')
+			</if>
+			<if test="parameters.user_email_llike != null and parameters.user_email_llike != ''">
+				AND user_email LIKE CONCAT('%',#{parameters.user_email_llike})
+			</if>
+			<if test="parameters.user_email_rlike != null and parameters.user_email_rlike != ''">
+				AND user_email LIKE CONCAT(#{parameters.user_email_rlike},'%')
+			</if>
+			<if test="parameters.user_email_equal != null and parameters.user_email_equal != ''">
+				AND user_email = #{parameters.user_email_equal}
+			</if>
+			<if test="parameters.user_website != null and parameters.user_website != ''">
+				AND user_website LIKE CONCAT('%',#{parameters.user_website},'%')
+			</if>
+			<if test="parameters.user_website_llike != null and parameters.user_website_llike != ''">
+				AND user_website LIKE CONCAT('%',#{parameters.user_website_llike})
+			</if>
+			<if test="parameters.user_website_rlike != null and parameters.user_website_rlike != ''">
+				AND user_website LIKE CONCAT(#{parameters.user_website_rlike},'%')
+			</if>
+			<if test="parameters.user_website_equal != null and parameters.user_website_equal != ''">
+				AND user_website = #{parameters.user_website_equal}
+			</if>
+			<if test="parameters.content != null and parameters.content != ''">
+				AND content LIKE CONCAT('%',#{parameters.content},'%')
+			</if>
+			<if test="parameters.content_llike != null and parameters.content_llike != ''">
+				AND content LIKE CONCAT('%',#{parameters.message_llike})
+			</if>
+			<if test="parameters.content_rlike != null and parameters.content_rlike != ''">
+				AND content LIKE CONCAT(#{parameters.content_rlike},'%')
+			</if>
+			<if test="parameters.content_equal != null and parameters.content_equal != ''">
+				AND content = #{parameters.content_equal}
+			</if>
+			<if test="parameters.reply != null and parameters.reply != ''">
+                AND reply LIKE CONCAT('%',#{parameters.reply},'%')
+            </if>
+            <if test="parameters.reply_llike != null and parameters.reply_llike != ''">
+                AND reply LIKE CONCAT('%',#{parameters.reply_llike})
+            </if>
+            <if test="parameters.reply_rlike != null and parameters.reply_rlike != ''">
+                AND reply LIKE CONCAT(#{parameters.reply_rlike},'%')
+            </if>
+            <if test="parameters.reply_equal != null and parameters.reply_equal != ''">
+                AND reply = #{parameters.reply_equal}
+            </if>
+			<if test="parameters.status != null and parameters.status != ''">
+				AND status = #{parameters.status}
+			</if>
+			<if test="parameters.status_lt != null and parameters.status_lt != ''">
+				AND status &lt; #{parameters.status_lt}
+			</if>
+			<if test="parameters.status_le != null and parameters.status_le != ''">
+				AND status &lt;= #{parameters.status_le}
+			</if>
+			<if test="parameters.status_gt != null and parameters.status_gt != ''">
+				AND status &gt; #{parameters.status_gt}
+			</if>
+			<if test="parameters.status_ge != null and parameters.status_ge != ''">
+				AND status &gt;= #{parameters.status_ge}
+			</if>
+			<if test="parameters.id != null and parameters.id != ''">
+				AND id = #{parameters.id}
+			</if>
+			<if test="parameters.id_lt != null and parameters.id_lt != ''">
+				AND id &lt; #{parameters.id_lt}
+			</if>
+			<if test="parameters.id_le != null and parameters.id_le != ''">
+				AND id &lt;= #{parameters.id_le}
+			</if>
+			<if test="parameters.id_gt != null and parameters.id_gt != ''">
+				AND id &gt; #{parameters.id_gt}
+			</if>
+			<if test="parameters.id_ge != null and parameters.id_ge != ''">
+				AND id &gt;= #{parameters.id_ge}
+			</if>
+		</trim>
+	</sql>
+	
+	<select id="queryMessages" resultMap="messageResultMap" parameterType="org.xhome.db.query.QueryBase">
+		<include refid="select_message"/>
+		<include refid="restriction_messages"/>
+		ORDER BY modified DESC
+		LIMIT #{start}, #{limit}
+	</select>
+	
+	<select id="countMessages" resultType="long" parameterType="org.xhome.db.query.QueryBase">
+		SELECT COUNT(*) FROM xhome_xblog_message
+		<include refid="restriction_messages"/>
+	</select>
+	
+</mapper>

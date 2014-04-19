@@ -338,3 +338,29 @@ COLLATE = utf8_general_ci
 AUTO_INCREMENT = 1;
 
 ALTER TABLE xhome_xblog_tag_user_permission COMMENT '标签用户访问权限';
+
+/*==============================================================*/
+/* Table: xhome_xblog_message                                   */
+/*==============================================================*/
+CREATE TABLE xhome_xblog_message
+(
+   id                   BIGINT NOT NULL AUTO_INCREMENT COMMENT '留言ID',
+   user_name            VARCHAR(20) NOT NULL COMMENT '留言用户的名称',
+   user_email           VARCHAR(50) NOT NULL COMMENT '留言用户的邮箱',
+   user_website         VARCHAR(100) DEFAULT NULL COMMENT '留言用户的个人主页', 
+   content              TEXT NOT NULL COMMENT '留言内容',
+   reply                TEXT DEFAULT NULL COMMENT '留言回复',
+   owner                BIGINT NOT NULL COMMENT '创建者',
+   modifier             BIGINT NOT NULL COMMENT '修改者',
+   created              TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
+   modified             TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '修改时间',
+   version              TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '版本',
+   status               TINYINT UNSIGNED NOT NULL DEFAULT 1 COMMENT '状态 1: 正常, 5: 锁定, 10: 不允许修改, 15: 不允许删除',
+   PRIMARY KEY (id)
+)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8
+COLLATE = utf8_general_ci
+AUTO_INCREMENT = 1;
+
+ALTER TABLE xhome_xblog_message COMMENT '留言';

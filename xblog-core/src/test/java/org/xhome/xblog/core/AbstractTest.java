@@ -18,6 +18,7 @@ import org.xhome.xblog.Category;
 import org.xhome.xblog.CategoryRolePermission;
 import org.xhome.xblog.CategoryUserPermission;
 import org.xhome.xblog.Comment;
+import org.xhome.xblog.Message;
 import org.xhome.xblog.Record;
 import org.xhome.xblog.Tag;
 import org.xhome.xblog.TagRolePermission;
@@ -117,7 +118,8 @@ public abstract class AbstractTest {
             return;
         }
         Article article = comment.getArticle();
-        logger.debug("Id:" + comment.getId() + "\tArticle:"
+        logger.debug("Id:" + comment.getId() + "UserName:"
+                        + comment.getUserName() + "\tArticle:"
                         + (article != null ? article.getId() : null)
                         + "\tType:" + comment.getType() + "\tCotent:"
                         + comment.getContent() + "\tStatus:"
@@ -126,12 +128,32 @@ public abstract class AbstractTest {
         Comment target = comment.getTarget();
         if (target != null) {
             article = target.getArticle();
-            logger.debug("\tTarget:\tId:" + target.getId() + "\tArticle:"
+            logger.debug("\tTarget:\tId:" + "UserName:" + comment.getUserName()
+                            + target.getId() + "\tArticle:"
                             + (article != null ? article.getId() : null)
                             + "\tType:" + target.getType() + "\tCotent:"
                             + target.getContent() + "\tStatus:"
                             + target.getStatus());
         }
+    }
+
+    protected void printMessage(List<Message> messages) {
+        if (messages != null) {
+            for (Message message : messages) {
+                printMessage(message);
+            }
+        }
+    }
+
+    protected void printMessage(Message message) {
+        if (message == null) {
+            return;
+        }
+        logger.debug("Id:" + message.getId() + "\tUserName:"
+                        + message.getUserName() + "\tContent:"
+                        + message.getContent() + "\tReply:"
+                        + message.getReply() + "\tStatus:"
+                        + message.getStatus());
     }
 
     protected void printRecord(List<Record> records) {

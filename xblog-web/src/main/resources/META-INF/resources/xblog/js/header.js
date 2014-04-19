@@ -3,7 +3,7 @@
  * Date:     2014-02-15
  * Email:    cpf624@126.com
  * Home:     http://pfchen.org
- * Describe: 导航工具类用到的JS
+ * Describe: 导航工具栏JS
  */
 
 $(document).ready(function() {

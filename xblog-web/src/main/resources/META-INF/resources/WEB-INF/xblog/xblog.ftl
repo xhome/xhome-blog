@@ -12,3 +12,7 @@
 
 <#assign comment_base_url = xblog_base_url + "/comment" />
 <#assign comment_add_url = comment_base_url + "/add.htm" />
+
+<#assign message_base_url = xblog_base_url + "/message" />
+<#assign message_add_url = message_base_url + "/add.htm" />
+<#assign message_list_url = message_base_url + "/list.htm" />

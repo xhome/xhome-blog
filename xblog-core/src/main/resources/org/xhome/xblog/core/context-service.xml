@@ -32,6 +32,12 @@
   	<property name="manageLogService" ref="manageLogService"/>
   </bean>
   
+  <bean id="messageService" class="org.xhome.xblog.core.service.MessageServiceImpl" scope="singleton">
+    <property name="messageDAO" ref="messageDAO"/>
+    <property name="blogConfigService" ref="blogConfigService"/>
+    <property name="manageLogService" ref="manageLogService"/>
+  </bean>
+  
   <bean id="recordService" class="org.xhome.xblog.core.service.RecordServiceImpl" scope="singleton">
   	<property name="recordDAO" ref="recordDAO"/>
   	<property name="manageLogService" ref="manageLogService"/>
