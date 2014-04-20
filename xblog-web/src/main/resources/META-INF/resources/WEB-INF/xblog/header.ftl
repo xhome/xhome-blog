@@ -76,6 +76,8 @@
 	</div>
 </div>
 <script type="text/javascript" src="${xblog.base_url}/xauth/js/user/validate.js"></script>
+<link rel="stylesheet" type="text/css" href="${xblog.base_url}/xlibs/ueditor/third-party/SyntaxHighlighter/shCoreDefault.css"/>
+<script type="text/javascript" src="${xblog.base_url}/xlibs/ueditor/third-party/SyntaxHighlighter/shCore.js"></script>
 <script type="text/javascript" src="${xblog.base_url}/xblog/js/header.js"></script>
 </#if>
 <#-- 修改密码弹窗 结束 -->

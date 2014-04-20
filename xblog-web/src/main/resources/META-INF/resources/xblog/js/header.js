@@ -7,6 +7,8 @@
  */
 
 $(document).ready(function() {
+    // 源代码语法高亮
+    SyntaxHighlighter.all();
     // 校验修改用户密码表单	
 	validateUserChangePasswordForm(function(form) {
 		$.post(form.action, $(form).serialize(), function(data) {
